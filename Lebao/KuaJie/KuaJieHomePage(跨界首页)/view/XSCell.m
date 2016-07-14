@@ -121,7 +121,7 @@
     qwbcLab.textAlignment = NSTextAlignmentCenter;
     qwbcLab.textColor = [UIColor colorWithRed:0.925 green:0.922 blue:0.922 alpha:1.000];
     qwbcLab.font = [UIFont systemFontOfSize:11];
-    qwbcLab.text = @"期望报酬(元)";
+    qwbcLab.text = @"成交报酬(元)";
     [_blueV addSubview:qwbcLab];
     
     _moneyLab = [[UILabel alloc]initWithFrame:CGRectMake(0, 120, _blueV.frame.size.width,38)];

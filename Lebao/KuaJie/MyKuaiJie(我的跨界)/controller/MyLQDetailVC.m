@@ -189,7 +189,7 @@
     qwbcLab.font = [UIFont systemFontOfSize:13];
     qwbcLab.textColor = [UIColor colorWithRed:0.757 green:0.761 blue:0.765 alpha:1.000];
     qwbcLab.textAlignment = NSTextAlignmentLeft;
-    qwbcLab.text = [NSString stringWithFormat:@"期望报酬:%@元",[_xiansuoDic objectForKey:@"cost"]];
+    qwbcLab.text = [NSString stringWithFormat:@"成交报酬:%@元",[_xiansuoDic objectForKey:@"cost"]];
     [xsDetailV addSubview:qwbcLab];
     
     UILabel * xqLab = [[UILabel alloc]initWithFrame:CGRectMake((xsDetailV.frame.size.width-20)/2, 10, (xsDetailV.frame.size.width-20)/2, 30)];

@@ -259,7 +259,7 @@
                                     <constraint firstItem="5oY-Cy-zPL" firstAttribute="leading" secondItem="Xwi-d6-2Mp" secondAttribute="trailing" constant="20" id="zVg-M1-1aN"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="期望报酬:300元" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ptC-RZ-gso">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="成交报酬:300元" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ptC-RZ-gso">
                                 <rect key="frame" x="30" y="190" width="240" height="26"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.24313725490196078" green="0.55294117647058827" blue="1" alpha="1" colorSpace="calibratedRGB"/>

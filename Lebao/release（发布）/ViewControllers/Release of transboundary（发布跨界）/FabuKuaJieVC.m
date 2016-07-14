@@ -126,7 +126,7 @@
     qwbcLab.backgroundColor = [UIColor whiteColor];
     qwbcLab.textColor = [UIColor blackColor];
     qwbcLab.textAlignment = NSTextAlignmentLeft;
-    qwbcLab.text = @"   期望报酬";
+    qwbcLab.text = @"   成交报酬";
     qwbcLab.font = [UIFont systemFontOfSize:13];
     [bcV addSubview:qwbcLab];
     UIView * hxV = [[UIView alloc]initWithFrame:CGRectMake(0, 44, SCREEN_WIDTH, 1)];
@@ -134,7 +134,7 @@
     [bcV addSubview:hxV];
     _bcTex = [[UITextField alloc]initWithFrame:CGRectMake(20, 55, SCREEN_WIDTH-40, 40)];
     _bcTex.borderStyle = UITextBorderStyleRoundedRect;
-    _bcTex.placeholder = @"请输入您期望的报酬";
+    _bcTex.placeholder = @"请输入您的成交报酬";
     _bcTex.keyboardType = UIKeyboardTypeDecimalPad;
     _bcTex.textColor = [UIColor blackColor];
     _bcTex.textAlignment = NSTextAlignmentCenter;
@@ -148,6 +148,9 @@
     djLab.text = @"需支付诚信金";
     djLab.font = [UIFont systemFontOfSize:12];
     [bcV addSubview:djLab];
+    
+   
+    
     
     _moneyLab = [[UILabel alloc]initWithFrame:CGRectMake((SCREEN_WIDTH-150)/2, 130, 150, 25)];
     _moneyLab.textAlignment = NSTextAlignmentCenter;
@@ -164,7 +167,7 @@
     msLab.numberOfLines = 2;
     msLab.textAlignment = NSTextAlignmentLeft;
     msLab.textColor = [UIColor colorWithWhite:0.522 alpha:1.000];
-    msLab.text = @"按照期望报酬的2%收取线索诚信金,没有选择合作或者合作成功,诚信金都将退回";
+    msLab.text = @"按照成交报酬的2%收取线索诚信金,没有选择合作或者合作成功,诚信金都将退回";
     [bcV addSubview:msLab];
     _bottomScr.contentSize = CGSizeMake(SCREEN_WIDTH, bcV.frame.size.height+bcV.frame.origin.y);
     
@@ -192,31 +195,51 @@
 }
 -(void)tijiaoAction
 {
-    NSString * induStr;
-    if ([tempBtn.titleLabel.text isEqualToString:@"保险"]) {
-        induStr = @"insurance";
-    }
-    if ([tempBtn.titleLabel.text isEqualToString:@"金融"]) {
-        induStr = @"finance";
-    }
-    if ([tempBtn.titleLabel.text isEqualToString:@"房产"]) {
-        induStr = @"property";
-    }
-    if ([tempBtn.titleLabel.text isEqualToString:@"车行"]) {
-        induStr = @"car";
-    }
     if ([_titTex.text length]<= 0) {
         HUDText(@"请输入标题");
         return;
     }
-    if ([_contTex.text length]<= 0) {
+    NSLog(@"_contTex.text=%@",_contTex.text);
+    if ([_contTex.text isEqualToString:@"请输入线索内容"]) {
         HUDText(@"请输入线索内容");
         return;
     }
     if ([_bcTex.text length]<= 0) {
-        HUDText(@"请输入期望报酬");
+        HUDText(@"请输入成交报酬");
         return;
     }
+    NSString * induStr;
+    if ([tempBtn.titleLabel.text isEqualToString:@"保险"]) {
+        
+        if ([_bcTex.text intValue]<200) {
+           
+            HUDText(@"保险类成交报酬最低为200元");
+            return;
+        }
+        induStr = @"insurance";
+    }
+    if ([tempBtn.titleLabel.text isEqualToString:@"金融"]) {
+        if ([_bcTex.text intValue]<500) {
+            HUDText(@"金融类成交报酬最低为500元");
+            return;
+        }
+        induStr = @"finance";
+    }
+    if ([tempBtn.titleLabel.text isEqualToString:@"房产"]) {
+        if ([_bcTex.text intValue]<2000) {
+            HUDText(@"房产类成交报酬最低为2000元");
+            return;
+        }
+        induStr = @"property";
+    }
+    if ([tempBtn.titleLabel.text isEqualToString:@"车行"]) {
+        if ([_bcTex.text intValue]<500) {
+            HUDText(@"车行类成交报酬最低为500元");
+            return;
+        }
+        induStr = @"car";
+    }
+
     NSLog(@"%@",induStr);
     PayDingJinVC * payVC = [[PayDingJinVC alloc]init];
     payVC.zfymType = FaBuZhiFu;

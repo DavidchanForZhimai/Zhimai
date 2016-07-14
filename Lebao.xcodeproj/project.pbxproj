@@ -5009,7 +5009,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/david/Desktop/Lebao/Lebao/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/yanwenbin/Desktop/zhimai/Lebao/PrefixHeader.pch;
 				INFOPLIST_FILE = Lebao/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -5036,7 +5036,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/david/Desktop/Lebao/Lebao/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/yanwenbin/Desktop/zhimai/Lebao/PrefixHeader.pch;
 				INFOPLIST_FILE = Lebao/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -357,7 +357,7 @@
                 default:
                     break;
             }
-            cell.qwbcLab.text = [NSString stringWithFormat:@"期望报酬:%@元",[_fabuArr[indexPath.row] objectForKey:@"cost"]];
+            cell.qwbcLab.text = [NSString stringWithFormat:@"成交报酬:%@元",[_fabuArr[indexPath.row] objectForKey:@"cost"]];
         }
         return cell;
     }else

@@ -87,7 +87,7 @@
     [cleaV addGestureRecognizer:tap];
     
     //提示字的高度
-    NSString *text =@"1.期望报酬，是指该条线索带来的客户成交后，发布者希望拿到的报酬\n2.领取者未被选中合作，或者合作未成交且双方无异议，定金将会退回\n3.领取者的定金在合作成交后作为报酬的一部分支付给发布者";
+    NSString *text =@"1.成交报酬，是指该条线索带来的客户成交后，发布者希望拿到的报酬\n2.领取者未被选中合作，或者合作未成交且双方无异议，定金将会退回\n3.领取者的定金在合作成交后作为报酬的一部分支付给发布者";
     CGSize size = [text sizeWithFont:Size(24) maxSize:CGSizeMake(SCREEN_WIDTH - 40, 1000 )];
     UIView * djV = [[UIView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT-(210 + size.height), SCREEN_WIDTH, 210 + size.height)];
     
@@ -588,7 +588,7 @@
     
     
     UILabel * qwLab = [[UILabel alloc]initWithFrame:CGRectMake(10, height, 130, 30)];
-    NSString * qwStr = @"期望报酬:";
+    NSString * qwStr = @"成交报酬:";
     NSString * moneyStr = [NSString stringWithFormat:@" %@",[_xiansDic objectForKey:@"cost"]];
     NSString * qwbcStr = [qwStr stringByAppendingString:moneyStr];
     NSMutableAttributedString * qwbcAtr = [[NSMutableAttributedString alloc]initWithString:qwbcStr];
