@@ -134,7 +134,7 @@
     [bcV addSubview:hxV];
     _bcTex = [[UITextField alloc]initWithFrame:CGRectMake(20, 55, SCREEN_WIDTH-40, 40)];
     _bcTex.borderStyle = UITextBorderStyleRoundedRect;
-    _bcTex.placeholder = @"请输入您的成交报酬";
+    _bcTex.placeholder = @"请输入您的成交报酬(请不小于200元)";
     _bcTex.keyboardType = UIKeyboardTypeDecimalPad;
     _bcTex.textColor = [UIColor blackColor];
     _bcTex.textAlignment = NSTextAlignmentCenter;
@@ -257,6 +257,19 @@
     sender.backgroundColor = [UIColor colorWithRed:0.243 green:0.553 blue:1.000 alpha:1.000];
      [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     tempBtn = sender;
+     if ([tempBtn.titleLabel.text isEqualToString:@"保险"]) {
+        _bcTex.placeholder = @"请输入您的成交报酬(请不小于200元)";
+    }
+    if ([tempBtn.titleLabel.text isEqualToString:@"金融"]) {
+        _bcTex.placeholder = @"请输入您的成交报酬(请不小于500元)";
+          }
+    if ([tempBtn.titleLabel.text isEqualToString:@"房产"]) {
+        _bcTex.placeholder = @"请输入您的成交报酬(请不小于2000元)";
+          }
+    if ([tempBtn.titleLabel.text isEqualToString:@"车行"]) {
+        _bcTex.placeholder = @"请输入您的成交报酬(请不小于500元)";
+         }
+
     NSLog(@"%ld",sender.tag);
 }
 -(void)setNav
