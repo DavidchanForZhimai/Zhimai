@@ -72,14 +72,15 @@ static BOOL isBackGroundActivateApplication;
   
     if (application.applicationState == UIApplicationStateInactive && !isBackGroundActivateApplication)
     {
-        NSLog(@"userInfo");
+       
+      
         [self notifacionApi:userInfo isAleat:NO];
         
         
     }
     // 应用在后台。当后台设置aps字段里的 content-available 值为 1 并开启远程通知激活应用的选项
     if (application.applicationState == UIApplicationStateBackground) {
-        NSLog(@"background is Activated Application ");
+//        NSLog(@"background is Activated Application ");
         // 此处可以选择激活应用提前下载邮件图片等内容。
         isBackGroundActivateApplication = YES;
         
@@ -102,7 +103,7 @@ static BOOL isBackGroundActivateApplication;
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    NSLog(@"test:%@",deviceToken);
+//    NSLog(@"test:%@",deviceToken);
     
     [BPush registerDeviceToken:deviceToken];
     
