@@ -30,8 +30,8 @@ static MP3PlayerManager* mP3PlayerManager;
     _startRecoderBlock = startRecoderBlock;
     [self setAudioSession];
     if (![self.audioRecorder isRecording]) {
-        [self.audioRecorder record];//首次使用应用时如果调用record方法会询问用户是否允许使用麦克风
-       _startRecoderBlock(YES);
+        [self.audioRecorder record];
+         _startRecoderBlock(YES);//首次使用应用时如果调用record方法会询问用户是否允许使用麦克风
        
     }
     
@@ -89,7 +89,7 @@ static MP3PlayerManager* mP3PlayerManager;
 -(NSURL *)getSavePath{
     NSString *urlStr=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     urlStr=[urlStr stringByAppendingPathComponent:_url];
-    NSLog(@"file path:%@",urlStr);
+//    NSLog(@"file path:%@",urlStr);
     NSURL *url=[NSURL fileURLWithPath:urlStr];
     return url;
 }
@@ -144,9 +144,13 @@ static MP3PlayerManager* mP3PlayerManager;
         _audioRecorder.delegate=self;
 //        _audioRecorder.meteringEnabled=YES;//如果要监控声波则必须设置为YES
         if (error) {
-            NSLog(@"创建录音机对象时发生错误，错误信息：%@",error.localizedDescription);
+            NSLog(@"创建播放器过程中发生错误，错误信息：%@",error.localizedDescription);
             _startRecoderBlock(NO);
             return nil;
+        }
+        else
+        {
+            _startRecoderBlock(YES);
         }
     }
     return _audioRecorder;
@@ -165,15 +169,7 @@ static MP3PlayerManager* mP3PlayerManager;
         _audioPlayer.numberOfLoops=0;
         [_audioPlayer prepareToPlay];
         _audioPlayer.delegate = self;
-        if (error) {
-            NSLog(@"创建播放器过程中发生错误，错误信息：%@",error.localizedDescription);
-            _startRecoderBlock(NO);
-            return nil;
-        }
-        else
-        {
-            _startRecoderBlock(YES);
-        }
+        
 
     }
     return _audioPlayer;
@@ -188,7 +184,7 @@ static MP3PlayerManager* mP3PlayerManager;
  */
 -(void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
     if (![self.audioPlayer isPlaying]) {
-//        [self.audioPlayer play];
+
     }
     NSLog(@"录音完成!");
 }

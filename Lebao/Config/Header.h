@@ -16,6 +16,7 @@
 #define IMG_URL  [NSString stringWithFormat:ImageURLS]
 
 
+
 #define BACKCOLOR [UIColor colorWithWhite:0.941 alpha:1.000]
 //手机屏幕高
 #define SCREEN_HEIGHT [[UIScreen mainScreen] bounds].size.height
