@@ -41,17 +41,14 @@
 // 进入主页面
 -(void)enter{
     
-    //兼容旧用户推送
-    NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-    NSString *oldVersion = infoDict[@"CFBundleShortVersionString"];
-    if ([oldVersion isEqualToString:@"2.0.66"]&&![CoreArchive strForKey:@"once"]) {
+    if (![CoreArchive strForKey:@"once"]) {
         [CoreArchive removeStrForKey:userName];
         [CoreArchive removeStrForKey:passWord];
-        
         
     }
     //没有登录
     if (![Parameter isSession]) {
+        
         
         [[ToolManager shareInstance]enterLoginView];
         

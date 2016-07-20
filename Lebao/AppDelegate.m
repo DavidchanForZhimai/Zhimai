@@ -24,15 +24,13 @@
      self.window = window;
     [self.window makeKeyAndVisible];
     
+    //百度推送
+    [self bPushapplication:application didFinishLaunchingWithOptions:launchOptions];
+    //向微信注册
+    [self registerAppWithWX];
     //引导页
     [self showView];
     
-    //向微信注册
-    [self registerAppWithWX];
-    
-    //百度推送
-    [self bPushapplication:application didFinishLaunchingWithOptions:launchOptions];
- 
 
     return YES;
 }

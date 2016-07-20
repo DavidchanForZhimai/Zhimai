@@ -78,13 +78,10 @@
 		631C40161C97C907003C67E6 /* rscode.c in Sources */ = {isa = PBXBuildFile; fileRef = 631C400D1C97C907003C67E6 /* rscode.c */; };
 		631C40171C97C907003C67E6 /* split.c in Sources */ = {isa = PBXBuildFile; fileRef = 631C400F1C97C907003C67E6 /* split.c */; };
 		631C401A1C97C9B7003C67E6 /* QRCodeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 631C40191C97C9B7003C67E6 /* QRCodeGenerator.m */; };
-		631C401D1C97D396003C67E6 /* yaoqinghaoyou@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631C401B1C97D396003C67E6 /* yaoqinghaoyou@2x.png */; };
-		631C401E1C97D396003C67E6 /* yaoqinghaoyou@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631C401C1C97D396003C67E6 /* yaoqinghaoyou@3x.png */; };
 		631C40291C97DBF1003C67E6 /* M80AttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 631C40211C97DBF1003C67E6 /* M80AttributedLabel.m */; };
 		631C402A1C97DBF1003C67E6 /* M80AttributedLabelAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631C40231C97DBF1003C67E6 /* M80AttributedLabelAttachment.m */; };
 		631C402B1C97DBF1003C67E6 /* M80AttributedLabelURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 631C40261C97DBF1003C67E6 /* M80AttributedLabelURL.m */; };
 		631C402C1C97DBF1003C67E6 /* NSMutableAttributedString+M80.m in Sources */ = {isa = PBXBuildFile; fileRef = 631C40281C97DBF1003C67E6 /* NSMutableAttributedString+M80.m */; };
-		631C40311C980CCD003C67E6 /* me_ business cardBg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 631C40301C980CCD003C67E6 /* me_ business cardBg.jpg */; };
 		631E8A341C995EEC003025A5 /* icon_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 631E8A331C995EEC003025A5 /* icon_placeholder.png */; };
 		631F2DD01CF582E100273C78 /* WHC_Banner.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F2DCF1CF582E100273C78 /* WHC_Banner.m */; };
 		632210311CF3049B001327E6 /* meessage_custom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6322102D1CF3049B001327E6 /* meessage_custom@2x.png */; };
@@ -754,8 +751,6 @@
 		631C40101C97C907003C67E6 /* split.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = split.h; sourceTree = "<group>"; };
 		631C40181C97C9B7003C67E6 /* QRCodeGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeGenerator.h; sourceTree = "<group>"; };
 		631C40191C97C9B7003C67E6 /* QRCodeGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeGenerator.m; sourceTree = "<group>"; };
-		631C401B1C97D396003C67E6 /* yaoqinghaoyou@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yaoqinghaoyou@2x.png"; sourceTree = "<group>"; };
-		631C401C1C97D396003C67E6 /* yaoqinghaoyou@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yaoqinghaoyou@3x.png"; sourceTree = "<group>"; };
 		631C40201C97DBF1003C67E6 /* M80AttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M80AttributedLabel.h; sourceTree = "<group>"; };
 		631C40211C97DBF1003C67E6 /* M80AttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M80AttributedLabel.m; sourceTree = "<group>"; };
 		631C40221C97DBF1003C67E6 /* M80AttributedLabelAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = M80AttributedLabelAttachment.h; sourceTree = "<group>"; };
@@ -765,7 +760,6 @@
 		631C40261C97DBF1003C67E6 /* M80AttributedLabelURL.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = M80AttributedLabelURL.m; sourceTree = "<group>"; };
 		631C40271C97DBF1003C67E6 /* NSMutableAttributedString+M80.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+M80.h"; sourceTree = "<group>"; };
 		631C40281C97DBF1003C67E6 /* NSMutableAttributedString+M80.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+M80.m"; sourceTree = "<group>"; };
-		631C40301C980CCD003C67E6 /* me_ business cardBg.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "me_ business cardBg.jpg"; sourceTree = "<group>"; };
 		631E8A331C995EEC003025A5 /* icon_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_placeholder.png; sourceTree = "<group>"; };
 		631F2DCE1CF582E100273C78 /* WHC_Banner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WHC_Banner.h; sourceTree = "<group>"; };
 		631F2DCF1CF582E100273C78 /* WHC_Banner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WHC_Banner.m; sourceTree = "<group>"; };
@@ -2422,9 +2416,6 @@
 				630387FE1CB4A0BF00C1BE6B /* me_mycross_icon_hasreward_normal@2x.png */,
 				630387FF1CB4A0BF00C1BE6B /* me_mycross_icon_hasfa_normal@3x.png */,
 				630388001CB4A0BF00C1BE6B /* me_mycross_icon_hasfa_normal@2xpng.png */,
-				631C40301C980CCD003C67E6 /* me_ business cardBg.jpg */,
-				631C401B1C97D396003C67E6 /* yaoqinghaoyou@2x.png */,
-				631C401C1C97D396003C67E6 /* yaoqinghaoyou@3x.png */,
 				631C3F9B1C97BB65003C67E6 /* icon_ me_invitefriends.png */,
 				63D814171C965FA800AA0253 /* me_Activevalue_level@2x.png */,
 				63D814181C965FA800AA0253 /* me_Activevalue_level@3x.png */,
@@ -4246,7 +4237,6 @@
 				632210341CF3049B001327E6 /* meessage_system@3x.png in Resources */,
 				6319ECAB1CCE159200C21D63 /* tabbar_compose_below_background@2x.png in Resources */,
 				632CAD531CB5F6490083FF1E /* xuanzhexuanzhong@2x.png in Resources */,
-				631C401D1C97D396003C67E6 /* yaoqinghaoyou@2x.png in Resources */,
 				6303EEBA1CE56F1700BEC470 /* iicon_discover_shoucang@3x.png in Resources */,
 				63340B2D1CFBE3490010A596 /* dengdaixuanzhe@2x.png in Resources */,
 				63B4A52F1D07ED0600EC5D02 /* new_feature_2_736h.png in Resources */,
@@ -4275,7 +4265,6 @@
 				63ECBEB91C4F58D500D014E7 /* iconfont-chengyijinjilu@2x.png in Resources */,
 				6303EEC01CE5724600BEC470 /* icon_widelyspreaddetail_collect@3x.png in Resources */,
 				636315CF1D0EB93D009C1132 /* FabuCell.xib in Resources */,
-				631C401E1C97D396003C67E6 /* yaoqinghaoyou@3x.png in Resources */,
 				6319ECBA1CCE159200C21D63 /* tabbar_compose_more_mask@2x.png in Resources */,
 				63543DB81C157CAD005966C1 /* option@3x.png in Resources */,
 				63340B301CFBE3490010A596 /* dizhi@3x.png in Resources */,
@@ -4377,7 +4366,6 @@
 				63ECBEC81C4F58D500D014E7 /* iconfont-xinyongzhi@3x.png in Resources */,
 				6319ECAC1CCE159200C21D63 /* tabbar_compose_below_button_highlighted@2x.png in Resources */,
 				6326334D1C8578D000787F80 /* ZSSimage.png in Resources */,
-				631C40311C980CCD003C67E6 /* me_ business cardBg.jpg in Resources */,
 				63340B461CFBE3490010A596 /* pinglun@2x.png in Resources */,
 				63ECBEBE1C4F58D500D014E7 /* iconfont-huiyuan@3x.png in Resources */,
 				63346E4E1CE42985007BC875 /* transboundary_normal@2x.png in Resources */,
@@ -5004,12 +4992,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junhua Xu (JNFDC8XND6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Junhua Xu (JNFDC8XND6)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Xiamen legend Interactive Network Technology Co. Ltd. (8R9B8NBXS4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Xiamen legend Interactive Network Technology Co. Ltd. (8R9B8NBXS4)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/yanwenbin/Desktop/zhimai/Lebao/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = "/Users/david/Desktop/知脉/Lebao/PrefixHeader.pch";
 				INFOPLIST_FILE = Lebao/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -5021,7 +5009,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhimai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a0c7d1d9-db51-45bc-9dc2-a5dbd645cb52";
+				PROVISIONING_PROFILE = "777844d9-b1a7-4ce9-b9c6-6117da92578a";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -5031,12 +5019,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Junhua Xu (JNFDC8XND6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Junhua Xu (JNFDC8XND6)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Xiamen legend Interactive Network Technology Co. Ltd. (8R9B8NBXS4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Xiamen legend Interactive Network Technology Co. Ltd. (8R9B8NBXS4)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/yanwenbin/Desktop/zhimai/Lebao/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = "/Users/david/Desktop/知脉/Lebao/PrefixHeader.pch";
 				INFOPLIST_FILE = Lebao/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -5049,7 +5037,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhimai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "a0c7d1d9-db51-45bc-9dc2-a5dbd645cb52";
+				PROVISIONING_PROFILE = "777844d9-b1a7-4ce9-b9c6-6117da92578a";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

@@ -37,7 +37,7 @@ static BOOL isBackGroundActivateApplication;
     
     // 在 App 启动时注册百度云推送服务，需要提供 Apikey
     
-    [BPush registerChannel:launchOptions apiKey:K_API_KEY pushMode:BPushModeDevelopment withFirstAction:@"打开" withSecondAction:@"回复" withCategory:@"test" useBehaviorTextInput:YES isDebug:YES];
+    [BPush registerChannel:launchOptions apiKey:K_API_KEY pushMode:BPushModeProduction withFirstAction:@"打开" withSecondAction:@"回复" withCategory:@"test" useBehaviorTextInput:YES isDebug:YES];
     
     // 禁用地理位置推送 需要再绑定接口前调用。
     
@@ -89,25 +89,36 @@ static BOOL isBackGroundActivateApplication;
     }
     
     
-    NSLog(@"%@",userInfo);
+//    NSLog(@"%@",userInfo);
 }
 
 // 在 iOS8 系统中，还需要添加这个方法。通过新的 API 注册推送服务
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {
-    
     [application registerForRemoteNotifications];
-    
-    
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-//    NSLog(@"test:%@",deviceToken);
-    
+    NSLog(@"test:%@",deviceToken);
     [BPush registerDeviceToken:deviceToken];
-    
-
+    [BPush bindChannelWithCompleteHandler:^(id result, NSError *error) {
+        
+        // 需要在绑定成功后进行 settag listtag deletetag unbind 操作否则会失败
+        if (result) {
+            
+            // 获取channel_id
+            NSString *myChannel_id = [BPush getChannelId];
+            
+            [CoreArchive setStr:myChannel_id key:DeviceToken];
+            
+            [BPush setTag:@"Mytag" withCompleteHandler:^(id result, NSError *error) {
+                if (result) {
+                    NSLog(@"设置tag成功");
+                }
+            }];
+        }
+    }];
 }
 
 // 当 DeviceToken 获取失败时，系统会回调此方法

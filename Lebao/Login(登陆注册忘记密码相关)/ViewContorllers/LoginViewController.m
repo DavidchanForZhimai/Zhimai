@@ -211,53 +211,25 @@ typedef enum {
       }
       
       [[ToolManager shareInstance] showWithStatus:@"登录..."];
-      //绑定推送通知
-      [BPush bindChannelWithCompleteHandler:^(id result, NSError *error) {
-          
-          // 需要在绑定成功后进行 settag listtag deletetag unbind 操作否则会失败
-           NSMutableDictionary * sendcaptchaParam = allocAndInit(NSMutableDictionary);
-          // 网络错误
-          if (error) {
-              [[ToolManager shareInstance] showWithStatus:@"登录失败！请重试"];
-              return ;
-          }
-          if (result) {
-              // 确认绑定成功
-              if ([result[@"error_code"]intValue]!=0) {
-                  return;
-              }
-              // 获取channel_id
-              NSString *myChannel_id = [BPush getChannelId];
-//              NSLog(@"myChannel_id==%@",myChannel_id);
-              [sendcaptchaParam setObject:myChannel_id forKey:@"channelid"];
-              [BPush listTagsWithCompleteHandler:^(id result, NSError *error) {
-                  if (result) {
-//                      NSLog(@"result ============== %@",result);
-                  }
-              }];
-              [BPush setTag:@"Mytag" withCompleteHandler:^(id result, NSError *error) {
-                  if (result) {
-//                      NSLog(@"设置tag成功");
-                  }
-              }];
-              
-              [sendcaptchaParam setObject:_userNametext.text forKey:userName];
-              [sendcaptchaParam setObject:[_passWordtext.text md5]   forKey:passWord];
-              [sendcaptchaParam setObject:@"2" forKey:@"type"];
-              [XLDataService postWithUrl:LoginURL param:sendcaptchaParam modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-                  //          NSLog(@"dataObj =%@",dataObj);
-                  
-                  if (error) {
-                      
-                      [[ToolManager shareInstance] showInfoWithStatus];
-                  }
-                  [self dealWithCode:dataObj];
-              }];
-
-          }
-      }];
-
+      NSMutableDictionary *sendcaptchaParam = [NSMutableDictionary dictionary];
+      if ([CoreArchive strForKey:DeviceToken]) {
+        [sendcaptchaParam setObject:[CoreArchive strForKey:DeviceToken] forKey:@"channelid"];
+       }
       
+          [sendcaptchaParam setObject:_userNametext.text forKey:userName];
+          [sendcaptchaParam setObject:[_passWordtext.text md5]   forKey:passWord];
+          [sendcaptchaParam setObject:@"2" forKey:@"type"];
+          NSLog(@"sendcaptchaParam =%@",sendcaptchaParam);
+          [XLDataService postWithUrl:LoginURL param:sendcaptchaParam modelClass:nil responseBlock:^(id dataObj, NSError *error) {
+    
+              if (error) {
+                  
+                  [[ToolManager shareInstance] showInfoWithStatus];
+              }
+              [self dealWithCode:dataObj];
+          }];
+     
+
   }
 
 }

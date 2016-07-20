@@ -29,15 +29,11 @@
 
 @interface InviteFriendsDatas : NSObject
 
-@property (nonatomic, copy) NSString *invitecode;
-
 @property (nonatomic, copy) NSString *realname;
-
-@property (nonatomic, copy) NSString *username;
 
 @property (nonatomic, copy) NSString *createtime;
 
-@property (nonatomic, copy) NSString *imgurl;
+@property (nonatomic, copy) NSString *tel;
 
 @property (nonatomic, copy) NSString *authen;
 
@@ -50,5 +46,5 @@
 
 @interface InviteFriendsCell : UITableViewCell
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier cellHeight:(float)cellHeight cellWidth:(float)cellWidth;
-- (void)dataModal:(InviteFriendsDatas *)modal;
+- (void)dataModal:(InviteFriendsDatas *)modal isFirst:(BOOL)isFirst;
 @end
