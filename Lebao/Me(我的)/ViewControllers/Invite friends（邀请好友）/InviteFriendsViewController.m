@@ -12,6 +12,7 @@
 #import "M80AttributedLabel.h"
 #import "GeneratePosterViewController.h"
 #import "RankingInvitedtalentViewController.h"
+#import "NSString+Extend.h"
 //我的URL ：appinterface/personal
 #define PersonalURL [NSString stringWithFormat:@"%@user/invite",HttpURL]
 #define PosterURL [NSString stringWithFormat:@"%@user/poster",HttpURL]
@@ -103,7 +104,7 @@
     imageViewbg.image = [UIImage imageNamed:@"icon_ me_invitefriends"];
     [headView addSubview:imageViewbg];
 //    df493f
-    UILabel * inviteLable = [UILabel createLabelWithFrame:frame((APPWIDTH - 94)/2.0, 155*ScreenMultiple  -47, 94, 94) text:[NSString stringWithFormat:@"邀请码\n%@\n可邀请%@人",modal.invitecode,modal.count] fontSize:24*SpacedFonts textColor:LightBlackTitleColor textAlignment:NSTextAlignmentCenter inView:imageViewbg];
+    UILabel * inviteLable = [UILabel createLabelWithFrame:frame((APPWIDTH - 94)/2.0, 155*ScreenMultiple  -47, 94, 94) text:[NSString stringWithFormat:@"邀请码\n%@\n",modal.invitecode] fontSize:24*SpacedFonts textColor:LightBlackTitleColor textAlignment:NSTextAlignmentCenter inView:imageViewbg];
     inviteLable.backgroundColor = WhiteColor;
     [inviteLable setRound];
     inviteLable.numberOfLines = 0;
@@ -144,10 +145,10 @@
         [[ToolManager shareInstance] showWithStatus:@"生成海报中..."];
         NSMutableDictionary *param = [Parameter parameterWithSessicon];
         [param setValue:modal.invitecode forKey:@"invite"];
-        NSLog(@"param =%@",param);
+//        NSLog(@"param =%@",param);
         [XLDataService postWithUrl:PosterURL param:param modelClass:nil responseBlock:^(id dataObj, NSError *error) {
             if (dataObj) {
-                NSLog(@"dataObj =%@",dataObj);
+//                NSLog(@"dataObj =%@",dataObj);
                 if ([dataObj[@"rtcode"] integerValue]==1) {
                     [[ToolManager shareInstance] dismiss];
                     
@@ -177,7 +178,7 @@
     
     __weak InviteFriendsViewController *weakSelf =self;
     
-    _scoredRecord = [[BaseButton alloc]initWithFrame:frame(0, 0, frameWidth(segment)/2.0, frameHeight(segment)) setTitle:[NSString stringWithFormat:@"成功邀请(%i)",(int)_inviteFriendsArray.count ] titleSize:26*SpacedFonts titleColor:AppMainColor textAlignment:NSTextAlignmentCenter backgroundColor:hexColor(dae9f7) inView:segment];
+    _scoredRecord = [[BaseButton alloc]initWithFrame:frame(0, 0, frameWidth(segment)/2.0, frameHeight(segment)) setTitle:[NSString stringWithFormat:@"成功邀请(%@)",modal.count] titleSize:26*SpacedFonts titleColor:AppMainColor textAlignment:NSTextAlignmentCenter backgroundColor:hexColor(dae9f7) inView:segment];
 
     
     _instructions = [[BaseButton alloc]initWithFrame:frame(frameWidth(segment)/2.0, 0, frameWidth(segment)/2.0, frameHeight(segment)) setTitle:@"说明" titleSize:26*SpacedFonts titleColor:LightBlackTitleColor textAlignment:NSTextAlignmentCenter backgroundColor:WhiteColor inView:segment];
@@ -260,7 +261,7 @@
     [[ToolManager shareInstance] showWithStatus];
   
     [XLDataService postWithUrl:PersonalURL param:parame modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-//        NSLog(@"dataObj===%@",dataObj);
+        NSLog(@"dataObj===%@",dataObj);
         if (dataObj) {
             modal = [InviteFriendsModal mj_objectWithKeyValues:dataObj];
             
@@ -268,7 +269,16 @@
             if (modal.rtcode ==1) {
               
                 for (InviteFriendsDatas *data in modal.datas) {
-              
+                    
+                    if (_inviteFriendsArray.count ==0) {
+                        InviteFriendsDatas *data = allocAndInit(InviteFriendsDatas);
+                        data.realname = @"昵称";
+                        data.tel = @"号码";
+                        data.createtime = @"时间";
+                        data.authen = @"状态";
+                        [_inviteFriendsArray addObject:data];
+                        
+                    }
                     [_inviteFriendsArray addObject:data];
                 }
                 
@@ -330,7 +340,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (_selected ==0) {
-        return 85;
+        return 35;
     }
     
     UILabel * label = allocAndInit(UILabel);
@@ -344,12 +354,20 @@
         static NSString *cellID =@"InviteFriendsCell";
         InviteFriendsCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
         if (!cell) {
-            cell = [[InviteFriendsCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID cellHeight:85 cellWidth:frameWidth(_inviteFriendsView)];
+            cell = [[InviteFriendsCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID cellHeight:35 cellWidth:frameWidth(_inviteFriendsView)];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             
         }
         InviteFriendsDatas *data = _inviteFriendsArray[indexPath.row];
-        [cell dataModal:data];
+        BOOL isFirst = NO;
+        if (indexPath.row==0) {
+            isFirst = YES;
+        }
+        else
+        {
+            isFirst = NO;
+        }
+        [cell dataModal:data isFirst:isFirst];
         return cell;
     }
     
@@ -425,10 +443,12 @@
 @end
 @implementation InviteFriendsCell
 {
-    UIImageView *_icon;
-    UILabel   *_userName;
 
-    UILabel *_integral;
+    UILabel   *_userName;
+    UILabel   *_tel;
+    UILabel   *_time;
+    UILabel   *_status;
+    UILabel   *_line;
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier cellHeight:(float)cellHeight cellWidth:(float)cellWidth
@@ -436,51 +456,59 @@
     self =[super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         
-        self.backgroundColor =[UIColor clearColor];
+        self.backgroundColor =[UIColor whiteColor];
         self.selectionStyle =  UITableViewCellSelectionStyleNone;
         
         
-        UIImageView *bg =allocAndInitWithFrame(UIImageView , frame(15, 15, cellWidth - 30, cellHeight - 15));
-        bg.image = [UIImage imageNamed:@"yaoqinghaoyou"];
-        [self addSubview:bg];
+        _userName = [UILabel createLabelWithFrame:frame(0, 0, frameWidth(self)/4.0 - 10, cellHeight) text:@"" fontSize:24*SpacedFonts textColor:BlackTitleColor textAlignment:NSTextAlignmentCenter inView:self];
         
-        _icon = allocAndInitWithFrame(UIImageView, frame(22*ScreenMultiple, (frameHeight(bg)- 50)/2.0, 50, 50));
-        [_icon setRound];
-        [bg addSubview:_icon];
+         _tel = [UILabel createLabelWithFrame:frame(CGRectGetMaxX(_userName.frame), frameY(_userName), frameWidth(_userName) + 20, frameHeight(_userName)) text:@"" fontSize:24*SpacedFonts textColor:BlackTitleColor textAlignment:NSTextAlignmentCenter inView:self];
         
-        _userName = [UILabel createLabelWithFrame:frame(120*ScreenMultiple, 0, 140*ScreenMultiple, 22) text:@"接受你的邀请" fontSize:24*SpacedFonts textColor:LightBlackTitleColor textAlignment:NSTextAlignmentCenter inView:bg];
+         _time = [UILabel createLabelWithFrame:frame(CGRectGetMaxX(_tel.frame), frameY(_tel), frameWidth(_userName) + 20, frameHeight(_tel)) text:@"" fontSize:24*SpacedFonts textColor:BlackTitleColor textAlignment:NSTextAlignmentCenter inView:self];
         
-        _integral = [UILabel createLabelWithFrame:frame(frameX(_userName), CGRectGetMaxY(_userName.frame), frameWidth(_userName),40) text:@"\n邀请码" fontSize:24*SpacedFonts textColor:hexColor(df493f) textAlignment:NSTextAlignmentCenter inView:bg];
-        [_integral setBorder:hexColor(df493f) width:0.5];
-        _integral.numberOfLines = 0;
+         _status = [UILabel createLabelWithFrame:frame(CGRectGetMaxX(_time.frame), frameY(_time), frameWidth(_userName), frameHeight(_time)) text:@"" fontSize:24*SpacedFonts textColor:BlackTitleColor textAlignment:NSTextAlignmentCenter inView:self];
         
-        
+        _line = [UILabel CreateLineFrame:frame(0, cellHeight -  1, cellWidth, 1) inView:self];
+        _line.hidden = YES;
     }
     
     return self;
 }
 
 
-- (void)dataModal:(InviteFriendsDatas *)modal {
+- (void)dataModal:(InviteFriendsDatas *)modal isFirst:(BOOL)isFirst {
     
-    [[ToolManager shareInstance] imageView:_icon setImageWithURL:modal.imgurl placeholderType:PlaceholderTypeUserHead];
-    _userName.text = [NSString stringWithFormat:@"%@接受你的邀请",modal.realname];
-    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:_userName.text ];
+    _line.hidden = YES;
+    if (isFirst) {
+       _line.hidden = NO;
+    }
+    _userName.text = modal.realname;
     
-    [str addAttribute:NSForegroundColorAttributeName
-                value:hexColor(df493f)
-                range:[_userName.text  rangeOfString:modal.realname]];
-    _userName.attributedText = str;
-
-    _integral.text = [NSString stringWithFormat:@"%@\n邀请码",modal.invitecode];
+    _tel.text = [NSString stringWithFormat:@"%@",modal.tel];
     
+    if ([modal.createtime intValue]>0) {
+        _time.text =[modal.createtime timeformatString:@"yyyy-MM-dd"];
+    }
+    else
+    {
+        _time.text  = modal.createtime;
+    }
     
-    NSMutableAttributedString *str2 = [[NSMutableAttributedString alloc] initWithString:_integral.text ];
+    NSString *str = modal.authen;
+    if ([modal.authen intValue]==1) {
+       str = @"未认证";
+    }
+    if ([modal.authen intValue]==2) {
+        str = @"认证中";
+    }
+    if ([modal.authen intValue]==3) {
+        str = @"已认证";
+    }
+    if ([modal.authen intValue]==9) {
+        str = @"被驳回";
+    }
+     _status.text = str;
     
-    [str2 addAttribute:NSFontAttributeName
-                value:Size(38)
-                range:[_integral.text  rangeOfString:modal.invitecode]];
-    _integral.attributedText = str2;
 }
 
 @end
