@@ -17,10 +17,13 @@
 #import "ClueCommunityViewController.h"
 #import "AuthenticationViewController.h"
 #import "NSString+Extend.h"
+#import "MP3PlayerManager.h"
 @interface XianSuoDetailVC ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
+
 @property (strong,nonatomic)NSDictionary * xiansDic;
 @property (strong ,nonatomic)NSMutableArray * coopArr;
 @property (strong,nonatomic)UIView * lqhxV;
+
 @end
 
 @implementation XianSuoDetailVC
@@ -533,20 +536,27 @@
     [duihuaBtn addTarget: self action:@selector(duihuaAction) forControlEvents:UIControlEventTouchUpInside];
     [_duihuaV addSubview:duihuaBtn];
 }
--(void)addTheXsV
+-(void)addTheXsV  //线索View
 {
     _xsDetailV = [[UIView alloc]initWithFrame:CGRectMake(10, 181-64, SCREEN_WIDTH-20, 0)];
     _xsDetailV.backgroundColor = [UIColor whiteColor];
     [_bottomScr addSubview:_xsDetailV];
     
-    UILabel * titLab = [[UILabel alloc]initWithFrame:CGRectMake(0, 10, _xsDetailV.frame.size.width, 30)];
+    UILabel * titLab = [[UILabel alloc]initWithFrame:CGRectMake(0, 10, _xsDetailV.frame.size.width, 30)];//标题lab
     titLab.font = [UIFont systemFontOfSize:16];
     titLab.textColor = [UIColor blackColor];
     titLab.textAlignment = NSTextAlignmentCenter;
     titLab.text = [_xiansDic objectForKey:@"title"];
     [_xsDetailV addSubview:titLab];
     
-    UILabel * detailLab = [[UILabel alloc]initWithFrame:CGRectMake(3, 45, _xsDetailV.frame.size.width-6, 60)];
+    UIButton *soundBtn=[UIButton buttonWithType:UIButtonTypeCustom];//语音button
+    soundBtn.frame=CGRectMake(_xsDetailV.frame.size.width-40, 10, 30, 30);
+    [soundBtn setBackgroundImage: [UIImage imageNamed:@"aaa@3x"] forState:UIControlStateNormal];
+    [soundBtn addTarget:self action:@selector(soundBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [_xsDetailV addSubview:soundBtn];
+
+    
+    UILabel * detailLab = [[UILabel alloc]initWithFrame:CGRectMake(3, 45, _xsDetailV.frame.size.width-6, 60)];//内容lab
     detailLab.textColor = [UIColor colorWithWhite:0.502 alpha:1.000];
     detailLab.textAlignment = NSTextAlignmentCenter;
     detailLab.userInteractionEnabled = NO;
@@ -840,6 +850,19 @@
     _lqhxV.backgroundColor = [UIColor colorWithRed:0.867 green:0.875 blue:0.878 alpha:1.000];
     [self.view addSubview:_lqhxV];
 }
+
+#pragma mark - 语音点击按钮
+-(void)soundBtnClicked:(UIButton *)sender
+{
+    [[MP3PlayerManager shareInstance]audioPlayerWithURl:@"ddd" audioPlayerDidFinishPlayingBlock:^(AVAudioPlayer *player, BOOL flag) {
+        if (flag) {
+            
+        }else{
+            
+        }
+    }];
+}
+
 
 -(void)linqAction:(UIButton *)sender
 {
