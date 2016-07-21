@@ -9,7 +9,7 @@
 #import "FabuKuaJieVC.h"
 #import "XianSuoDetailInfo.h"
 #import "PayDingJinVC.h"
-#define kRecordAudioFile @"myRecord.caf"
+
 #import "MP3PlayerManager.h"
 @interface FabuKuaJieVC ()<UITextViewDelegate,UITextFieldDelegate>
 {
@@ -20,11 +20,11 @@
     UILabel *_promptLab;
     NSTimer *timer;
     NSInteger addtm;
-    NSInteger btnMark;
+    BOOL btnMark;
     double angle;
     NSInteger allTm;
     UIView * bjV;
-    AVCaptureSession *m_Capture;
+    
 }
 @property (strong,nonatomic)UITextField * titTex;
 @property (strong,nonatomic)UITextView * contTex;
@@ -47,7 +47,7 @@
     [self setBtmScr];
     timer=[[NSTimer alloc]init];
     
-    
+    btnMark=NO;
     
     
     
@@ -158,45 +158,6 @@
     [self addTheHYV:bjV.frame.size.height+bjV.frame.origin.y + 10];
 }
 
--(void)openMsound
-{
-    NSError *error;
-    m_Capture=[[AVCaptureSession alloc]init];
-    AVCaptureDevice *audioDev=[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-    if (audioDev==nil) {
-        NSLog(@"麦克风没权限");
-        
-        return;
-    }
-    // create mic device
-    AVCaptureDeviceInput *audioIn = [AVCaptureDeviceInput deviceInputWithDevice:audioDev error:&error];
-    if (error != nil)
-    {
-        NSLog("Couldn't create audio input");
-        return ;
-    }
-    
-    
-    // add mic device in capture object
-    if ([m_Capture canAddInput:audioIn] == NO)
-    {
-        NSLog(@"");
-        return ;
-    }
-    [m_Capture addInput:audioIn];
-    // export audio data
-    AVCaptureAudioDataOutput *audioOutput = [[AVCaptureAudioDataOutput alloc] init];
-    [audioOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
-    if ([m_Capture canAddOutput:audioOutput] == NO)
-    {
-        NSLog("Couldn't add audio output");
-        return ;
-    }
-    [m_Capture addOutput:audioOutput];
-    [audioOutput connectionWithMediaType:AVMediaTypeAudio];
-    [m_Capture startRunning];
-    return ;
-}
 
 #pragma -mark 录音相关
 -(void)soundBtnAction:(UIButton *)sender
@@ -245,7 +206,7 @@
         self.shapeLayer.hidden=YES;
         self.shapeLayer.strokeEnd=0;
         addtm=0;
-        
+        btnMark=YES;
         
     }else if(sender.tag==1003){//播放
         
@@ -264,18 +225,19 @@
         
     }else if(sender.tag==1004){//暂停
         sender.tag=1003;
-        
+        [[MP3PlayerManager shareInstance]stopPlayer];
         [self timerEnd];
         [_soundBtn setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
         self.shapeLayer.hidden=YES;
         self.shapeLayer.strokeEnd=0;
-        //        [[MP3PlayerManager shareInstance] stopPlayer];
+       
     }
 }
 -(void)repeatBtnAction:(UIButton *)sender//重录
 {
-    //    [[MP3PlayerManager shareInstance] removeAudioRecorder:kRecordAudioFile];
-    
+    btnMark=NO;
+        [[MP3PlayerManager shareInstance] stopAudioRecorder];
+        [[MP3PlayerManager shareInstance] removeAudioRecorder];
     [self timerEnd];
     _repeatBtn.userInteractionEnabled=NO;
     _repeatBtn.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
@@ -504,6 +466,7 @@
     payVC.content = _contTex.text;
     payVC.industry = induStr;
     payVC.jineStr = _moneyLab.text;
+    payVC.isAudio=btnMark;
     [self.navigationController pushViewController:payVC animated:YES];
 }
 -(void)hyAction:(UIButton *)sender

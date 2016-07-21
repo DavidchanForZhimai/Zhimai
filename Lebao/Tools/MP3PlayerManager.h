@@ -18,7 +18,7 @@
 //
 - (void)audioRecorderWithURl:(NSString *)url;
 - (void)stopAudioRecorder;
-- (void)removeAudioRecorder:(NSString *)url;
-//- (void)stopPlayer;
+- (void)removeAudioRecorder;
+- (void)stopPlayer;
 - (void)audioPlayerWithURl:(NSString *)url;
 @end

@@ -851,17 +851,11 @@
     [self.view addSubview:_lqhxV];
 }
 
-//#pragma mark - 语音点击按钮
-//-(void)soundBtnClicked:(UIButton *)sender
-//{
-//    [[MP3PlayerManager shareInstance]audioPlayerWithURl:@"ddd" audioPlayerDidFinishPlayingBlock:^(AVAudioPlayer *player, BOOL flag) {
-//        if (flag) {
-//            
-//        }else{
-//            
-//        }
-//    }];
-//}
+#pragma mark - 语音点击按钮
+-(void)soundBtnClicked:(UIButton *)sender
+{
+   [[MP3PlayerManager shareInstance] audioRecorderWithURl:kRecordAudioFile];
+}
 
 
 -(void)linqAction:(UIButton *)sender

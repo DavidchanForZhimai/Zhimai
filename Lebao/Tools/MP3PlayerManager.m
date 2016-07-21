@@ -43,18 +43,9 @@ static MP3PlayerManager* mP3PlayerManager;
     
 }
 //删除录音
-- (void)removeAudioRecorder:(NSString *)url
+- (void)removeAudioRecorder
 {
-    //    _url = url;
-    //    NSFileManager *fileManager = [NSFileManager defaultManager];
-    //    NSError *error = nil;
-    //    if ([fileManager fileExistsAtPath:[self getSavePathStr]]) {
-    //         NSLog(@"url=%@",[self getSavePathStr]);
-    //
-    //            [fileManager removeItemAtPath:[self getSavePathStr] error:&error];
-    //
-    //
-    //    }
+    [self.audioRecorder deleteRecording];
 }
 
 //播放
@@ -69,7 +60,11 @@ static MP3PlayerManager* mP3PlayerManager;
     
     [self.audioPlayer play];
 }
-
+//停止播放
+-(void)stopPlayer
+{
+    [self.audioPlayer stop];
+}
 #pragma mark - 私有方法
 /**
  *  设置音频会话

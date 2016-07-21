@@ -30,4 +30,5 @@ typedef enum {
 @property (strong,nonatomic)NSString * bfb;
 @property (strong,nonatomic)NSString * xsID;
 @property (strong,nonatomic)NSString * qwjeStr;
+@property (nonatomic,assign)BOOL isAudio;
 @end
