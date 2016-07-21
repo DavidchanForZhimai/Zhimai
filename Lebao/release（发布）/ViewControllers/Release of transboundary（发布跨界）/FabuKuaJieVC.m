@@ -24,7 +24,7 @@
     double angle;
     NSInteger allTm;
     UIView * bjV;
-
+    AVCaptureSession *m_Capture;
 }
 @property (strong,nonatomic)UITextField * titTex;
 @property (strong,nonatomic)UITextView * contTex;
@@ -134,7 +134,7 @@
     self.shapeLayer.lineWidth=3.0f;//线宽
     self.shapeLayer.strokeColor=[UIColor colorWithRed:0.243 green:0.553 blue:1.000 alpha:1.000].CGColor;//线色
     UIBezierPath *circlePath=[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, SCREEN_WIDTH/4-2, SCREEN_WIDTH/4-2)];//创建出圆形贝塞尔曲线
-
+    
     self.shapeLayer.path=circlePath.CGPath;//让贝塞尔曲线与CAShapeLayer产生联系
     self.shapeLayer.strokeStart=0;
     self.shapeLayer.strokeEnd=0;
@@ -158,77 +158,110 @@
     [self addTheHYV:bjV.frame.size.height+bjV.frame.origin.y + 10];
 }
 
+-(void)openMsound
+{
+    NSError *error;
+    m_Capture=[[AVCaptureSession alloc]init];
+    AVCaptureDevice *audioDev=[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+    if (audioDev==nil) {
+        NSLog(@"麦克风没权限");
+        
+        return;
+    }
+    // create mic device
+    AVCaptureDeviceInput *audioIn = [AVCaptureDeviceInput deviceInputWithDevice:audioDev error:&error];
+    if (error != nil)
+    {
+        NSLog("Couldn't create audio input");
+        return ;
+    }
+    
+    
+    // add mic device in capture object
+    if ([m_Capture canAddInput:audioIn] == NO)
+    {
+        NSLog(@"");
+        return ;
+    }
+    [m_Capture addInput:audioIn];
+    // export audio data
+    AVCaptureAudioDataOutput *audioOutput = [[AVCaptureAudioDataOutput alloc] init];
+    [audioOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
+    if ([m_Capture canAddOutput:audioOutput] == NO)
+    {
+        NSLog("Couldn't add audio output");
+        return ;
+    }
+    [m_Capture addOutput:audioOutput];
+    [audioOutput connectionWithMediaType:AVMediaTypeAudio];
+    [m_Capture startRunning];
+    return ;
+}
+
 #pragma -mark 录音相关
 -(void)soundBtnAction:(UIButton *)sender
 {
     
     
-    NSLog(@"send.tag=%ld",sender.tag);
+    if (![[MP3PlayerManager shareInstance] canRecord]) {
+        
+        [[ToolManager shareInstance] showAlertViewTitle:@"提示" contentText:@"请到设置-隐私-麦克风-打开麦克风权限" showAlertViewBlcok:^{
+            
+        }];
+        return;
+    }
+  
     
     if (sender.tag==1001) {//开始录音
-        NSLog(@"=====g%ld",sender.tag);
-        [[MP3PlayerManager shareInstance] audioRecorderWithURl:kRecordAudioFile startRecoderBlock:^(BOOL flag) {
-            NSLog(@"flag%d",flag);
-            if (flag) {
-       
-                addtm=0;
-                allTm=6000;
-                sender.tag=1002;
-            _repeatBtn.userInteractionEnabled=YES;
+        
+        [[MP3PlayerManager shareInstance] audioRecorderWithURl:kRecordAudioFile];
+        
+        
+        addtm=0;
+        allTm=6000;
+        sender.tag=1002;
+        _repeatBtn.userInteractionEnabled=YES;
         _repeatBtn.backgroundColor=[UIColor orangeColor];
-         [_repeatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [sender setImage:[UIImage imageNamed:@"luyinzhong"] forState:UIControlStateNormal];
-                self.shapeLayer.hidden=NO;
-        NSLog(@"fhhhhhhhhg%ld",sender.tag);
+        [_repeatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [sender setImage:[UIImage imageNamed:@"luyinzhong"] forState:UIControlStateNormal];
+        self.shapeLayer.hidden=NO;
         
-                [self timerStart];
         
-
-            }
-            else
-            {
-                [[ToolManager shareInstance] showAlertMessage:@"录音失败"];
-            }
-        }];
         
+        [self timerStart];
         
     }else if(sender.tag==1002){//停止录音
         [self timerEnd];
         allTm=addtm;
         sender.tag=1003;
         [[MP3PlayerManager shareInstance] stopAudioRecorder];
-      
-       
+        
+        
         [sender setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
         
         _promptLab.text=@"播放试听";
-       
+        
         
         self.shapeLayer.hidden=YES;
         self.shapeLayer.strokeEnd=0;
+        addtm=0;
         
-
         
     }else if(sender.tag==1003){//播放
         
         
-//            [[MP3PlayerManager shareInstance] audioPlayerWithURl:kRecordAudioFile audioPlayerDidFinishPlayingBlock:^(AVAudioPlayer *player, BOOL flag) {
+        [[MP3PlayerManager shareInstance] audioPlayerWithURl:kRecordAudioFile];
+        addtm=0;
         
-//                        if (flag) {
-      
-                            addtm=0;
-                            
-                            sender.tag=1004;
-                            [_soundBtn setImage:[UIImage imageNamed:@"zanting"] forState:UIControlStateNormal];
-                            self.shapeLayer.strokeEnd=0;
-                            self.shapeLayer.hidden=NO;
-                            [self timerStart];
-
-//                        }else NSLog(@"播放失败");
-//                    }];
-    
-
-
+        sender.tag=1004;
+        [_soundBtn setImage:[UIImage imageNamed:@"zanting"] forState:UIControlStateNormal];
+        self.shapeLayer.strokeEnd=0;
+        self.shapeLayer.hidden=NO;
+        
+        
+        
+        [self timerStart];
+        
     }else if(sender.tag==1004){//暂停
         sender.tag=1003;
         
@@ -236,12 +269,12 @@
         [_soundBtn setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
         self.shapeLayer.hidden=YES;
         self.shapeLayer.strokeEnd=0;
-//        [[MP3PlayerManager shareInstance] stopPlayer];
+        //        [[MP3PlayerManager shareInstance] stopPlayer];
     }
 }
 -(void)repeatBtnAction:(UIButton *)sender//重录
 {
-//    [[MP3PlayerManager shareInstance] removeAudioRecorder:kRecordAudioFile];
+    //    [[MP3PlayerManager shareInstance] removeAudioRecorder:kRecordAudioFile];
     
     [self timerEnd];
     _repeatBtn.userInteractionEnabled=NO;
@@ -262,28 +295,31 @@
 
 -(void)timerChange  //定时器事件
 {
+    //    NSLog(@"addtm=%ld",addtm);
+    //    NSLog(@"alltm=%ld",allTm);
     angle=1.0/allTm;
     if(addtm<allTm){
-     _timerLab.text=[NSString stringWithFormat:@"%ld\"",addtm/
-                     100];
-    self.shapeLayer.strokeEnd+=angle;
+        _timerLab.text=[NSString stringWithFormat:@"%ld\"",addtm/
+                        100];
+        self.shapeLayer.strokeEnd+=angle;
         
-//        NSLog(@"%lf",self.shapeLayer.strokeEnd);
-              addtm+=1;
+        //        NSLog(@"%lf",self.shapeLayer.strokeEnd);
+        addtm+=1;
     }
-    else{
+    else if(addtm>=allTm){
+        [self timerEnd];
         _soundBtn.tag=1004;
         [self soundBtnAction:_soundBtn];
-       
-        [self timerEnd];
+        
+        
         
         
         self.shapeLayer.hidden=YES;
         self.shapeLayer.strokeEnd=0;
-       
+        return;
         
     }
-
+    
     
 }
 
@@ -333,7 +369,7 @@
     tempBtn = [hanyeV viewWithTag:100];
     tempBtn.backgroundColor = [UIColor colorWithRed:0.243 green:0.553 blue:1.000 alpha:1.000];
     [tempBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-
+    
     [self addTheBCV:hanyeV.frame.size.height+hanyeV.frame.origin.y+10];
 }
 -(void)addTheBCV:(CGFloat)orgY
@@ -361,7 +397,7 @@
     _bcTex.delegate = self;
     _bcTex.font = [UIFont systemFontOfSize:15];
     [bcV addSubview:_bcTex];
-
+    
     UILabel * djLab = [[UILabel alloc]initWithFrame:CGRectMake((SCREEN_WIDTH-100)/2, 110, 100, 20)];
     djLab.textAlignment = NSTextAlignmentCenter;
     djLab.textColor = [UIColor blackColor];
@@ -369,7 +405,7 @@
     djLab.font = [UIFont systemFontOfSize:12];
     [bcV addSubview:djLab];
     
-   
+    
     
     
     _moneyLab = [[UILabel alloc]initWithFrame:CGRectMake((SCREEN_WIDTH-150)/2, 130, 150, 25)];
@@ -432,7 +468,7 @@
     if ([tempBtn.titleLabel.text isEqualToString:@"保险"]) {
         
         if ([_bcTex.text intValue]<200) {
-           
+            
             HUDText(@"保险类成交报酬最低为200元");
             return;
         }
@@ -459,7 +495,7 @@
         }
         induStr = @"car";
     }
-
+    
     NSLog(@"%@",induStr);
     PayDingJinVC * payVC = [[PayDingJinVC alloc]init];
     payVC.zfymType = FaBuZhiFu;
@@ -475,28 +511,28 @@
     [tempBtn setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
     tempBtn.backgroundColor = [UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
     sender.backgroundColor = [UIColor colorWithRed:0.243 green:0.553 blue:1.000 alpha:1.000];
-     [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     tempBtn = sender;
-     if ([tempBtn.titleLabel.text isEqualToString:@"保险"]) {
+    if ([tempBtn.titleLabel.text isEqualToString:@"保险"]) {
         _bcTex.placeholder = @"请输入您的成交报酬(请不小于200元)";
     }
     if ([tempBtn.titleLabel.text isEqualToString:@"金融"]) {
         _bcTex.placeholder = @"请输入您的成交报酬(请不小于500元)";
-          }
+    }
     if ([tempBtn.titleLabel.text isEqualToString:@"房产"]) {
         _bcTex.placeholder = @"请输入您的成交报酬(请不小于2000元)";
-          }
+    }
     if ([tempBtn.titleLabel.text isEqualToString:@"车行"]) {
         _bcTex.placeholder = @"请输入您的成交报酬(请不小于500元)";
-         }
-
+    }
+    
     NSLog(@"%ld",sender.tag);
 }
 -(void)setNav
 {
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.navigationController.navigationBar.hidden = YES;
-   
+    
     UIView * navView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 64)];
     navView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:navView];
@@ -595,7 +631,6 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [self removeNoti];
-    [[MP3PlayerManager shareInstance] stopAudioRecorder];
 }
 
 
@@ -605,13 +640,13 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

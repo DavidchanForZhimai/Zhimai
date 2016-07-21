@@ -23,21 +23,16 @@ static MP3PlayerManager* mP3PlayerManager;
 }
 
 //录音
-- (void)audioRecorderWithURl:(NSString *)url startRecoderBlock:(StartRecoderBlock)startRecoderBlock
+- (void)audioRecorderWithURl:(NSString *)url
 {
     
     _url = url;
-    _startRecoderBlock = startRecoderBlock;
+    
     [self setAudioSession];
-     NSLog(@"[self.audioRecorder record]111 = %i",[self.audioRecorder record]);
     if (![self.audioRecorder isRecording]) {
         [self.audioRecorder record];
-        NSLog(@"[self.audioRecorder record]222 = %i",[self.audioRecorder record]);
-        if ([self.audioRecorder record]) {
-            _startRecoderBlock(YES);//首次使用应用时如果调用record方法会询问用户是否允许使用麦克风
-        }
+        //首次使用应用时如果调用record方法会询问用户是否允许使用麦克风
         
-       
     }
     
 }
@@ -50,29 +45,29 @@ static MP3PlayerManager* mP3PlayerManager;
 //删除录音
 - (void)removeAudioRecorder:(NSString *)url
 {
-//    _url = url;
-//    NSFileManager *fileManager = [NSFileManager defaultManager];
-//    NSError *error = nil;
-//    if ([fileManager fileExistsAtPath:[self getSavePathStr]]) {
-//         NSLog(@"url=%@",[self getSavePathStr]);
-//    
-//            [fileManager removeItemAtPath:[self getSavePathStr] error:&error];
-//            
-//        
-//    }
+    //    _url = url;
+    //    NSFileManager *fileManager = [NSFileManager defaultManager];
+    //    NSError *error = nil;
+    //    if ([fileManager fileExistsAtPath:[self getSavePathStr]]) {
+    //         NSLog(@"url=%@",[self getSavePathStr]);
+    //
+    //            [fileManager removeItemAtPath:[self getSavePathStr] error:&error];
+    //
+    //
+    //    }
 }
 
 //播放
-- (void)audioPlayerWithURl:(NSString *)url audioPlayerDidFinishPlayingBlock:(AudioPlayerDidFinishPlayingBlock)audioPlayerDidFinishPlayingBlock
+- (void)audioPlayerWithURl:(NSString *)url
 {
-
+    
     AVAudioSession *session = [AVAudioSession sharedInstance];
     NSError *error;
     [session setCategory:AVAudioSessionCategoryPlayback error:&error];
-
+    NSLog(@"errrrr%@",error);
     _url = url;
-    _audioPlayerDidFinishPlayingBlock = audioPlayerDidFinishPlayingBlock;
-    [_audioPlayer play];
+    
+    [self.audioPlayer play];
 }
 
 #pragma mark - 私有方法
@@ -94,14 +89,14 @@ static MP3PlayerManager* mP3PlayerManager;
 -(NSURL *)getSavePath{
     NSString *urlStr=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     urlStr=[urlStr stringByAppendingPathComponent:_url];
-//    NSLog(@"file path:%@",urlStr);
+    //    NSLog(@"file path:%@",urlStr);
     NSURL *url=[NSURL fileURLWithPath:urlStr];
     return url;
 }
 -(NSString *)getSavePathStr{
     NSString *urlStr=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     urlStr=[urlStr stringByAppendingPathComponent:_url];
-//    NSLog(@"file path:%@",urlStr);
+    //    NSLog(@"file path:%@",urlStr);
     return urlStr;
 }
 
@@ -147,20 +142,20 @@ static MP3PlayerManager* mP3PlayerManager;
         _audioRecorder=[[AVAudioRecorder alloc]initWithURL:url settings:setting error:&error];
         
         _audioRecorder.delegate=self;
-        _audioRecorder.meteringEnabled=YES;//如果要监控声波则必须设置为YES
+        //        _audioRecorder.meteringEnabled=YES;//如果要监控声波则必须设置为YES
         if (error) {
-            NSLog(@"创建录音过程中发生错误，错误信息：%@",error.localizedDescription);
-            _startRecoderBlock(NO);
+            NSLog(@"创建播放器过程中发生错误，错误信息：%@",error.localizedDescription);
+            
             return nil;
         }
-        
+        else
+        {
+            
+        }
     }
     return _audioRecorder;
 }
-- (void)audioRecorderBeginInterruption:(AVAudioRecorder *)recorder
-{
-    NSLog(@"audioRecorderBeginInterruption");
-}
+
 /**
  *  创建播放器
  *
@@ -174,12 +169,8 @@ static MP3PlayerManager* mP3PlayerManager;
         _audioPlayer.numberOfLoops=0;
         [_audioPlayer prepareToPlay];
         _audioPlayer.delegate = self;
-        if (error) {
-            NSLog(@"创建播放器过程中发生错误，错误信息：%@",error.localizedDescription);
-            return nil;
-        }
         
-
+        
     }
     return _audioPlayer;
 }
@@ -193,22 +184,36 @@ static MP3PlayerManager* mP3PlayerManager;
  */
 -(void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
     if (![self.audioPlayer isPlaying]) {
-
+        
     }
     NSLog(@"录音完成!");
 }
 #pragma mark - 播放器代理方法
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
-    if (_audioPlayerDidFinishPlayingBlock) {
-        _audioPlayerDidFinishPlayingBlock(player,flag);
-    }
-}
-
-/* if an error occurs while decoding it will be reported to the delegate. */
-- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError * __nullable)error
-{
     
+    NSLog(@"bofang完成!");
 }
 
+//新增api,获取录音权限. 返回值,YES为无拒绝,NO为拒绝录音.
+
+- (BOOL)canRecord
+{
+    __block BOOL bCanRecord = YES;
+    if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0"] != NSOrderedAscending)
+    {
+        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+        if ([audioSession respondsToSelector:@selector(requestRecordPermission:)]) {
+            [audioSession performSelector:@selector(requestRecordPermission:) withObject:^(BOOL granted) {
+                if (granted) {
+                    bCanRecord = YES;
+                } else {
+                    bCanRecord = NO;
+                }
+            }];
+        }
+    }
+    
+    return bCanRecord;
+}
 @end
