@@ -7,6 +7,8 @@
 //
 
 #import "MP3PlayerManager.h"
+#import "lame.h"
+#import "XLNetworkRequest.h"
 static MP3PlayerManager* mP3PlayerManager;
 @implementation MP3PlayerManager
 + (MP3PlayerManager *)shareInstance
@@ -39,12 +41,17 @@ static MP3PlayerManager* mP3PlayerManager;
 //停止录音
 - (void)stopAudioRecorder
 {
+    
     [self.audioRecorder stop];
     
 }
 //删除录音
 - (void)removeAudioRecorder
 {
+    if ([self.audioRecorder isRecording]) {
+        [self.audioRecorder stop];
+        NSLog(@"======================?????");
+    }
     [self.audioRecorder deleteRecording];
 }
 
@@ -57,13 +64,18 @@ static MP3PlayerManager* mP3PlayerManager;
     [session setCategory:AVAudioSessionCategoryPlayback error:&error];
     NSLog(@"errrrr%@",error);
     _url = url;
+    if (![self.audioPlayer isPlaying]) {
+        [self.audioPlayer play];
+    }
     
-    [self.audioPlayer play];
 }
 //停止播放
 -(void)stopPlayer
 {
-    [self.audioPlayer stop];
+    if ([self.audioPlayer isPlaying]) {
+        [self.audioPlayer stop];
+    }
+    
 }
 #pragma mark - 私有方法
 /**
@@ -101,24 +113,18 @@ static MP3PlayerManager* mP3PlayerManager;
  *  @return 录音设置
  */
 -(NSDictionary *)getAudioSetting{
-    NSMutableDictionary *dicM=[NSMutableDictionary dictionary];
-    //设置录音格式
-    [dicM setObject:@(kAudioFormatLinearPCM) forKey:AVFormatIDKey];
-    //设置录音采样率，8000是电话采样率，对于一般录音已经够了
-    [dicM setObject:@(8000) forKey:AVSampleRateKey];
-    //设置通道,这里采用单声道
-    [dicM setObject:@(2) forKey:AVNumberOfChannelsKey];
-    //每个采样点位数,分为8、16、24、32
-    [dicM setObject:@(8) forKey:AVLinearPCMBitDepthKey];
-    //是否使用浮点数采样
-    [dicM setObject:@(YES) forKey:AVLinearPCMIsFloatKey];
-    //声音质量
-    [dicM setObject:@(AVAudioQualityMedium) forKey:AVEncoderAudioQualityKey];
-    //音频编码的比特率
-    [dicM setObject:@(128000) forKey:AVEncoderBitRateKey];
+    NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
+    //录音格式 无法使用
+    [settings setValue :[NSNumber numberWithInt:kAudioFormatLinearPCM] forKey: AVFormatIDKey];
+    //采样率
+    [settings setValue :[NSNumber numberWithFloat:11025.0] forKey: AVSampleRateKey];//44100.0
+    //通道数
+    [settings setValue :[NSNumber numberWithInt:2] forKey: AVNumberOfChannelsKey];
+    //音频质量,采样质量
+    [settings setValue:[NSNumber numberWithInt:AVAudioQualityMin] forKey:AVEncoderAudioQualityKey];
     
     //....其他设置等
-    return dicM;
+    return settings;
 }
 
 /**
@@ -178,9 +184,7 @@ static MP3PlayerManager* mP3PlayerManager;
  *  @param flag     是否成功
  */
 -(void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
-    if (![self.audioPlayer isPlaying]) {
-        
-    }
+   
     NSLog(@"录音完成!");
 }
 #pragma mark - 播放器代理方法
@@ -210,5 +214,119 @@ static MP3PlayerManager* mP3PlayerManager;
     }
     
     return bCanRecord;
+}
+
+//转MP3
+- (void)convertMp3FinishBlock:(FinishBlock)finishBlock
+{
+    
+    NSString *cafFilePath = [self getSavePathStr];
+    NSString *mp3FilePath = [self mp3Path];
+    
+    @try {
+        int read, write;
+        
+        FILE *pcm = fopen([cafFilePath cStringUsingEncoding:1], "rb");  //source 被转换的音频文件位置
+        fseek(pcm, 4*1024, SEEK_CUR);                                   //skip file header
+        FILE *mp3 = fopen([mp3FilePath cStringUsingEncoding:1], "wb");  //output 输出生成的Mp3文件位置
+        
+        const int PCM_SIZE = 8192;
+        const int MP3_SIZE = 8192;
+        short int pcm_buffer[PCM_SIZE*2];
+        unsigned char mp3_buffer[MP3_SIZE];
+        
+        lame_t lame = lame_init();
+        lame_set_in_samplerate(lame, 11025.0);
+        lame_set_VBR(lame, vbr_default);
+        lame_init_params(lame);
+        
+        do {
+            read = (int)fread(pcm_buffer, 2*sizeof(short int), PCM_SIZE, pcm);
+            if (read == 0)
+                write = lame_encode_flush(lame, mp3_buffer, MP3_SIZE);
+            else
+                write = lame_encode_buffer_interleaved(lame, pcm_buffer, read, mp3_buffer, MP3_SIZE);
+            
+            fwrite(mp3_buffer, write, 1, mp3);
+            
+        } while (read != 0);
+        
+        lame_close(lame);
+        fclose(mp3);
+        fclose(pcm);
+    }
+    @catch (NSException *exception) {
+//        NSLog(@"%@",[exception description]);
+        [[ToolManager shareInstance] showAlertMessage:[exception description]];
+    }
+    @finally {
+        [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategorySoloAmbient error: nil];
+    }
+    
+   
+    if (finishBlock) {
+        finishBlock(YES);
+    }
+}
+- (NSString *)mp3Path
+{
+    NSString *mp3FileName = @"Mp3File";
+    mp3FileName = [mp3FileName stringByAppendingString:@".mp3"];
+    NSString *mp3FilePath = [[NSHomeDirectory() stringByAppendingFormat:@"/Documents/"] stringByAppendingPathComponent:mp3FileName];
+    
+    return mp3FilePath;
+}
+//上传音频道服务器
+- (void)uploadAudioWithType:(NSString *)type finishuploadBlock:(FinishuploadBlock)finishuploadBlock{
+    
+    [self convertMp3FinishBlock:^(BOOL succeed) {
+        if (succeed) {
+
+            XLFileConfig *fileConfig = allocAndInit(XLFileConfig);
+            NSData *audioData =[NSData dataWithContentsOfFile:[self mp3Path]];
+            fileConfig.fileData = audioData;
+            fileConfig.name = @"audioFile";
+            fileConfig.fileName =@"audio.mp3";
+            fileConfig.mimeType =@"audio/mp3";
+            NSMutableDictionary *parameter = [Parameter parameterWithSessicon];
+            [parameter setObject:type forKey:Type];
+            [parameter setObject:@"audioFile" forKey:@"name"];
+//            [[ToolManager shareInstance] showWithStatus:@"上传音频中..."];
+            [XLNetworkRequest updateRequest:UploadAudioURL params:parameter fileConfig:fileConfig success:^(id responseObj) {
+                
+                NSLog(@"responseObj =%@ parameter= %@",responseObj,parameter);
+                
+                if (responseObj) {
+                   
+                    if ([responseObj[@"rtcode"]intValue] ==1) {
+                        [[ToolManager shareInstance] dismiss];
+                    
+                        finishuploadBlock(YES,responseObj);
+                    
+                        }
+                        else
+                        {
+                         [[ToolManager shareInstance] showInfoWithStatus:responseObj[@"rtmsg"]];
+                        }
+                    
+                }
+                else
+                {
+                    [[ToolManager shareInstance] showInfoWithStatus];
+                }
+                
+                
+            } failure:^(NSError *error) {
+                
+                [[ToolManager shareInstance] showInfoWithStatus];
+            }];
+        }
+        else
+        {
+            [[ToolManager shareInstance] showInfoWithStatus:@" 转化MP3格式错误"];
+        }
+    }];
+    
+
 }
 @end

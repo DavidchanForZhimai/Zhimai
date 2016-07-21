@@ -137,7 +137,7 @@ typedef NS_ENUM(NSUInteger,ButtonActionTag) {
     [_sendSound setTitle:@"发送" forState:UIControlStateNormal];
     [_sendSound addTarget:self action:@selector(repeatAndSendBtnAction:) forControlEvents:UIControlEventTouchUpInside];
     _sendSound.userInteractionEnabled=NO;
-    _sendSound.tag=1101;
+    _sendSound.tag=1102;
     [bjV addSubview:_sendSound];
 
 
@@ -208,7 +208,8 @@ typedef NS_ENUM(NSUInteger,ButtonActionTag) {
         sender.tag=1003;
         [[MP3PlayerManager shareInstance] stopAudioRecorder];
         
-        
+        _sendSound.backgroundColor=[UIColor orangeColor];
+        [_sendSound setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [sender setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
         
         _promptLab.text=@"播放试听";
@@ -246,12 +247,16 @@ typedef NS_ENUM(NSUInteger,ButtonActionTag) {
 }
 -(void)repeatAndSendBtnAction:(UIButton *)sender//重录
 {
-    [[MP3PlayerManager shareInstance] stopAudioRecorder];
-    [[MP3PlayerManager shareInstance] removeAudioRecorder];
+    
+//    [[MP3PlayerManager shareInstance] stopAudioRecorder];
+//    [[MP3PlayerManager shareInstance] removeAudioRecorder];
     [self timerEnd];
     _repeatBtn.userInteractionEnabled=NO;
     _repeatBtn.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
     [_repeatBtn setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
+    _sendSound.userInteractionEnabled=NO;
+    _sendSound.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
+    [_sendSound setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
     _soundBtn.tag=1001;
     [_soundBtn setImage:[UIImage imageNamed:@"yuying@3x"] forState:UIControlStateNormal];
     _timerLab.text=@"0\"";

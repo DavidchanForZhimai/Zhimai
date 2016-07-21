@@ -236,7 +236,7 @@
 -(void)repeatBtnAction:(UIButton *)sender//重录
 {
     btnMark=NO;
-        [[MP3PlayerManager shareInstance] stopAudioRecorder];
+//        [[MP3PlayerManager shareInstance] stopAudioRecorder];
         [[MP3PlayerManager shareInstance] removeAudioRecorder];
     [self timerEnd];
     _repeatBtn.userInteractionEnabled=NO;

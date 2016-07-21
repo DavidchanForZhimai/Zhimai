@@ -11,6 +11,7 @@
 #import "ToolManager.h"
 #import "WetChatPayManager.h"
 #import "MyKuaJieVC.h"
+#import "MP3PlayerManager.h"
 @interface PayDingJinVC ()
 typedef enum {
     zhimaizhifuType=0,//知脉支付
@@ -125,27 +126,66 @@ typedef enum {
      MyKuaJieVC *myKuaJieVC =  allocAndInit(MyKuaJieVC);
     if (_zfymType == FaBuZhiFu) {
         
-        [[XianSuoDetailInfo shareInstance]faBuKuaJieWithTitle:_titStr andContent:_content andIndustry:_industry andCost:_qwjeStr andPaytype:zhifuType andCallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
+        if (_isAudio) {
             
-            if (issucced == YES) {
+            [[MP3PlayerManager shareInstance] uploadAudioWithType:@"mp3" finishuploadBlock:^(BOOL succeed,id  audioDic) {
+                NSLog(@"audioDic =%@",audioDic);
+                NSLog(@"%@%@",ImageURLS,audioDic[@"audiourl"]);
                 
-                if (_moneyType==weixinzhifuType) {
-                    [[WetChatPayManager shareInstance]wxPay:jsonDic succeedMeg:@"发布成功！" recharge:@"0" wetChatPaySucceed:^(NSString *payMoney) {
-                        
-                        PushView(self, myKuaJieVC);
-                    }];
-                    return ;
-                    
-                }
-                [[ToolManager shareInstance] showSuccessWithStatus:@"发布成功！"];
-                 PushView(self, myKuaJieVC);
-            }
-            else
-            {
-              [[ToolManager shareInstance]showAlertMessage:info];
-            }
-            
+                NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://pic.lmlm.cn/record/201607/21/146908531456209.mp3"]];
+
+                [data writeToFile:@"/Users/yanwenbin/Desktop/mp3.mp3" atomically:YES];
+                
+                        [[XianSuoDetailInfo shareInstance]faBuKuaJieWithTitle:_titStr andContent:_content andIndustry:_industry andCost:_qwjeStr andPaytype:zhifuType audiosUrl:audioDic[@"audiourl"] andCallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
+                
+                            if (issucced == YES) {
+                
+                                if (_moneyType==weixinzhifuType) {
+                                    [[WetChatPayManager shareInstance]wxPay:jsonDic succeedMeg:@"发布成功！" recharge:@"0" wetChatPaySucceed:^(NSString *payMoney) {
+                
+                                        PushView(self, myKuaJieVC);
+                                    }];
+                                    return ;
+                
+                                }
+                                [[ToolManager shareInstance] showSuccessWithStatus:@"发布成功！"];
+                                 PushView(self, myKuaJieVC);
+                            }
+                            else
+                            {
+                              [[ToolManager shareInstance]showAlertMessage:info];
+                            }
+                            
+                            }];
+           
             }];
+        }
+        else
+        {
+            [[XianSuoDetailInfo shareInstance]faBuKuaJieWithTitle:_titStr andContent:_content andIndustry:_industry andCost:_qwjeStr andPaytype:zhifuType audiosUrl:nil andCallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
+                
+                if (issucced == YES) {
+                    
+                    if (_moneyType==weixinzhifuType) {
+                        [[WetChatPayManager shareInstance]wxPay:jsonDic succeedMeg:@"发布成功！" recharge:@"0" wetChatPaySucceed:^(NSString *payMoney) {
+                            
+                            PushView(self, myKuaJieVC);
+                        }];
+                        return ;
+                        
+                    }
+                    [[ToolManager shareInstance] showSuccessWithStatus:@"发布成功！"];
+                    PushView(self, myKuaJieVC);
+                }
+                else
+                {
+                    [[ToolManager shareInstance]showAlertMessage:info];
+                }
+                
+            }];
+ 
+        }
+
     }else if(_zfymType == LingQuZhiFu){
        
            [[XianSuoDetailInfo shareInstance]lqxsWithID:_xsID andRadio:[_bfb stringByReplacingOccurrencesOfString:@"%" withString:@""] andDeposit:_jineStr andPaytype:@"amount" andCallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
@@ -197,4 +237,5 @@ typedef enum {
 
 
 }
+
 @end

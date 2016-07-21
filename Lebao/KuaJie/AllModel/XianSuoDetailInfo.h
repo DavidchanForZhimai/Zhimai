@@ -16,7 +16,7 @@ typedef void (^xianSuoDetailCallbackType2)(BOOL issucced, NSString* info, NSDict
 //获取可用余额
 -(void)getAmountWith:(xianSuoDetailCallbackType2)callBack;
 //发布跨界
--(void)faBuKuaJieWithTitle:(NSString *)title andContent:(NSString *)content andIndustry:(NSString *)industry andCost:(NSString *)cost andPaytype:(NSString *)paytype andCallBack:(xianSuoDetailCallbackType2)callBack;
+-(void)faBuKuaJieWithTitle:(NSString *)title andContent:(NSString *)content andIndustry:(NSString *)industry andCost:(NSString *)cost andPaytype:(NSString *)paytype audiosUrl:(NSString *)audiosUrl andCallBack:(xianSuoDetailCallbackType2)callBack;
 //线索领取
 -(void)lqxsWithID:(NSString *)xiansuoID andRadio:(NSString *)radio andDeposit:(NSString *)deposit andPaytype:(NSString *)paytype andCallBack:(xianSuoDetailCallbackType2)callback;
 //支付尾款

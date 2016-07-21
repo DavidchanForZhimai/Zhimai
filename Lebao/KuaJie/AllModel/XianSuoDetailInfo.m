@@ -83,7 +83,7 @@
     }];
 
 }
--(void)faBuKuaJieWithTitle:(NSString *)title andContent:(NSString *)content andIndustry:(NSString *)industry andCost:(NSString *)cost andPaytype:(NSString *)paytype andCallBack:(xianSuoDetailCallbackType2)callBack
+-(void)faBuKuaJieWithTitle:(NSString *)title andContent:(NSString *)content andIndustry:(NSString *)industry andCost:(NSString *)cost andPaytype:(NSString *)paytype audiosUrl:(NSString *)audiosUrl andCallBack:(xianSuoDetailCallbackType2)callBack
 {
     NSString * url = [NSString stringWithFormat:@"%@demand/save",HOST_URL];
      NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
@@ -92,6 +92,9 @@
      [parameters setValue:cost forKey:@"cost"];
      [parameters setValue:paytype forKey:@"paytype"];
      [parameters setValue:content forKey:@"content"];
+    if (audiosUrl) {
+        [parameters setValue:audiosUrl forKey:@"audios"];
+    }
     [[ToolManager shareInstance]showWithStatus];
     [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
 
