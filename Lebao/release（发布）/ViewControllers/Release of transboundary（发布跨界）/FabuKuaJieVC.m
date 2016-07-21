@@ -166,39 +166,43 @@
     NSLog(@"send.tag=%ld",sender.tag);
     
     if (sender.tag==1001) {//开始录音
-        
-//        [[MP3PlayerManager shareInstance] audioRecorderWithURl:kRecordAudioFile startRecoderBlock:^(BOOL flag) {
-        
-//            if (flag) {
+        NSLog(@"=====g%ld",sender.tag);
+        [[MP3PlayerManager shareInstance] audioRecorderWithURl:kRecordAudioFile startRecoderBlock:^(BOOL flag) {
+            NSLog(@"flag%d",flag);
+            if (flag) {
+       
                 addtm=0;
+                allTm=6000;
                 sender.tag=1002;
+            _repeatBtn.userInteractionEnabled=YES;
+        _repeatBtn.backgroundColor=[UIColor orangeColor];
+         [_repeatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                 [sender setImage:[UIImage imageNamed:@"luyinzhong"] forState:UIControlStateNormal];
                 self.shapeLayer.hidden=NO;
-                allTm=6000;
-                timer=[NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(timerChange) userInfo:nil repeats:YES];
-                timer.fireDate=[NSDate distantPast];
+        NSLog(@"fhhhhhhhhg%ld",sender.tag);
+        
+                [self timerStart];
         
 
-//            }
-//            else
-//            {
-//                [[ToolManager shareInstance] showAlertMessage:@"录音失败"];
-//            }
-//        }];
+            }
+            else
+            {
+                [[ToolManager shareInstance] showAlertMessage:@"录音失败"];
+            }
+        }];
         
         
     }else if(sender.tag==1002){//停止录音
-        //        [[MP3PlayerManager shareInstance] stopAudioRecorder];
-      
-        [timer invalidate];
-        timer=nil;
+        [self timerEnd];
         allTm=addtm;
-         sender.tag=1003;
+        sender.tag=1003;
+        [[MP3PlayerManager shareInstance] stopAudioRecorder];
+      
+       
         [sender setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
-        _repeatBtn.userInteractionEnabled=YES;
-        _repeatBtn.backgroundColor=[UIColor orangeColor];
+        
         _promptLab.text=@"播放试听";
-        [_repeatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+       
         
         self.shapeLayer.hidden=YES;
         self.shapeLayer.strokeEnd=0;
@@ -207,41 +211,39 @@
         
     }else if(sender.tag==1003){//播放
         
-            addtm=0;
-       
-            sender.tag=1004;
-            //        _soundBtn.userInteractionEnabled=NO;
-            
-            
-            self.shapeLayer.strokeEnd=0;
-            self.shapeLayer.hidden=NO;
-            timer=[NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(timerChange) userInfo:nil repeats:YES];
-            timer.fireDate=[NSDate distantPast];
-            
-            //        [[MP3PlayerManager shareInstance] audioPlayerWithURl:kRecordAudioFile audioPlayerDidFinishPlayingBlock:^(AVAudioPlayer *player, BOOL flag) {
-            //
-            //            if (flag) {
-            
-            //            }
-            //        }];
-            [_soundBtn setImage:[UIImage imageNamed:@"zanting"] forState:UIControlStateNormal];
+        
+//            [[MP3PlayerManager shareInstance] audioPlayerWithURl:kRecordAudioFile audioPlayerDidFinishPlayingBlock:^(AVAudioPlayer *player, BOOL flag) {
+        
+//                        if (flag) {
+      
+                            addtm=0;
+                            
+                            sender.tag=1004;
+                            [_soundBtn setImage:[UIImage imageNamed:@"zanting"] forState:UIControlStateNormal];
+                            self.shapeLayer.strokeEnd=0;
+                            self.shapeLayer.hidden=NO;
+                            [self timerStart];
+
+//                        }else NSLog(@"播放失败");
+//                    }];
+    
 
 
     }else if(sender.tag==1004){//暂停
         sender.tag=1003;
         
-        [timer invalidate];
-        timer=nil;
+        [self timerEnd];
         [_soundBtn setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
         self.shapeLayer.hidden=YES;
         self.shapeLayer.strokeEnd=0;
+//        [[MP3PlayerManager shareInstance] stopPlayer];
     }
 }
 -(void)repeatBtnAction:(UIButton *)sender//重录
 {
 //    [[MP3PlayerManager shareInstance] removeAudioRecorder:kRecordAudioFile];
-    [timer invalidate];
-    timer=nil;
+    
+    [self timerEnd];
     _repeatBtn.userInteractionEnabled=NO;
     _repeatBtn.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
     [_repeatBtn setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
@@ -249,16 +251,16 @@
     [_soundBtn setImage:[UIImage imageNamed:@"yuying@3x"] forState:UIControlStateNormal];
     _timerLab.text=@"0\"";
     _promptLab.text=@"最长可录音60s";
-    self.shapeLayer.strokeStart=0;
+    
     self.shapeLayer.strokeEnd=0;
-    allTm=6000;
+    
     addtm=0;
-    _soundBtn.userInteractionEnabled=YES;
+    allTm=6000;
     
 }
 
 
--(void)timerChange
+-(void)timerChange  //定时器事件
 {
     angle=1.0/allTm;
     if(addtm<allTm){
@@ -270,16 +272,16 @@
               addtm+=1;
     }
     else{
-        
+        _soundBtn.tag=1004;
         [self soundBtnAction:_soundBtn];
-        [timer invalidate];
-        timer = nil;
-        _soundBtn.tag=1003;
-        _soundBtn.userInteractionEnabled=YES;
+       
+        [self timerEnd];
+        
+        
         self.shapeLayer.hidden=YES;
         self.shapeLayer.strokeEnd=0;
        
-        [_soundBtn setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
+        
     }
 
     
@@ -287,6 +289,15 @@
 
 
 
+-(void)timerStart{  //打开定时器
+    timer=[NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(timerChange) userInfo:nil repeats:YES];
+    timer.fireDate=[NSDate distantPast];
+    
+}
+-(void)timerEnd{//关闭定时器
+    [timer invalidate];
+    timer = nil;
+}
 
 
 
@@ -584,6 +595,7 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [self removeNoti];
+    [[MP3PlayerManager shareInstance] stopAudioRecorder];
 }
 
 

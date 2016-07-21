@@ -29,9 +29,14 @@ static MP3PlayerManager* mP3PlayerManager;
     _url = url;
     _startRecoderBlock = startRecoderBlock;
     [self setAudioSession];
+     NSLog(@"[self.audioRecorder record]111 = %i",[self.audioRecorder record]);
     if (![self.audioRecorder isRecording]) {
         [self.audioRecorder record];
-         _startRecoderBlock(YES);//首次使用应用时如果调用record方法会询问用户是否允许使用麦克风
+        NSLog(@"[self.audioRecorder record]222 = %i",[self.audioRecorder record]);
+        if ([self.audioRecorder record]) {
+            _startRecoderBlock(YES);//首次使用应用时如果调用record方法会询问用户是否允许使用麦克风
+        }
+        
        
     }
     
@@ -142,20 +147,20 @@ static MP3PlayerManager* mP3PlayerManager;
         _audioRecorder=[[AVAudioRecorder alloc]initWithURL:url settings:setting error:&error];
         
         _audioRecorder.delegate=self;
-//        _audioRecorder.meteringEnabled=YES;//如果要监控声波则必须设置为YES
+        _audioRecorder.meteringEnabled=YES;//如果要监控声波则必须设置为YES
         if (error) {
-            NSLog(@"创建播放器过程中发生错误，错误信息：%@",error.localizedDescription);
+            NSLog(@"创建录音过程中发生错误，错误信息：%@",error.localizedDescription);
             _startRecoderBlock(NO);
             return nil;
         }
-        else
-        {
-            _startRecoderBlock(YES);
-        }
+        
     }
     return _audioRecorder;
 }
-
+- (void)audioRecorderBeginInterruption:(AVAudioRecorder *)recorder
+{
+    NSLog(@"audioRecorderBeginInterruption");
+}
 /**
  *  创建播放器
  *
@@ -169,6 +174,10 @@ static MP3PlayerManager* mP3PlayerManager;
         _audioPlayer.numberOfLoops=0;
         [_audioPlayer prepareToPlay];
         _audioPlayer.delegate = self;
+        if (error) {
+            NSLog(@"创建播放器过程中发生错误，错误信息：%@",error.localizedDescription);
+            return nil;
+        }
         
 
     }

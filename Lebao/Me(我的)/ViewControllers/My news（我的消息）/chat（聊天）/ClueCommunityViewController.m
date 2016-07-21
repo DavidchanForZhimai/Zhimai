@@ -170,104 +170,104 @@ typedef NS_ENUM(NSUInteger,ButtonActionTag) {
 }
 #pragma mark
 
-#pragma -mark 录音相关
--(void)soundBtnAction:(UIButton *)sender
-{
-    tm=0;
-    
-    tm=0;
-    if (sender.tag==1001) {//开始录音
-        
-        [[MP3PlayerManager shareInstance] audioRecorderWithURl:kRecordAudioFile startRecoderBlock:^(BOOL flag) {
-            
-            if (flag) {
-                [sender setImage:[UIImage imageNamed:@"luyinzhong@3x"] forState:UIControlStateNormal];
-                sender.tag=1002;
-                [timer invalidate];
-                timer=nil;
-                timer=[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerChange) userInfo:nil repeats:YES];
-                timer.fireDate=[NSDate distantPast];
-                angle=1.0/600;
-                
-            }
-            else
-            {
-                [[ToolManager shareInstance] showAlertMessage:@"录音失败"];
-            }
-        }];
-        
-        
-    }else if(sender.tag==1002){//停止录音
-        sender.tag=1003;
-        [[MP3PlayerManager shareInstance] stopAudioRecorder];
-        [sender setImage:[UIImage imageNamed:@"bofang@3x"] forState:UIControlStateNormal];
-        //改变发送和重录按钮权限
-        _repeatBtn.userInteractionEnabled=YES;
-        _repeatBtn.backgroundColor=[UIColor orangeColor];
-        _sendSound.userInteractionEnabled=YES;
-        _sendSound.backgroundColor=[UIColor orangeColor];
-        [_repeatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_sendSound setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [timer invalidate];
-        timer=nil;
-        _promptLab.text=@"播放试听";
-        
-    }else if(sender.tag==1003){//播放
-        sender.tag=1004;
-        [timer invalidate];
-        timer=nil;
-        timer=[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerChange) userInfo:nil repeats:YES];
-        timer.fireDate=[NSDate distantPast];
-        angle=1.0/600;
-        self.shapeLayer.strokeEnd=0;
-        _repeatBtn.userInteractionEnabled=NO;
-        
-        [[MP3PlayerManager shareInstance]audioPlayerWithURl:kRecordAudioFile audioPlayerDidFinishPlayingBlock:^(AVAudioPlayer *player, BOOL flag) {
-            if (flag) {
-                sender.tag=1003;
-                [timer invalidate];
-                timer=nil;
-                _repeatBtn.userInteractionEnabled=YES;
-            }
-        }];
-        
-
-    }
-}
--(void)repeatAndSendBtnAction:(UIButton *)sender//重录和发送
-{
-    [[MP3PlayerManager shareInstance]removeAudioRecorder:kRecordAudioFile];
-    _repeatBtn.userInteractionEnabled=NO;
-    _sendSound.userInteractionEnabled=NO;
-    
-    _repeatBtn.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
-    [_repeatBtn setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
-    _sendSound.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
-    [_sendSound setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
-    
-    _soundBtn.tag=1001;
-    [_soundBtn setImage:[UIImage imageNamed:@"yuying@3x"] forState:UIControlStateNormal];
-    [timer invalidate];
-    timer=nil;
-    _timerLab.text=@"0\"";
-    _promptLab.text=@"最长可录音60s";
-    self.shapeLayer.strokeEnd=0;
-}
-
-
--(void)timerChange
-{
-    if(tm<600){
-        _timerLab.text=[NSString stringWithFormat:@"%ld\"",tm/10];
-        
-        tm+=1;
-        self.shapeLayer.strokeEnd+=angle;}
-    else{
-        
-        [self soundBtnAction:_soundBtn];
-    }
-    
-}
+//#pragma -mark 录音相关
+//-(void)soundBtnAction:(UIButton *)sender
+//{
+//    tm=0;
+//    
+//    tm=0;
+//    if (sender.tag==1001) {//开始录音
+//        
+//        [[MP3PlayerManager shareInstance] audioRecorderWithURl:kRecordAudioFile startRecoderBlock:^(BOOL flag) {
+//            
+//            if (flag) {
+//                [sender setImage:[UIImage imageNamed:@"luyinzhong@3x"] forState:UIControlStateNormal];
+//                sender.tag=1002;
+//                [timer invalidate];
+//                timer=nil;
+//                timer=[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerChange) userInfo:nil repeats:YES];
+//                timer.fireDate=[NSDate distantPast];
+//                angle=1.0/600;
+//                
+//            }
+//            else
+//            {
+//                [[ToolManager shareInstance] showAlertMessage:@"录音失败"];
+//            }
+//        }];
+//        
+//        
+//    }else if(sender.tag==1002){//停止录音
+//        sender.tag=1003;
+//        [[MP3PlayerManager shareInstance] stopAudioRecorder];
+//        [sender setImage:[UIImage imageNamed:@"bofang@3x"] forState:UIControlStateNormal];
+//        //改变发送和重录按钮权限
+//        _repeatBtn.userInteractionEnabled=YES;
+//        _repeatBtn.backgroundColor=[UIColor orangeColor];
+//        _sendSound.userInteractionEnabled=YES;
+//        _sendSound.backgroundColor=[UIColor orangeColor];
+//        [_repeatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        [_sendSound setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//        [timer invalidate];
+//        timer=nil;
+//        _promptLab.text=@"播放试听";
+//        
+//    }else if(sender.tag==1003){//播放
+//        sender.tag=1004;
+//        [timer invalidate];
+//        timer=nil;
+//        timer=[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerChange) userInfo:nil repeats:YES];
+//        timer.fireDate=[NSDate distantPast];
+//        angle=1.0/600;
+//        self.shapeLayer.strokeEnd=0;
+//        _repeatBtn.userInteractionEnabled=NO;
+//        
+//        [[MP3PlayerManager shareInstance]audioPlayerWithURl:kRecordAudioFile audioPlayerDidFinishPlayingBlock:^(AVAudioPlayer *player, BOOL flag) {
+//            if (flag) {
+//                sender.tag=1003;
+//                [timer invalidate];
+//                timer=nil;
+//                _repeatBtn.userInteractionEnabled=YES;
+//            }
+//        }];
+//        
+//
+//    }
+//}
+//-(void)repeatAndSendBtnAction:(UIButton *)sender//重录和发送
+//{
+//    [[MP3PlayerManager shareInstance]removeAudioRecorder:kRecordAudioFile];
+//    _repeatBtn.userInteractionEnabled=NO;
+//    _sendSound.userInteractionEnabled=NO;
+//    
+//    _repeatBtn.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
+//    [_repeatBtn setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
+//    _sendSound.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
+//    [_sendSound setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
+//    
+//    _soundBtn.tag=1001;
+//    [_soundBtn setImage:[UIImage imageNamed:@"yuying@3x"] forState:UIControlStateNormal];
+//    [timer invalidate];
+//    timer=nil;
+//    _timerLab.text=@"0\"";
+//    _promptLab.text=@"最长可录音60s";
+//    self.shapeLayer.strokeEnd=0;
+//}
+//
+//
+//-(void)timerChange
+//{
+//    if(tm<600){
+//        _timerLab.text=[NSString stringWithFormat:@"%ld\"",tm/10];
+//        
+//        tm+=1;
+//        self.shapeLayer.strokeEnd+=angle;}
+//    else{
+//        
+//        [self soundBtnAction:_soundBtn];
+//    }
+//    
+//}
 
 -(void)touchView
 {

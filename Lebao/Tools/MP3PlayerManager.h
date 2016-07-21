@@ -21,6 +21,6 @@ typedef void (^StartRecoderBlock)(BOOL flag);
 - (void)audioRecorderWithURl:(NSString *)url startRecoderBlock:(StartRecoderBlock)startRecoderBlock;
 - (void)stopAudioRecorder;
 - (void)removeAudioRecorder:(NSString *)url;
-
+//- (void)stopPlayer;
 - (void)audioPlayerWithURl:(NSString *)url audioPlayerDidFinishPlayingBlock:(AudioPlayerDidFinishPlayingBlock)audioPlayerDidFinishPlayingBlock;
 @end
