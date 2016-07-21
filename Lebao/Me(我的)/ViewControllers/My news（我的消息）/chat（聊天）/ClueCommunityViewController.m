@@ -59,7 +59,7 @@ typedef NS_ENUM(NSUInteger,ButtonActionTag) {
     [self navViewTitleAndBackBtn:@"线索评论"];
     [self addTableView];
     [self addToolBar];
-    [self createLoundView];
+//    [self createLoundView];
     [self netWork:NO isFooter:NO isShouldClear:NO isSend:NO];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(touchView)];
@@ -169,162 +169,6 @@ typedef NS_ENUM(NSUInteger,ButtonActionTag) {
     [_mainSrollView addSubview:_clueCommunityView];
     
 }
-#pragma mark
-#pragma -mark 录音相关
--(void)soundBtnAction:(UIButton *)sender
-{
-    
-    
-    if (![[MP3PlayerManager shareInstance] canRecord]) {
-        
-        [[ToolManager shareInstance] showAlertViewTitle:@"提示" contentText:@"请到设置-隐私-麦克风-打开麦克风权限" showAlertViewBlcok:^{
-            
-        }];
-        return;
-    }
-    
-    
-    if (sender.tag==1001) {//开始录音
-        
-        [[MP3PlayerManager shareInstance] audioRecorderWithURl:kRecordAudioFile];
-        
-        
-        addtm=0;
-        allTm=6000;
-        sender.tag=1002;
-        _repeatBtn.userInteractionEnabled=YES;
-        _repeatBtn.backgroundColor=[UIColor orangeColor];
-        [_repeatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [sender setImage:[UIImage imageNamed:@"luyinzhong"] forState:UIControlStateNormal];
-        self.shapeLayer.hidden=NO;
-        
-        
-        
-        [self timerStart];
-        
-    }else if(sender.tag==1002){//停止录音
-        [self timerEnd];
-        allTm=addtm;
-        sender.tag=1003;
-        [[MP3PlayerManager shareInstance] stopAudioRecorder];
-        
-        _sendSound.backgroundColor=[UIColor orangeColor];
-        [_sendSound setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [sender setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
-        
-        _promptLab.text=@"播放试听";
-        
-        
-        self.shapeLayer.hidden=YES;
-        self.shapeLayer.strokeEnd=0;
-        addtm=0;
-        
-        
-    }else if(sender.tag==1003){//播放
-        
-        
-        [[MP3PlayerManager shareInstance] audioPlayerWithURl:kRecordAudioFile];
-        addtm=0;
-        
-        sender.tag=1004;
-        [_soundBtn setImage:[UIImage imageNamed:@"zanting"] forState:UIControlStateNormal];
-        self.shapeLayer.strokeEnd=0;
-        self.shapeLayer.hidden=NO;
-        
-        
-        
-        [self timerStart];
-        
-    }else if(sender.tag==1004){//暂停
-        sender.tag=1003;
-        [[MP3PlayerManager shareInstance]stopPlayer];
-        [self timerEnd];
-        [_soundBtn setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
-        self.shapeLayer.hidden=YES;
-        self.shapeLayer.strokeEnd=0;
-        
-    }
-}
--(void)repeatAndSendBtnAction:(UIButton *)sender//重录
-{
-    
-//    [[MP3PlayerManager shareInstance] stopAudioRecorder];
-//    [[MP3PlayerManager shareInstance] removeAudioRecorder];
-    [self timerEnd];
-    _repeatBtn.userInteractionEnabled=NO;
-    _repeatBtn.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
-    [_repeatBtn setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
-    _sendSound.userInteractionEnabled=NO;
-    _sendSound.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
-    [_sendSound setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
-    _soundBtn.tag=1001;
-    [_soundBtn setImage:[UIImage imageNamed:@"yuying@3x"] forState:UIControlStateNormal];
-    _timerLab.text=@"0\"";
-    _promptLab.text=@"最长可录音60s";
-    
-    self.shapeLayer.strokeEnd=0;
-    
-    addtm=0;
-    allTm=6000;
-    
-}
-
-
--(void)timerChange  //定时器事件
-{
-    //    NSLog(@"addtm=%ld",addtm);
-    //    NSLog(@"alltm=%ld",allTm);
-    angle=1.0/allTm;
-    if(addtm<allTm){
-        _timerLab.text=[NSString stringWithFormat:@"%ld\"",addtm/
-                        100];
-        self.shapeLayer.strokeEnd+=angle;
-        
-        //        NSLog(@"%lf",self.shapeLayer.strokeEnd);
-        addtm+=1;
-    }
-    else if(addtm>=allTm){
-        [self timerEnd];
-        _soundBtn.tag=1004;
-        [self soundBtnAction:_soundBtn];
-        
-        
-        
-        
-        self.shapeLayer.hidden=YES;
-        self.shapeLayer.strokeEnd=0;
-        return;
-        
-    }
-    
-    
-}
-
-
-
--(void)timerStart{  //打开定时器
-    timer=[NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(timerChange) userInfo:nil repeats:YES];
-    timer.fireDate=[NSDate distantPast];
-    
-}
--(void)timerEnd{//关闭定时器
-    [timer invalidate];
-    timer = nil;
-}
-
--(void)touchView
-{
-    if (bjV.frame.origin.y<SCREEN_HEIGHT) {
-        [UIView animateWithDuration:0.5 animations:^{
-            CGRect rect=bjV.frame;
-            rect.origin.y=SCREEN_HEIGHT;
-            bjV.frame=rect;
-        }];
-
-    }
-
-}
-
 #pragma mark - netWork-
 - (void)netWork:(BOOL)isRefresh isFooter:(BOOL)isFooter isShouldClear:(BOOL)isShouldClear isSend:(BOOL)isSend
 {
@@ -502,21 +346,21 @@ typedef NS_ENUM(NSUInteger,ButtonActionTag) {
     _textField.delegate = self;
     [textView addSubview:_textField];
     
-    UIButton *liyinBtn=[UIButton buttonWithType:UIButtonTypeCustom];//想发语音按钮
-    liyinBtn.frame=frame(frameWidth(textView) -frameHeight(textView)-5, 2, frameHeight(textView)-4, frameHeight(textView)-4);
-    [liyinBtn setBackgroundImage:[UIImage imageNamed:@"liyin@3x"] forState:UIControlStateNormal];
-    [liyinBtn addTarget:self action:@selector(liyinBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-    [textView addSubview:liyinBtn];
-
-    _sendBtn = [UIButton createButtonWithfFrame:frame(CGRectGetMaxX(textView.frame)+15*ScreenMultiple, 8, 62*ScreenMultiple, 28) title:@"发送" backgroundImage:nil iconImage:nil highlightImage:nil tag:ButtonActionTagSend inView:bgView];
-    _sendBtn.titleLabel.font = Size(28);
-    [_sendBtn setTitleColor:WhiteColor forState:UIControlStateNormal];
-    [_sendBtn setTitle:@"发送" forState:UIControlStateNormal];
-    _sendBtn.layer.masksToBounds = YES;
-    _sendBtn.layer.cornerRadius = 3.0;
-    _sendBtn.backgroundColor = AppMainColor;
-    [_sendBtn addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-    
+//    UIButton *liyinBtn=[UIButton buttonWithType:UIButtonTypeCustom];//想发语音按钮
+//    liyinBtn.frame=frame(frameWidth(textView) -frameHeight(textView)-5, 2, frameHeight(textView)-4, frameHeight(textView)-4);
+//    [liyinBtn setBackgroundImage:[UIImage imageNamed:@"liyin@3x"] forState:UIControlStateNormal];
+//    [liyinBtn addTarget:self action:@selector(liyinBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+//    [textView addSubview:liyinBtn];
+//
+//    _sendBtn = [UIButton createButtonWithfFrame:frame(CGRectGetMaxX(textView.frame)+15*ScreenMultiple, 8, 62*ScreenMultiple, 28) title:@"发送" backgroundImage:nil iconImage:nil highlightImage:nil tag:ButtonActionTagSend inView:bgView];
+//    _sendBtn.titleLabel.font = Size(28);
+//    [_sendBtn setTitleColor:WhiteColor forState:UIControlStateNormal];
+//    [_sendBtn setTitle:@"发送" forState:UIControlStateNormal];
+//    _sendBtn.layer.masksToBounds = YES;
+//    _sendBtn.layer.cornerRadius = 3.0;
+//    _sendBtn.backgroundColor = AppMainColor;
+//    [_sendBtn addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+//    
 }
 
 #pragma mark

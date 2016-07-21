@@ -163,7 +163,7 @@
 -(void)soundBtnAction:(UIButton *)sender
 {
     
-    
+    NSLog(@"sende.tag=%ld",sender.tag);
     if (![[MP3PlayerManager shareInstance] canRecord]) {
         
         [[ToolManager shareInstance] showAlertViewTitle:@"提示" contentText:@"请到设置-隐私-麦克风-打开麦克风权限" showAlertViewBlcok:^{
@@ -187,8 +187,7 @@
         [sender setImage:[UIImage imageNamed:@"luyinzhong"] forState:UIControlStateNormal];
         self.shapeLayer.hidden=NO;
         
-        
-        
+
         [self timerStart];
         
     }else if(sender.tag==1002){//停止录音
@@ -197,11 +196,9 @@
         sender.tag=1003;
         [[MP3PlayerManager shareInstance] stopAudioRecorder];
         
-        
         [sender setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
         
         _promptLab.text=@"播放试听";
-        
         
         self.shapeLayer.hidden=YES;
         self.shapeLayer.strokeEnd=0;
@@ -219,8 +216,6 @@
         self.shapeLayer.strokeEnd=0;
         self.shapeLayer.hidden=NO;
         
-        
-        
         [self timerStart];
         
     }else if(sender.tag==1004){//暂停
@@ -236,8 +231,7 @@
 -(void)repeatBtnAction:(UIButton *)sender//重录
 {
     btnMark=NO;
-//        [[MP3PlayerManager shareInstance] stopAudioRecorder];
-        [[MP3PlayerManager shareInstance] removeAudioRecorder];
+    [[MP3PlayerManager shareInstance] removeAudioRecorder];
     [self timerEnd];
     _repeatBtn.userInteractionEnabled=NO;
     _repeatBtn.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
@@ -259,8 +253,8 @@
 {
     //    NSLog(@"addtm=%ld",addtm);
     //    NSLog(@"alltm=%ld",allTm);
-    angle=1.0/allTm;
-    if(addtm<allTm){
+    angle=1.0/(allTm+8);
+    if(addtm<allTm+10){
         _timerLab.text=[NSString stringWithFormat:@"%ld\"",addtm/
                         100];
         self.shapeLayer.strokeEnd+=angle;
@@ -270,12 +264,17 @@
     }
     else if(addtm>=allTm){
         [self timerEnd];
-        _soundBtn.tag=1004;
-        [self soundBtnAction:_soundBtn];
-        
-        
-        
-        
+        if (_soundBtn.tag==1004) {
+            _soundBtn.tag=1004;
+            [self soundBtnAction:_soundBtn];
+        }
+      else
+            if (_soundBtn.tag==1002) {
+            _soundBtn.tag=1002;
+            [self soundBtnAction:_soundBtn];
+        }
+       
+    
         self.shapeLayer.hidden=YES;
         self.shapeLayer.strokeEnd=0;
         return;

@@ -27,15 +27,11 @@ static MP3PlayerManager* mP3PlayerManager;
 //录音
 - (void)audioRecorderWithURl:(NSString *)url
 {
-    
     _url = url;
-    
     [self setAudioSession];
-    if (![self.audioRecorder isRecording]) {
-        [self.audioRecorder record];
-        //首次使用应用时如果调用record方法会询问用户是否允许使用麦克风
-        
-    }
+    [self setRecorder];
+    [self.audioRecorder record];
+    //首次使用应用时如果调用record方法会询问用户是否允许使用麦克风
     
 }
 //停止录音
@@ -48,11 +44,10 @@ static MP3PlayerManager* mP3PlayerManager;
 //删除录音
 - (void)removeAudioRecorder
 {
-    if ([self.audioRecorder isRecording]) {
-        [self.audioRecorder stop];
-        NSLog(@"======================?????");
-    }
+    [self.audioPlayer stop];
+    [self.audioRecorder stop];
     [self.audioRecorder deleteRecording];
+    
 }
 
 //播放
@@ -64,17 +59,16 @@ static MP3PlayerManager* mP3PlayerManager;
     [session setCategory:AVAudioSessionCategoryPlayback error:&error];
     NSLog(@"errrrr%@",error);
     _url = url;
-    if (![self.audioPlayer isPlaying]) {
-        [self.audioPlayer play];
-    }
+    [self setPlayer];
+    [self.audioPlayer play];
+    
     
 }
 //停止播放
 -(void)stopPlayer
 {
-    if ([self.audioPlayer isPlaying]) {
-        [self.audioPlayer stop];
-    }
+    
+    [self.audioPlayer stop];
     
 }
 #pragma mark - 私有方法
@@ -132,8 +126,10 @@ static MP3PlayerManager* mP3PlayerManager;
  *
  *  @return 录音机对象
  */
--(AVAudioRecorder *)audioRecorder{
-    if (!_audioRecorder) {
+-(void)setRecorder{
+    
+        _audioRecorder = nil;
+    
         //创建录音文件保存路径
         NSURL *url=[self getSavePath];
         //创建录音格式设置
@@ -147,14 +143,12 @@ static MP3PlayerManager* mP3PlayerManager;
         if (error) {
             NSLog(@"创建播放器过程中发生错误，错误信息：%@",error.localizedDescription);
             
-            return nil;
         }
         else
         {
             
         }
-    }
-    return _audioRecorder;
+
 }
 
 /**
@@ -162,8 +156,8 @@ static MP3PlayerManager* mP3PlayerManager;
  *
  *  @return 播放器
  */
--(AVAudioPlayer *)audioPlayer{
-    if (!_audioPlayer) {
+-(void)setPlayer{
+        _audioPlayer = nil;
         NSURL *url=[self getSavePath];
         NSError *error=nil;
         _audioPlayer=[[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
@@ -171,9 +165,7 @@ static MP3PlayerManager* mP3PlayerManager;
         [_audioPlayer prepareToPlay];
         _audioPlayer.delegate = self;
         
-        
-    }
-    return _audioPlayer;
+    
 }
 
 #pragma mark - 录音机代理方法
