@@ -18,9 +18,13 @@
 #import "ClueCommunityViewController.h"
 #import "DXAlertView.h"
 #import "CommunicationViewController.h"
+#import "MP3PlayerManager.h"
 #define WHZTABTAG 110
 #define XTTJTABTAG 129
 @interface MyXSDetailVC ()<UITableViewDelegate,UITableViewDataSource>
+{
+    NSString *_url;
+}
 @property (strong,nonatomic)UIScrollView * bottmScr;
 @property (strong,nonatomic)UITableView * whzTab;
 @property (strong,nonatomic)UITableView * commendTab;
@@ -43,6 +47,12 @@
     _recomArr = [[NSMutableArray alloc]init];
     [self setNav];
     [self getJsonWithID:_xiansuoID];
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+   
+    [[MP3PlayerManager shareInstance] stopPlayer];
 }
 -(void)getJsonWithID:(NSString *)xsID
 {
@@ -71,9 +81,12 @@
     _bottmScr.showsVerticalScrollIndicator = NO;
     _bottmScr.showsHorizontalScrollIndicator = NO;
     [self.view addSubview:_bottmScr];
+    
+    
     [self addTheXSV];
 
-}
+    
+  }
 -(void)addTheXSV
 {
     UIView * xsDetailV = [[UIView alloc]initWithFrame:CGRectMake(10, 0, SCREEN_WIDTH-20, 185)];
@@ -103,12 +116,28 @@
     }
     [xsDetailV addSubview:xqLab];
     
-    UILabel * titLab = [[UILabel alloc]initWithFrame:CGRectMake(0, xqLab.frame.size.height+15, xsDetailV.frame.size.width, 30)];
+    UILabel * titLab = [[UILabel alloc]initWithFrame:CGRectMake(30, xqLab.frame.size.height+15, xsDetailV.frame.size.width-60, 30)];
     titLab.font = [UIFont systemFontOfSize:16];
     titLab.textColor = [UIColor blackColor];
     titLab.textAlignment = NSTextAlignmentCenter;
     titLab.text = [_xiansDic objectForKey:@"title"];
     [xsDetailV addSubview:titLab];
+    
+    //语音
+    
+    
+    if (_xiansDic[@"audios"]&&![_xiansDic[@"audios"]isEqualToString:@""]) {
+        
+        UIButton *soundBtn=[UIButton buttonWithType:UIButtonTypeCustom];//语音button
+        soundBtn.frame=CGRectMake(xsDetailV.frame.size.width-40,45, 30, 30);
+        [soundBtn setBackgroundImage: [UIImage imageNamed:@"aaa@3x"] forState:UIControlStateNormal];
+        [soundBtn addTarget:self action:@selector(playAudioBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [xsDetailV addSubview:soundBtn];
+        
+        _url = [NSString stringWithFormat:@"%@%@",ImageURLS,_xiansDic[@"audios"]];
+    }
+    
+
     
     UILabel * detailLab = [[UILabel alloc]initWithFrame:CGRectMake(3, titLab.frame.size.height+titLab.frame.origin.y+5, xsDetailV.frame.size.width-6, 60)];
     detailLab.textColor = [UIColor colorWithWhite:0.502 alpha:1.000];
@@ -1012,6 +1041,23 @@
     }
     
 };
+#pragma mark - 语音点击按钮
+-(void)playAudioBtnClicked:(UIButton *)sender
+{
+
+    NSArray *pathArrays = [_url componentsSeparatedByString:@"/"];
+    NSString *topath;
+    if (pathArrays.count>0) {
+        topath = pathArrays[pathArrays.count-1];
+    }
+    
+    [[MP3PlayerManager shareInstance] downLoadAudioWithUrl:_url  finishDownLoadBloak:^(BOOL succeed) {
+        if (succeed) {
+            [[MP3PlayerManager shareInstance] audioPlayerWithURl:topath];
+        }
+        
+    }];
+}
 -(void)whzDetaolAction:(UITapGestureRecognizer *)sender
 {
     JJRDetailVC * jjrV = allocAndInit(JJRDetailVC);

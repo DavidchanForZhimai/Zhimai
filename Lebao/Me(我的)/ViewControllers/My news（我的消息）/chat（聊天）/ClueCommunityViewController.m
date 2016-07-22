@@ -181,7 +181,7 @@ typedef NS_ENUM(NSUInteger,ButtonActionTag) {
     }
    
     [XLDataService postWithUrl:CommentlistURL param:param modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-        NSLog(@"dataObj =%@",dataObj);
+        //NSLog(@"dataObj =%@",dataObj);
         if (isRefresh) {
             [[ToolManager shareInstance]endHeaderWithRefreshing
              :_clueCommunityView];

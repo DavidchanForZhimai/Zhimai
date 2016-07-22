@@ -16,7 +16,13 @@
 #import "JJRDetailVC.h"
 #import "ClueCommunityViewController.h"
 #import "CommunicationViewController.h"
+#import "MP3PlayerManager.h"
 @interface MyLQDetailVC ()
+{
+    UIView* xsDetailV;
+  
+     NSString *_url;
+}
 @property (strong,nonatomic)UIScrollView * btmScr;
 @property (strong,nonatomic) UIView      * jibaoV;
 @property (strong,nonatomic) UIView * dangzhuV;;
@@ -35,6 +41,12 @@
     self.view.backgroundColor = BACKCOLOR;
     [self getJson];
     
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [[MP3PlayerManager shareInstance] stopPlayer];
 }
 -(void)getJson
 {
@@ -65,6 +77,9 @@
     jjrTap.numberOfTouchesRequired = 1;
     [tapV addGestureRecognizer:jjrTap];
     _headImg = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 41, 41)];
+    
+
+    
     NSString * imgUrl;
     if ([[_xiansuoDic objectForKey:@"imgurl"] rangeOfString:@"http"].location != NSNotFound) {
         imgUrl = [_xiansuoDic objectForKey:@"imgurl"];
@@ -163,6 +178,18 @@
     }
     
     [self addTheXSV:jjrV.frame.size.height+jjrV.frame.origin.y+10];
+    //语音
+
+
+        if (_xiansuoDic[@"audios"]&&![_xiansuoDic[@"audios"]isEqualToString:@""]) {
+            
+            UIButton *soundBtn=[UIButton buttonWithType:UIButtonTypeCustom];//语音button
+            soundBtn.frame=CGRectMake(xsDetailV.frame.size.width-40,45, 30, 30);
+            [soundBtn setBackgroundImage: [UIImage imageNamed:@"aaa@3x"] forState:UIControlStateNormal];
+            [soundBtn addTarget:self action:@selector(playAudioBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [xsDetailV addSubview:soundBtn];
+            _url = [NSString stringWithFormat:@"%@%@",ImageURLS,_xiansuoDic[@"audios"]];
+        }
 }
 -(void)lianxiAction
 {
@@ -179,9 +206,10 @@
     jjrV.jjrID = [_xiansuoDic objectForKey:@"brokerid"];
     [self.navigationController pushViewController:jjrV animated:YES];
 }
+#pragma mark  View
 -(void)addTheXSV:(CGFloat)orgY
 {
-    UIView * xsDetailV = [[UIView alloc]initWithFrame:CGRectMake(10, orgY, SCREEN_WIDTH-20, 185)];
+    xsDetailV = [[UIView alloc]initWithFrame:CGRectMake(10, orgY, SCREEN_WIDTH-20, 185)];
     xsDetailV.backgroundColor = [UIColor whiteColor];
     [_btmScr addSubview:xsDetailV];
     
@@ -207,12 +235,16 @@
     }
     [xsDetailV addSubview:xqLab];
     
-    UILabel * titLab = [[UILabel alloc]initWithFrame:CGRectMake(0, xqLab.frame.size.height+15, xsDetailV.frame.size.width, 30)];
+    UILabel * titLab = [[UILabel alloc]initWithFrame:CGRectMake(30, xqLab.frame.size.height+15, xsDetailV.frame.size.width-60, 30)];
     titLab.font = [UIFont systemFontOfSize:16];
     titLab.textColor = [UIColor blackColor];
     titLab.textAlignment = NSTextAlignmentCenter;
     titLab.text = [_xiansuoDic objectForKey:@"title"];
     [xsDetailV addSubview:titLab];
+    
+  
+   
+    
     
     UILabel * detailLab = [[UILabel alloc]initWithFrame:CGRectMake(3, titLab.frame.size.height+titLab.frame.origin.y+5, xsDetailV.frame.size.width-6, 60)];
     detailLab.textColor = [UIColor colorWithWhite:0.502 alpha:1.000];
@@ -853,6 +885,24 @@
     [self.view addSubview:hxV];
     
 }
+#pragma mark - 语音点击按钮
+-(void)playAudioBtnClicked:(UIButton *)sender
+{
+//    _url = @"http://pic.lmlm.cn/record/201607/22/146915727469518.mp3";
+    NSArray *pathArrays = [_url componentsSeparatedByString:@"/"];
+    NSString *topath;
+    if (pathArrays.count>0) {
+        topath = pathArrays[pathArrays.count-1];
+    }
+    
+    [[MP3PlayerManager shareInstance] downLoadAudioWithUrl:_url  finishDownLoadBloak:^(BOOL succeed) {
+        //        NSLog(@"documentUrl =%@",path);
+        
+        [[MP3PlayerManager shareInstance] audioPlayerWithURl:topath];
+    }];
+
+}
+
 -(void)backAction
 {
     [self.navigationController popViewControllerAnimated:YES];

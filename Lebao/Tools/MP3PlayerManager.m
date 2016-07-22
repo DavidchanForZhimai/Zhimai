@@ -324,4 +324,22 @@ static MP3PlayerManager* mP3PlayerManager;
     
 
 }
+//下载音频
+- (void)downLoadAudioWithUrl:(NSString *)url  finishDownLoadBloak:(FinishDownloadBlock)finishDownLoadBloak{
+    
+    [XLNetworkRequest downloadRequest:url  successAndProgress:^(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite){
+        
+        
+    } complete:^(id dataObj, NSError *error) {
+        
+        if (!error) {
+            finishDownLoadBloak(YES);
+        }
+        else
+        {
+            [[ToolManager shareInstance] showInfoWithStatus:@"播放失败!"];
+            finishDownLoadBloak(NO);
+        }
+    }];
+}
 @end

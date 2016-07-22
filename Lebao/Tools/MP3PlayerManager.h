@@ -11,6 +11,7 @@
 #define UploadAudioURL [NSString stringWithFormat:@"%@upload/audio",HttpURL]
 typedef void (^FinishBlock)(BOOL succeed);
 typedef void (^FinishuploadBlock)(BOOL succeed,id  audioDic);
+typedef void (^FinishDownloadBlock)(BOOL succeed);
 @interface MP3PlayerManager : NSObject<AVAudioRecorderDelegate,AVAudioPlayerDelegate>
 
 @property (nonatomic,strong) AVAudioRecorder *audioRecorder;//音频录音机
@@ -28,4 +29,6 @@ typedef void (^FinishuploadBlock)(BOOL succeed,id  audioDic);
 
 //上传音频
 - (void)uploadAudioWithType:(NSString *)type finishuploadBlock:(FinishuploadBlock)finishuploadBlock;
+//下载音频
+- (void)downLoadAudioWithUrl:(NSString *)url finishDownLoadBloak:(FinishDownloadBlock)finishDownLoadBloak;
 @end

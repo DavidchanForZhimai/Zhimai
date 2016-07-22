@@ -164,7 +164,7 @@
 -(void)soundBtnAction:(UIButton *)sender
 {
     
-    NSLog(@"sende.tag=%ld",sender.tag);
+  //  NSLog(@"sende.tag=%ld",sender.tag);
     if (![[MP3PlayerManager shareInstance] canRecord]) {
         
         [[ToolManager shareInstance] showAlertViewTitle:@"提示" contentText:@"请到设置-隐私-麦克风-打开麦克风权限" showAlertViewBlcok:^{
@@ -458,7 +458,7 @@
         induStr = @"car";
     }
     
-    NSLog(@"%@",induStr);
+  //  NSLog(@"%@",induStr);
     PayDingJinVC * payVC = [[PayDingJinVC alloc]init];
     payVC.zfymType = FaBuZhiFu;
     payVC.qwjeStr = _bcTex.text;
@@ -489,7 +489,7 @@
         _bcTex.placeholder = @"请输入您的成交报酬(请不小于500元)";
     }
     
-    NSLog(@"%ld",sender.tag);
+  //  NSLog(@"%ld",sender.tag);
 }
 -(void)setNav
 {

@@ -122,7 +122,7 @@
 
             
         }
-        NSLog(@"imageTitles =%@ upimgurl =%@",_banner.imageTitles,_banner.imageUrls);
+       // NSLog(@"imageTitles =%@ upimgurl =%@",_banner.imageTitles,_banner.imageUrls);
         [_banner setNetworkLoadingImageBlock:^(UIImageView *imageView, NSString *url, NSInteger index) {
             
             [[ToolManager shareInstance] imageView:imageView setImageWithURL:url placeholderType:PlaceholderTypeImageUnProcessing];
