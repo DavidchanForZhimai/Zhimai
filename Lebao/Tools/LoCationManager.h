@@ -12,10 +12,10 @@
 
 
 @property (nonatomic,strong)CLLocationManager *locationMNG;
-+(LoCationManager*)shareInstance;
++(LoCationManager *)shareInstance;
 
 
--(CLLocationCoordinate2D )getLatitudeAndLongitude;//返回经纬度
+-(void)getLatitudeAndLongitude;//返回经纬度
 
 
 

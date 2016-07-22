@@ -7,7 +7,7 @@
 //
 
 #import "LoCationManager.h"
-
+#import "XLDataService.h"
 
 static LoCationManager *locationManager;
 @implementation LoCationManager
@@ -15,7 +15,7 @@ static LoCationManager *locationManager;
      CLLocationCoordinate2D coordinate2D;
 }
 
-+(LoCationManager*)shareInstance
++(LoCationManager *)shareInstance
 {
     
     
@@ -23,18 +23,19 @@ static LoCationManager *locationManager;
     dispatch_once(&onceToken, ^{
         locationManager =[[super alloc]init];
     });
- 
     return locationManager;
+    
 }
 
--(CLLocationCoordinate2D )getLatitudeAndLongitude
+-(void)getLatitudeAndLongitude
 {
    
     
     [self creatLocationManager];
     
     
-    return coordinate2D;
+
+    
 }
 
 -(void)creatLocationManager
@@ -82,6 +83,22 @@ static LoCationManager *locationManager;
     NSLog(@"纬度: %f, 经度: %f", coordinate2D.latitude, coordinate2D.longitude);
     
     
+    NSMutableDictionary *param = [Parameter parameterWithSessicon];
+    
+    [param setObject:@(1) forKey:@"source"];
+    [param setObject:@(coordinate2D.latitude) forKey:@"latitude"];
+    [param setObject:@(coordinate2D.longitude) forKey:@"longitude"];
+    
+  
+    
+    [XLDataService postWithUrl:[NSString stringWithFormat:@"%@user/locationlog",HttpURL] param:param modelClass:nil responseBlock:^(id dataObj, NSError *error) {
+        
+        NSLog(@"定位上传error=%@",error);
+        
+    }];
+
+    
+    //如果不需要反复的定位， 可以停止定位服务
     [_locationMNG stopUpdatingLocation];
     
     _locationMNG=nil;

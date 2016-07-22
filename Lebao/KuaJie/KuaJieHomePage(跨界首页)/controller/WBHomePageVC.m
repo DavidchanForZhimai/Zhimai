@@ -96,7 +96,7 @@
     
     
     
-//    [[LoCationManager shareInstance]getLatitudeAndLongitude];
+
     
     
 }
@@ -148,11 +148,18 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
 }
 //选择行业
 - (void)selectIndustry
 {
-   
+//    [[LoCationManager shareInstance]getLatitudeAndLongitude]; //定位
     _selectedIndustryBg = [[BaseButton alloc]initWithFrame:frame(0, StatusBarHeight + NavigationBarHeight, APPWIDTH, APPHEIGHT -(StatusBarHeight + NavigationBarHeight + TabBarHeight) ) setTitle:nil titleSize:0 titleColor:WhiteColor textAlignment:0 backgroundColor: rgba(0, 0, 0, 0.3) inView:self.view];
     _selectedIndustryBg.hidden = YES;
     __weak typeof(self) weakSelf =self;
