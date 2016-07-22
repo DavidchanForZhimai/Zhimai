@@ -120,6 +120,7 @@ typedef NS_ENUM(int,SwitchActionTag) {
     _titleTextField.font = Size(24);_titleTextField.text = _data.title;
     _titleTextField.clearButtonMode =UITextFieldViewModeWhileEditing;
     
+     
     UIView *_authorViewBg = allocAndInitWithFrame(UIView, frame(10 , CGRectGetMaxY(_releaseViewBg.frame)  + 10, frameWidth(_mainScrollView) - 20, 42));
     _authorViewBg.backgroundColor =[UIColor whiteColor];
     [_authorViewBg setBorder:LineBg width:0.5];

@@ -20,6 +20,7 @@
     UILabel *_promptLab;
     NSTimer *timer;
     NSInteger addtm;
+    
     BOOL btnMark;
     double angle;
     NSInteger allTm;

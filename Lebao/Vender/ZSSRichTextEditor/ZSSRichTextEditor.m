@@ -939,8 +939,13 @@ static Class hackishFixClass = Nil;
         
         float w =0;
         float h =0;
-        w = 160;
-        h = 160/image.size.width*image.size.height;
+        w = image.size.width;
+        h = image.size.height;
+        if (image.size.width>500) {
+            w = 500;
+            h = 500*image.size.height/image.size.width;
+            
+        }
         [[UpLoadImageManager shareInstance] upLoadImageType:UploadImagesTypeRelease image:image imageSize:CGSizeMake(w, h) imageBlock:^(UpLoadImageModal * upLoadImageModal) {
 //            if (!weakSelf.selectedImageURL) {
             

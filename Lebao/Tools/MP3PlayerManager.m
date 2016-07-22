@@ -111,9 +111,10 @@ static MP3PlayerManager* mP3PlayerManager;
     //录音格式 无法使用
     [settings setValue :[NSNumber numberWithInt:kAudioFormatLinearPCM] forKey: AVFormatIDKey];
     //采样率
-    [settings setValue :[NSNumber numberWithFloat:11025.0] forKey: AVSampleRateKey];//44100.0
+    [settings setValue :[NSNumber numberWithFloat:8000] forKey: AVSampleRateKey];
     //通道数
     [settings setValue :[NSNumber numberWithInt:2] forKey: AVNumberOfChannelsKey];
+
     //音频质量,采样质量
     [settings setValue:[NSNumber numberWithInt:AVAudioQualityMin] forKey:AVEncoderAudioQualityKey];
     
@@ -228,7 +229,7 @@ static MP3PlayerManager* mP3PlayerManager;
         unsigned char mp3_buffer[MP3_SIZE];
         
         lame_t lame = lame_init();
-        lame_set_in_samplerate(lame, 11025.0);
+        lame_set_in_samplerate(lame, 8000);
         lame_set_VBR(lame, vbr_default);
         lame_init_params(lame);
         
@@ -315,6 +316,8 @@ static MP3PlayerManager* mP3PlayerManager;
         }
         else
         {
+            
+            
             [[ToolManager shareInstance] showInfoWithStatus:@" 转化MP3格式错误"];
         }
     }];
