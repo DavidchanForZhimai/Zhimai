@@ -15,7 +15,7 @@
 
 #define IMG_URL  [NSString stringWithFormat:ImageURLS]
 //录音地址
-#define kRecordAudioFile @"myRecord.wav"
+#define kRecordAudioFile @"myRecord.caf"
 
 #define BACKCOLOR [UIColor colorWithWhite:0.941 alpha:1.000]
 //手机屏幕高

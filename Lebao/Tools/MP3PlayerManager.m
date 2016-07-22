@@ -44,6 +44,7 @@ static MP3PlayerManager* mP3PlayerManager;
 //删除录音
 - (void)removeAudioRecorder
 {
+    NSLog(@"removeAudioRecorder");
     [self.audioPlayer stop];
     [self.audioRecorder stop];
     [self.audioRecorder deleteRecording];
@@ -108,6 +109,7 @@ static MP3PlayerManager* mP3PlayerManager;
  */
 -(NSDictionary *)getAudioSetting{
     NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
+    
     //录音格式 无法使用
     [settings setValue :[NSNumber numberWithInt:kAudioFormatLinearPCM] forKey: AVFormatIDKey];
     //采样率
@@ -116,7 +118,7 @@ static MP3PlayerManager* mP3PlayerManager;
     [settings setValue :[NSNumber numberWithInt:2] forKey: AVNumberOfChannelsKey];
 
     //音频质量,采样质量
-    [settings setValue:[NSNumber numberWithInt:AVAudioQualityMin] forKey:AVEncoderAudioQualityKey];
+    [settings setValue:[NSNumber numberWithInt:AVAudioQualityLow] forKey:AVEncoderAudioQualityKey];
     
     //....其他设置等
     return settings;
@@ -232,6 +234,7 @@ static MP3PlayerManager* mP3PlayerManager;
         lame_set_in_samplerate(lame, 8000);
         lame_set_VBR(lame, vbr_default);
         lame_init_params(lame);
+        
         
         do {
             read = (int)fread(pcm_buffer, 2*sizeof(short int), PCM_SIZE, pcm);

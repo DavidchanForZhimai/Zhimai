@@ -164,7 +164,7 @@
 -(void)soundBtnAction:(UIButton *)sender
 {
     
-  //  NSLog(@"sende.tag=%ld",sender.tag);
+  
     if (![[MP3PlayerManager shareInstance] canRecord]) {
         
         [[ToolManager shareInstance] showAlertViewTitle:@"提示" contentText:@"请到设置-隐私-麦克风-打开麦克风权限" showAlertViewBlcok:^{
@@ -456,6 +456,26 @@
             return;
         }
         induStr = @"car";
+    }
+    if (_soundBtn.tag ==1002) {
+        
+        [[ToolManager shareInstance] showAlertViewTitle:@"提示" contentText:@"放弃录音？" showAlertViewBlcok:^{
+            _soundBtn.tag =1101;
+            [self repeatBtnAction:_soundBtn];
+            
+            PayDingJinVC * payVC = [[PayDingJinVC alloc]init];
+            payVC.zfymType = FaBuZhiFu;
+            payVC.qwjeStr = _bcTex.text;
+            payVC.titStr = _titTex.text;
+            payVC.content = _contTex.text;
+            payVC.industry = induStr;
+            payVC.jineStr = _moneyLab.text;
+            payVC.isAudio=btnMark;
+            [self.navigationController pushViewController:payVC animated:YES];
+            
+        }];
+        
+        return;
     }
     
   //  NSLog(@"%@",induStr);
