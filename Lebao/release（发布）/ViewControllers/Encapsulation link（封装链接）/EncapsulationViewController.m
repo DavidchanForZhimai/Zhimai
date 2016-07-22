@@ -369,10 +369,10 @@ typedef NS_ENUM(int,SwitchActionTag) {
         if ( weakSelf.data.product.count>0) {
             SelectedPruductViewController *pruduct = allocAndInit(SelectedPruductViewController);
             pruduct.selectedPruductArray = weakSelf.data.product;
-            NSLog(@"weakSelf.data.product =%@",weakSelf.data.product);
+         //   NSLog(@"weakSelf.data.product =%@",weakSelf.data.product);
             pruduct.selectedPruductSureBlock = ^(NSDictionary *dic)
             {
-                NSLog(@"dic =%@",dic);
+         //       NSLog(@"dic =%@",dic);
                 [weakSelf addProductWithId:dic[@"id"] andImageUrl:dic[@"imgurl"] andTitle:dic[@"title"] andView:weakSelf andCellHeight:cellHeight];
             };
             

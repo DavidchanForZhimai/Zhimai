@@ -214,7 +214,7 @@
                     }];
                     [_banner setDidClickImageBlock:^(UIImageView *imageView, NSString *url, NSInteger index) {
                         DiscoverHomePageData *data = modal.datas[index];
-                        NSLog(@"%@",data.foundlink);
+                    //    NSLog(@"%@",data.foundlink);
                         [[ToolManager shareInstance] loadWebViewWithUrl:data.foundlink title:weakSelf.banner.imageTitles[index] pushView:weakSelf rightBtn:nil];
                     }];
                     

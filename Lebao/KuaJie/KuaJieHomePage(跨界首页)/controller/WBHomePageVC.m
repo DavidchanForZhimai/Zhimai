@@ -20,7 +20,7 @@
 #import "CoreArchive.h"
 #import "CALayer+Transition.h"
 #import "ViewController.h"//选择地址
-
+#import "LoCationManager.h"
 #define xsTabTag  110
 #define jjrTabTag 120
 @interface WBHomePageVC ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>
@@ -93,6 +93,11 @@
 
         
     };
+    
+    
+    
+//    [[LoCationManager shareInstance]getLatitudeAndLongitude];
+    
     
 }
 

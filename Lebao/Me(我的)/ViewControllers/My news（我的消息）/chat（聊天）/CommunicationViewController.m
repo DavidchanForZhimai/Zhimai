@@ -359,7 +359,7 @@ typedef NS_ENUM(NSUInteger,ButtonActionTag) {
 }
 - (void)setData:(NSDictionary *)data
 {
-    NSLog(@"data = %@",data);
+    //NSLog(@"data = %@",data);
     CommunityDataModal *modal =[CommunityDataModal mj_objectWithKeyValues:data];
     MessageModel *message = [MessageModel messageModelWithModal:modal];
     CellFrameModel *lastFrame = [_cellFrameDatas lastObject];

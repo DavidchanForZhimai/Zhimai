@@ -211,7 +211,7 @@
 }
 - (void)addCityDict:(NSMutableDictionary *)dic hotcity:(NSMutableArray *)hotCity
 {
-    NSLog(@"dic =%@",dic);
+    
     //索引城市
     [_allCitysDictionary addEntriesFromDictionary:dic];
    

@@ -281,7 +281,7 @@
         [[ToolManager shareInstance] showWithStatus];
     }
     [XLDataService postWithUrl:PersonalURL param:parame modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-        NSLog(@"data == %@",dataObj);
+       // NSLog(@"data == %@",dataObj);
         if (isRefresh) {
             [[ToolManager shareInstance]endHeaderWithRefreshing
              :_myActiveValueView];

@@ -98,7 +98,7 @@
 /**
  下载文件，监听下载进度
  */
-+ (void)downloadRequest:(NSString *)url successAndProgress:(progressBlock)progressHandler complete:(responseBlock)completionHandler {
++ (void)downloadRequest:(NSString *)url  successAndProgress:(progressBlock)progressHandler complete:(responseBlock)completionHandler {
     
     if (![self checkNetworkStatus]) {
         progressHandler(0, 0, 0);
@@ -116,6 +116,8 @@
     NSURLSessionDownloadTask *downloadTask = [manager downloadTaskWithRequest:request progress:&kProgress destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
         
         NSURL *documentUrl = [[NSFileManager defaultManager] URLForDirectory :NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
+      
+        NSLog(@"[documentUrl URLByAppendingPathComponent:[response suggestedFilename]] =%@",[documentUrl URLByAppendingPathComponent:[response suggestedFilename]]);
         
         return [documentUrl URLByAppendingPathComponent:[response suggestedFilename]];
         

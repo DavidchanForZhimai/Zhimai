@@ -20,6 +20,9 @@
 #import "MP3PlayerManager.h"
 @interface XianSuoDetailVC ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
 
+{
+    NSString *_url;
+}
 @property (strong,nonatomic)NSDictionary * xiansDic;
 @property (strong ,nonatomic)NSMutableArray * coopArr;
 @property (strong,nonatomic)UIView * lqhxV;
@@ -31,6 +34,12 @@
 -(void)viewWillAppear:(BOOL)animated
 {
       [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(infoAction)name:UITextFieldTextDidChangeNotification object:nil];
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+     [self removeNoti];
+    [[MP3PlayerManager shareInstance] stopPlayer];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -48,7 +57,24 @@
                 [_coopArr addObject:dic];
             }
             _xiansDic = [NSDictionary dictionaryWithDictionary:[jsonDic objectForKey:@"datas"]];
+//            NSLog(@"_xiansDic =%@",_xiansDic,HttpURL);
             [self addButtomScro];
+            
+            if (![_xiansDic[@"audios"] isEqualToString:@""]) {
+                
+                UIButton *soundBtn=[UIButton buttonWithType:UIButtonTypeCustom];//语音button
+                soundBtn.frame=CGRectMake(_xsDetailV.frame.size.width-40, 10, 30, 30);
+                [soundBtn setBackgroundImage: [UIImage imageNamed:@"aaa@3x"] forState:UIControlStateNormal];
+                [soundBtn addTarget:self action:@selector(soundBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+                [_xsDetailV addSubview:soundBtn];
+                
+              _url=[NSString stringWithFormat:@"%@%@",ImageURLS,_xiansDic[@"audios"]];
+               
+                
+            }
+            
+            
+            
             if ([[_xiansDic objectForKey:@"iscoop"] intValue ]==1) {
                 _linqBtn.selected = YES;
                 _linqBtn.backgroundColor = [UIColor clearColor];
@@ -536,24 +562,20 @@
     [duihuaBtn addTarget: self action:@selector(duihuaAction) forControlEvents:UIControlEventTouchUpInside];
     [_duihuaV addSubview:duihuaBtn];
 }
--(void)addTheXsV  //线索View
+#pragma mark 线索View
+-(void)addTheXsV
 {
     _xsDetailV = [[UIView alloc]initWithFrame:CGRectMake(10, 181-64, SCREEN_WIDTH-20, 0)];
     _xsDetailV.backgroundColor = [UIColor whiteColor];
     [_bottomScr addSubview:_xsDetailV];
     
-    UILabel * titLab = [[UILabel alloc]initWithFrame:CGRectMake(0, 10, _xsDetailV.frame.size.width, 30)];//标题lab
+    UILabel * titLab = [[UILabel alloc]initWithFrame:CGRectMake(30, 10, _xsDetailV.frame.size.width-60, 30)];//标题lab
     titLab.font = [UIFont systemFontOfSize:16];
     titLab.textColor = [UIColor blackColor];
     titLab.textAlignment = NSTextAlignmentCenter;
     titLab.text = [_xiansDic objectForKey:@"title"];
     [_xsDetailV addSubview:titLab];
     
-    UIButton *soundBtn=[UIButton buttonWithType:UIButtonTypeCustom];//语音button
-    soundBtn.frame=CGRectMake(_xsDetailV.frame.size.width-40, 10, 30, 30);
-    [soundBtn setBackgroundImage: [UIImage imageNamed:@"aaa@3x"] forState:UIControlStateNormal];
-    [soundBtn addTarget:self action:@selector(soundBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [_xsDetailV addSubview:soundBtn];
 
     
     UILabel * detailLab = [[UILabel alloc]initWithFrame:CGRectMake(3, 45, _xsDetailV.frame.size.width-6, 60)];//内容lab
@@ -854,7 +876,20 @@
 #pragma mark - 语音点击按钮
 -(void)soundBtnClicked:(UIButton *)sender
 {
-   [[MP3PlayerManager shareInstance] audioRecorderWithURl:kRecordAudioFile];
+
+//    _url = @"http://pic.lmlm.cn/record/201607/22/146915727469518.mp3";
+    
+    NSArray *pathArrays = [_url componentsSeparatedByString:@"/"];
+    NSString *topath;
+    if (pathArrays.count>0) {
+        topath = pathArrays[pathArrays.count-1];
+    }
+    
+    [[MP3PlayerManager shareInstance] downLoadAudioWithUrl:_url  finishDownLoadBloak:^(BOOL succeed) {
+        //        NSLog(@"documentUrl =%@",path);
+        
+        [[MP3PlayerManager shareInstance] audioPlayerWithURl:topath];
+    }];
 }
 
 
@@ -891,10 +926,7 @@
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
--(void)viewWillDisappear:(BOOL)animated
-{
-    [self removeNoti];
-}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

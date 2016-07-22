@@ -57,7 +57,7 @@
         [_jjrTab reloadData];
         [self getJsonWithType:_typeName];
         [_jjrTab.mj_header endRefreshing];
-        NSLog(@"刷新经纪人");
+      //  NSLog(@"刷新经纪人");
         
     }];
     _jjrTab.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreJJR)];

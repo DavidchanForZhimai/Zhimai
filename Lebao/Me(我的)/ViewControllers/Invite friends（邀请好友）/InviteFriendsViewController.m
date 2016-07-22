@@ -261,7 +261,7 @@
     [[ToolManager shareInstance] showWithStatus];
   
     [XLDataService postWithUrl:PersonalURL param:parame modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-        NSLog(@"dataObj===%@",dataObj);
+      //  NSLog(@"dataObj===%@",dataObj);
         if (dataObj) {
             modal = [InviteFriendsModal mj_objectWithKeyValues:dataObj];
             
