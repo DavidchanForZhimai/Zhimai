@@ -60,7 +60,7 @@
 //            NSLog(@"_xiansDic =%@",_xiansDic,HttpURL);
             [self addButtomScro];
             
-            if (![_xiansDic[@"audios"] isEqualToString:@""]) {
+            if (_xiansDic[@"audios"]&&![_xiansDic[@"audios"] isEqualToString:@""]) {
                 
                 UIButton *soundBtn=[UIButton buttonWithType:UIButtonTypeCustom];//语音button
                 soundBtn.frame=CGRectMake(_xsDetailV.frame.size.width-40, 10, 30, 30);

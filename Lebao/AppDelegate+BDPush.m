@@ -100,7 +100,7 @@ static BOOL isBackGroundActivateApplication;
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    NSLog(@"test:%@",deviceToken);
+   // NSLog(@"test:%@",deviceToken);
     [BPush registerDeviceToken:deviceToken];
     [BPush bindChannelWithCompleteHandler:^(id result, NSError *error) {
         

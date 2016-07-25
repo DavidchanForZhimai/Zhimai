@@ -13,7 +13,7 @@
 #import "ToolManager.h"
 #import "HomeInfo.h"
 #import "CommunicationViewController.h"
-
+#import "XHPicView.h"
 //产品
 #import "MyContentDetailViewController.h"
 #import "MyProductDetailViewController.h"
@@ -24,6 +24,8 @@
 #import "MyLQDetailVC.h"
 #import "MyXSDetailVC.h"
 #import "NSString+Extend.h"
+
+
 @interface JJRDetailVC ()<UIActionSheetDelegate>
 {
     UIScrollView * bottomScr;
@@ -203,7 +205,7 @@
 
     [self addTheXsView:CGRectGetMaxY(xqV.frame) + 10];
 }
--(void)addTxBtn:(UIView *)sender
+-(void)addTxBtn:(UIView *)sender//头像那一栏
 {
     UIImageView * headImg = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 41, 41)];
     NSString * imgUrl;
@@ -214,6 +216,10 @@
     }
    
     [[ToolManager shareInstance]imageView:headImg setImageWithURL:imgUrl placeholderType:PlaceholderTypeUserHead];
+    UIGestureRecognizer *TapOneGr=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(TapOne:)];
+    [headImg addGestureRecognizer:TapOneGr];
+    headImg.userInteractionEnabled=YES;
+
     [sender addSubview:headImg];
   
     UILabel * userNameLab = [[UILabel alloc]initWithFrame:CGRectMake(headImg.frame.origin.x+headImg.frame.size.width+10, 7, 55, 25)];
@@ -270,7 +276,7 @@
     [sender addSubview:hxV];
     
 }
--(void)addTheRoundView:(UIView *)sender
+-(void)addTheRoundView:(UIView *)sender //发布领取满意度
 {
     UIView * gRuondV = [[UIView alloc]initWithFrame:CGRectMake(0, 61, sender.frame.size.width, 70)];
     gRuondV.backgroundColor = [UIColor clearColor];
@@ -551,6 +557,7 @@
         
     }
 }
+#pragma mark
 -(void)addTheThreeFuwu:(UIView *)sender
 {
     for (int i = 0 ; i<_gdfwArr.count; i++) {
@@ -559,9 +566,9 @@
         cell.backgroundColor =WhiteColor;
         [sender addSubview:cell];
         
-        UIImageView *cellIcon = allocAndInitWithFrame(UIImageView, frame(10, 10, 50 , frameHeight(cell) - 20));
+        UIImageView *cellIcon = allocAndInitWithFrame(UIImageView, frame(10, 10, 50 , frameHeight(cell) - 20));//头像
         [[ToolManager shareInstance] imageView:cellIcon setImageWithURL:_gdfwArr[i][@"imgurl"] placeholderType:PlaceholderTypeOther];
-        [cell addSubview:cellIcon];
+                [cell addSubview:cellIcon];
         
         [UILabel createLabelWithFrame:frame(CGRectGetMaxX(cellIcon.frame) + 8, frameY(cellIcon), frameWidth(cell) -CGRectGetMaxX(cellIcon.frame) - 20 , 28*SpacedFonts) text:_gdfwArr[i][@"title"] fontSize: 28*SpacedFonts textColor:BlackTitleColor textAlignment:NSTextAlignmentLeft inView:cell];
         
@@ -605,7 +612,22 @@
        
     }
 }
-#pragma mark
+#pragma mark -头像点击事件
+-(void)TapOne:(UITapGestureRecognizer *)tap
+{
+    UIImageView *imageView = (UIImageView *)tap.view;
+    XHPicView *picView = [[XHPicView alloc]initWithFrame:self.view.frame withImgs:@[imageView.image] withImgUrl:nil];
+    picView.alpha = 0;
+    [UIView animateWithDuration:0.3 animations:^{
+        picView.alpha = 1;
+    }];
+    
+    picView.eventBlock = ^(NSString *event){
+        NSLog(@"触发事件%@",event);
+    };
+    [self.view addSubview:picView];
+
+}
 #pragma mark - labTap
 - (void)backVTap:(UITapGestureRecognizer *)sender
 {
