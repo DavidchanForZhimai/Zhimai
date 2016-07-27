@@ -72,6 +72,14 @@ static MP3PlayerManager* mP3PlayerManager;
     [self.audioPlayer stop];
     
 }
+-(void)pausePlayer
+{
+    [self.audioPlayer pause];
+}
+-(void)playerNil
+{
+    self.audioPlayer=nil;
+}
 #pragma mark - 私有方法
 /**
  *  设置音频会话
@@ -116,7 +124,7 @@ static MP3PlayerManager* mP3PlayerManager;
     [settings setValue :[NSNumber numberWithFloat:8000] forKey: AVSampleRateKey];
     //通道数
     [settings setValue :[NSNumber numberWithInt:2] forKey: AVNumberOfChannelsKey];
-
+    
     //音频质量,采样质量
     [settings setValue:[NSNumber numberWithInt:AVAudioQualityLow] forKey:AVEncoderAudioQualityKey];
     
@@ -131,27 +139,27 @@ static MP3PlayerManager* mP3PlayerManager;
  */
 -(void)setRecorder{
     
-        _audioRecorder = nil;
+    _audioRecorder = nil;
     
-        //创建录音文件保存路径
-        NSURL *url=[self getSavePath];
-        //创建录音格式设置
-        NSDictionary *setting=[self getAudioSetting];
-        //创建录音机
-        NSError *error=nil;
-        _audioRecorder=[[AVAudioRecorder alloc]initWithURL:url settings:setting error:&error];
+    //创建录音文件保存路径
+    NSURL *url=[self getSavePath];
+    //创建录音格式设置
+    NSDictionary *setting=[self getAudioSetting];
+    //创建录音机
+    NSError *error=nil;
+    _audioRecorder=[[AVAudioRecorder alloc]initWithURL:url settings:setting error:&error];
+    
+    _audioRecorder.delegate=self;
+    //        _audioRecorder.meteringEnabled=YES;//如果要监控声波则必须设置为YES
+    if (error) {
+        NSLog(@"创建播放器过程中发生错误，错误信息：%@",error.localizedDescription);
         
-        _audioRecorder.delegate=self;
-        //        _audioRecorder.meteringEnabled=YES;//如果要监控声波则必须设置为YES
-        if (error) {
-            NSLog(@"创建播放器过程中发生错误，错误信息：%@",error.localizedDescription);
-            
-        }
-        else
-        {
-            
-        }
-
+    }
+    else
+    {
+        
+    }
+    
 }
 
 /**
@@ -160,14 +168,16 @@ static MP3PlayerManager* mP3PlayerManager;
  *  @return 播放器
  */
 -(void)setPlayer{
-        _audioPlayer = nil;
+    if (_audioPlayer==nil) {
         NSURL *url=[self getSavePath];
         NSError *error=nil;
         _audioPlayer=[[AVAudioPlayer alloc]initWithContentsOfURL:url error:&error];
         _audioPlayer.numberOfLoops=0;
         [_audioPlayer prepareToPlay];
         _audioPlayer.delegate = self;
-        
+    }
+    
+    
     
 }
 
@@ -179,14 +189,16 @@ static MP3PlayerManager* mP3PlayerManager;
  *  @param flag     是否成功
  */
 -(void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
-   
+    
     NSLog(@"录音完成!");
 }
 #pragma mark - 播放器代理方法
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
-    
-    NSLog(@"bofang完成!");
+    _audioPlayer=nil;
+    if (_playFinishBlock) {
+        _playFinishBlock(flag);
+    }
 }
 
 //新增api,获取录音权限. 返回值,YES为无拒绝,NO为拒绝录音.
@@ -252,14 +264,14 @@ static MP3PlayerManager* mP3PlayerManager;
         fclose(pcm);
     }
     @catch (NSException *exception) {
-//        NSLog(@"%@",[exception description]);
+        //        NSLog(@"%@",[exception description]);
         [[ToolManager shareInstance] showAlertMessage:[exception description]];
     }
     @finally {
         [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategorySoloAmbient error: nil];
     }
     
-   
+    
     if (finishBlock) {
         finishBlock(YES);
     }
@@ -277,7 +289,7 @@ static MP3PlayerManager* mP3PlayerManager;
     
     [self convertMp3FinishBlock:^(BOOL succeed) {
         if (succeed) {
-
+            
             XLFileConfig *fileConfig = allocAndInit(XLFileConfig);
             NSData *audioData =[NSData dataWithContentsOfFile:[self mp3Path]];
             fileConfig.fileData = audioData;
@@ -287,23 +299,23 @@ static MP3PlayerManager* mP3PlayerManager;
             NSMutableDictionary *parameter = [Parameter parameterWithSessicon];
             [parameter setObject:type forKey:Type];
             [parameter setObject:@"audioFile" forKey:@"name"];
-//            [[ToolManager shareInstance] showWithStatus:@"上传音频中..."];
+            //            [[ToolManager shareInstance] showWithStatus:@"上传音频中..."];
             [XLNetworkRequest updateRequest:UploadAudioURL params:parameter fileConfig:fileConfig success:^(id responseObj) {
                 
                 NSLog(@"responseObj =%@ parameter= %@",responseObj,parameter);
                 
                 if (responseObj) {
-                   
+                    
                     if ([responseObj[@"rtcode"]intValue] ==1) {
                         [[ToolManager shareInstance] dismiss];
-                    
+                        
                         finishuploadBlock(YES,responseObj);
-                    
-                        }
-                        else
-                        {
-                         [[ToolManager shareInstance] showInfoWithStatus:responseObj[@"rtmsg"]];
-                        }
+                        
+                    }
+                    else
+                    {
+                        [[ToolManager shareInstance] showInfoWithStatus:responseObj[@"rtmsg"]];
+                    }
                     
                 }
                 else
@@ -325,7 +337,7 @@ static MP3PlayerManager* mP3PlayerManager;
         }
     }];
     
-
+    
 }
 //下载音频
 - (void)downLoadAudioWithUrl:(NSString *)url  finishDownLoadBloak:(FinishDownloadBlock)finishDownLoadBloak{

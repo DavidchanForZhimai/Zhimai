@@ -60,18 +60,6 @@
 //            NSLog(@"_xiansDic =%@",_xiansDic,HttpURL);
             [self addButtomScro];
             
-            if (_xiansDic[@"audios"]&&![_xiansDic[@"audios"] isEqualToString:@""]) {
-                
-                UIButton *soundBtn=[UIButton buttonWithType:UIButtonTypeCustom];//语音button
-                soundBtn.frame=CGRectMake(_xsDetailV.frame.size.width-40, 10, 30, 30);
-                [soundBtn setBackgroundImage: [UIImage imageNamed:@"aaa@3x"] forState:UIControlStateNormal];
-                [soundBtn addTarget:self action:@selector(soundBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-                [_xsDetailV addSubview:soundBtn];
-                
-              _url=[NSString stringWithFormat:@"%@%@",ImageURLS,_xiansDic[@"audios"]];
-               
-                
-            }
             
             
             
@@ -569,7 +557,7 @@
     _xsDetailV.backgroundColor = [UIColor whiteColor];
     [_bottomScr addSubview:_xsDetailV];
     
-    UILabel * titLab = [[UILabel alloc]initWithFrame:CGRectMake(30, 10, _xsDetailV.frame.size.width-60, 30)];//标题lab
+    UILabel * titLab = [[UILabel alloc]initWithFrame:CGRectMake(0, 10, _xsDetailV.frame.size.width, 30)];//标题lab
     titLab.font = [UIFont systemFontOfSize:16];
     titLab.textColor = [UIColor blackColor];
     titLab.textAlignment = NSTextAlignmentCenter;
@@ -587,11 +575,36 @@
     detailLab.text = [_xiansDic objectForKey:@"content"];
     CGSize detailLabsize = [detailLab sizeWithMultiLineContent:detailLab.text rowWidth:frameWidth(detailLab) font:detailLab.font];
     detailLab.lineBreakMode = NSLineBreakByTruncatingTail;
-    detailLab.frame = frame(frameX(detailLab), frameY(detailLab), frameWidth(detailLab), detailLabsize.height + 20);
+    detailLab.frame = frame(frameX(detailLab), frameY(detailLab), frameWidth(detailLab), detailLabsize.height + 10);
     
     [_xsDetailV addSubview:detailLab];
     
-    UIView * sxV = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(detailLab.frame), _xsDetailV.frame.size.width-20, 1)];
+    
+       UIImageView *soundImg;
+    if (_xiansDic[@"audios"]&&![_xiansDic[@"audios"] isEqualToString:@""]) {
+        
+        soundImg=[[UIImageView alloc]init];//语音button
+        UIImage *image = [UIImage imageNamed:@"bofangyuyuying3"];
+        soundImg.frame=CGRectMake((frameWidth(_xsDetailV) - image.size.width*1.7)/2.0,CGRectGetMaxY(detailLab.frame), image.size.width*1.7,  image.size.height*1.7);
+        soundImg.image=image;
+        soundImg.animationImages = @[[UIImage imageNamed:@"bofangyuyuying1"],[UIImage imageNamed:@"bofangyuyuying2"],[UIImage imageNamed:@"bofangyuyuying3"]];
+        soundImg.animationDuration = 1.5;
+        soundImg.animationRepeatCount = 0;
+        soundImg.tag=1110;
+        
+        UITapGestureRecognizer *oneTap=[[UITapGestureRecognizer alloc]init];
+        [oneTap addTarget:self action:@selector(soundBtnClicked:)];
+        soundImg.userInteractionEnabled=YES;
+        [soundImg addGestureRecognizer:oneTap];
+        [_xsDetailV addSubview:soundImg];
+        
+        _url=[NSString stringWithFormat:@"%@%@",ImageURLS,_xiansDic[@"audios"]];
+        
+        
+    }
+
+    
+    UIView * sxV = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(soundImg.frame), _xsDetailV.frame.size.width-20, 1)];
     sxV.backgroundColor = [UIColor colorWithRed:0.925 green:0.925 blue:0.929 alpha:1.000];
     [_xsDetailV addSubview:sxV];
     
@@ -874,7 +887,7 @@
 }
 
 #pragma mark - 语音点击按钮
--(void)soundBtnClicked:(UIButton *)sender
+-(void)soundBtnClicked:(UIGestureRecognizer *)sender
 {
 
 //    _url = @"http://pic.lmlm.cn/record/201607/22/146915727469518.mp3";
@@ -884,12 +897,33 @@
     if (pathArrays.count>0) {
         topath = pathArrays[pathArrays.count-1];
     }
-    
-    [[MP3PlayerManager shareInstance] downLoadAudioWithUrl:_url  finishDownLoadBloak:^(BOOL succeed) {
-        //        NSLog(@"documentUrl =%@",path);
+    if (sender.view.tag==1110) {
+        [[MP3PlayerManager shareInstance] downLoadAudioWithUrl:_url  finishDownLoadBloak:^(BOOL succeed) {
+            if (succeed) {
+                [(UIImageView *)sender.view startAnimating];
+                sender.view.tag=1111;
+                
+                [[MP3PlayerManager shareInstance] audioPlayerWithURl:topath];
+                [MP3PlayerManager shareInstance].playFinishBlock = ^(BOOL succeed)
+                {
+                    if (succeed) {
+                        sender.view.tag=1110;
+                        [(UIImageView *)sender.view stopAnimating];
+                    }
+                    
+                };
+
+            }
+          
+        }];
         
-        [[MP3PlayerManager shareInstance] audioPlayerWithURl:topath];
-    }];
+    }else if (sender.view.tag==1111){
+         sender.view.tag=1110;
+        [[MP3PlayerManager shareInstance] pausePlayer];
+        [(UIImageView *)sender.view stopAnimating];
+    }
+   
+    
 }
 
 
@@ -924,6 +958,7 @@
 }
 -(void)backAction
 {
+    [[MP3PlayerManager shareInstance]playerNil];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

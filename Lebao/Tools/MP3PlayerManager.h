@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 #define UploadAudioURL [NSString stringWithFormat:@"%@upload/audio",HttpURL]
+typedef void (^PlayFinishBlock)(BOOL succeed);
 typedef void (^FinishBlock)(BOOL succeed);
 typedef void (^FinishuploadBlock)(BOOL succeed,id  audioDic);
 typedef void (^FinishDownloadBlock)(BOOL succeed);
@@ -16,6 +17,7 @@ typedef void (^FinishDownloadBlock)(BOOL succeed);
 
 @property (nonatomic,strong) AVAudioRecorder *audioRecorder;//音频录音机
 @property (nonatomic,strong) AVAudioPlayer *audioPlayer;//播放器
+@property (nonatomic,copy) PlayFinishBlock playFinishBlock;//播放器播放成功后的回调
 @property(nonatomic,copy) NSString *url;
 - (BOOL)canRecord;
 + (MP3PlayerManager *)shareInstance;
@@ -24,6 +26,8 @@ typedef void (^FinishDownloadBlock)(BOOL succeed);
 - (void)stopAudioRecorder;
 - (void)removeAudioRecorder;
 - (void)stopPlayer;
+-(void)pausePlayer;
+-(void)playerNil;
 - (void)audioPlayerWithURl:(NSString *)url;
 
 

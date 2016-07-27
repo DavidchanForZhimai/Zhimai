@@ -123,20 +123,8 @@
     titLab.text = [_xiansDic objectForKey:@"title"];
     [xsDetailV addSubview:titLab];
     
-    //语音
     
-    
-    if (_xiansDic[@"audios"]&&![_xiansDic[@"audios"]isEqualToString:@""]) {
-        
-        UIButton *soundBtn=[UIButton buttonWithType:UIButtonTypeCustom];//语音button
-        soundBtn.frame=CGRectMake(xsDetailV.frame.size.width-40,45, 30, 30);
-        [soundBtn setBackgroundImage: [UIImage imageNamed:@"aaa@3x"] forState:UIControlStateNormal];
-        [soundBtn addTarget:self action:@selector(playAudioBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [xsDetailV addSubview:soundBtn];
-        
-        _url = [NSString stringWithFormat:@"%@%@",ImageURLS,_xiansDic[@"audios"]];
-    }
-    
+
 
     
     UILabel * detailLab = [[UILabel alloc]initWithFrame:CGRectMake(3, titLab.frame.size.height+titLab.frame.origin.y+5, xsDetailV.frame.size.width-6, 60)];
@@ -152,7 +140,32 @@
     
     [xsDetailV addSubview:detailLab];
     
-    UIView * sxV = [[UIView alloc]initWithFrame:CGRectMake(10, detailLab.frame.size.height+detailLab.frame.origin.y+5, xsDetailV.frame.size.width-20, 1)];
+    //语音
+    UIImageView *soundImg;
+    if (_xiansDic[@"audios"]&&![_xiansDic[@"audios"] isEqualToString:@""]) {
+        
+        soundImg=[[UIImageView alloc]init];//语音button
+        UIImage *image = [UIImage imageNamed:@"bofangyuyuying3"];
+        soundImg.frame=CGRectMake((frameWidth(xsDetailV) - image.size.width*1.7)/2.0,CGRectGetMaxY(detailLab.frame), image.size.width*1.7,  image.size.height*1.7);
+        soundImg.image=image;
+        soundImg.animationImages = @[[UIImage imageNamed:@"bofangyuyuying1"],[UIImage imageNamed:@"bofangyuyuying2"],[UIImage imageNamed:@"bofangyuyuying3"]];
+        soundImg.animationDuration = 1.5;
+        soundImg.animationRepeatCount = 0;
+        soundImg.tag=1110;
+        
+        UITapGestureRecognizer *oneTap=[[UITapGestureRecognizer alloc]init];
+        [oneTap addTarget:self action:@selector(playAudioBtnClicked:)];
+        soundImg.userInteractionEnabled=YES;
+        [soundImg addGestureRecognizer:oneTap];
+        [xsDetailV addSubview:soundImg];
+        
+        _url=[NSString stringWithFormat:@"%@%@",ImageURLS,_xiansDic[@"audios"]];
+        
+        
+    }
+
+    
+    UIView * sxV = [[UIView alloc]initWithFrame:CGRectMake(10, soundImg.frame.size.height+soundImg.frame.origin.y+5, xsDetailV.frame.size.width-20, 1)];
     sxV.backgroundColor = [UIColor colorWithRed:0.925 green:0.925 blue:0.929 alpha:1.000];
     [xsDetailV addSubview:sxV];
     
@@ -1042,7 +1055,7 @@
     
 };
 #pragma mark - 语音点击按钮
--(void)playAudioBtnClicked:(UIButton *)sender
+-(void)playAudioBtnClicked:(UIGestureRecognizer *)sender
 {
 
     NSArray *pathArrays = [_url componentsSeparatedByString:@"/"];
@@ -1050,13 +1063,31 @@
     if (pathArrays.count>0) {
         topath = pathArrays[pathArrays.count-1];
     }
-    
-    [[MP3PlayerManager shareInstance] downLoadAudioWithUrl:_url  finishDownLoadBloak:^(BOOL succeed) {
-        if (succeed) {
-            [[MP3PlayerManager shareInstance] audioPlayerWithURl:topath];
-        }
+    if (sender.view.tag==1110) {
+        [[MP3PlayerManager shareInstance] downLoadAudioWithUrl:_url  finishDownLoadBloak:^(BOOL succeed) {
+            if (succeed) {
+                [(UIImageView *)sender.view startAnimating];
+                sender.view.tag=1111;
+                
+                [[MP3PlayerManager shareInstance] audioPlayerWithURl:topath];
+                [MP3PlayerManager shareInstance].playFinishBlock = ^(BOOL succeed)
+                {
+                    if (succeed) {
+                        sender.view.tag=1110;
+                        [(UIImageView *)sender.view stopAnimating];
+                    }
+                    
+                };
+            }
+            
+        }];
         
-    }];
+    }else if (sender.view.tag==1111){
+        [[MP3PlayerManager shareInstance] pausePlayer];
+         sender.view.tag=1110;
+        [(UIImageView *)sender.view stopAnimating];
+    }
+
 }
 -(void)whzDetaolAction:(UITapGestureRecognizer *)sender
 {
@@ -1145,6 +1176,7 @@
 }
 -(void)backAction
 {
+    [[MP3PlayerManager shareInstance]playerNil];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
