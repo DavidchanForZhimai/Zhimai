@@ -228,7 +228,7 @@ typedef NS_ENUM(int,SwitchActionTag) {
     {
         [[ToolManager shareInstance] seleteImageFormSystem:weakSelf seleteImageFormSystemBlcok:^(UIImage *image) {
             
-            [[UpLoadImageManager shareInstance] upLoadImageType:@"cover" image:image imageSize:CGSizeMake(120, 120) imageBlock:^(UpLoadImageModal * upLoadImageModal) {
+            [[UpLoadImageManager shareInstance] upLoadImageType:@"cover" image:image  imageBlock:^(UpLoadImageModal * upLoadImageModal) {
                 weakSelf.data.currentImageurl = upLoadImageModal.imgurl;
                 [[ToolManager shareInstance] imageView:weakSelf.coverImage setImageWithURL:weakSelf.data.currentImageurl placeholderType:PlaceholderTypeImageProcessing];
             }];
@@ -256,7 +256,7 @@ typedef NS_ENUM(int,SwitchActionTag) {
             
             [[ToolManager shareInstance] seleteImageFormSystem:weakSelf seleteImageFormSystemBlcok:^(UIImage *image) {
                 
-                [[UpLoadImageManager shareInstance] upLoadImageType:@"product" image:image imageSize:CGSizeMake(APPWIDTH*2, APPWIDTH*2) imageBlock:^(UpLoadImageModal * upLoadImageModal)
+                [[UpLoadImageManager shareInstance] upLoadImageType:@"product" image:image  imageBlock:^(UpLoadImageModal * upLoadImageModal)
                 {
 //                    NSLog(@"imageUrl =%@",imageUrl);
                     [weakSelf.data.imageurl addObject:upLoadImageModal.imgurl];

@@ -269,7 +269,7 @@ typedef NS_ENUM(NSInteger, ButtonAction) {
     [[ToolManager shareInstance] seleteImageFormSystem:self seleteImageFormSystemBlcok:^(UIImage *image) {
         if (seletedIndex ==0) {
             
-            [[UpLoadImageManager shareInstance] upLoadImageType:@"authen" image:image  imageSize:CGSizeMake(320, 320) imageBlock:^(UpLoadImageModal * upLoadImageModal) {
+            [[UpLoadImageManager shareInstance] upLoadImageType:@"authen" image:image   imageBlock:^(UpLoadImageModal * upLoadImageModal) {
                 leftImageUrl = upLoadImageModal.imgurl;
                 [[ToolManager shareInstance] imageView:_leftImage setImageWithURL:upLoadImageModal.imgurl placeholderType:PlaceholderTypeImageUnProcessing];
             }];
@@ -277,7 +277,7 @@ typedef NS_ENUM(NSInteger, ButtonAction) {
         }
         else
         {
-            [[UpLoadImageManager shareInstance]upLoadImageType:@"authen" image:image imageSize:CGSizeMake(320, 320) imageBlock:^(UpLoadImageModal * upLoadImageModal) {
+            [[UpLoadImageManager shareInstance]upLoadImageType:@"authen" image:image imageBlock:^(UpLoadImageModal * upLoadImageModal) {
                 rightImageUrl = upLoadImageModal.imgurl;
                 [[ToolManager shareInstance] imageView:_rightImage setImageWithURL:upLoadImageModal.imgurl placeholderType:PlaceholderTypeImageUnProcessing];
             }];

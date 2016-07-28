@@ -488,12 +488,9 @@
         
         [[ToolManager shareInstance] seleteImageFormSystem:self seleteImageFormSystemBlcok:^(UIImage *image) {
             NSString *type;
-            CGSize size;
-         
+     
             type =@"head";
-            size = CGSizeMake(100, 100);
-            
-            [[UpLoadImageManager shareInstance] upLoadImageType:type image:image imageSize:size imageBlock:^(UpLoadImageModal * upLoadImageModal) {
+            [[UpLoadImageManager shareInstance] upLoadImageType:type image:image imageBlock:^(UpLoadImageModal * upLoadImageModal) {
                 
                 weakSelf.saveBtn.hidden = NO;
                 

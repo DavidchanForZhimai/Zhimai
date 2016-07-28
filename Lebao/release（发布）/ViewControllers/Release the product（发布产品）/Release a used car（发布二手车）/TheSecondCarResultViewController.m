@@ -291,7 +291,7 @@ typedef NS_ENUM(int,SwitchActionTag) {
     weakSelf.feimianBtn.didClickBtnBlock = ^
     {
         [[ToolManager shareInstance] seleteImageFormSystem:weakSelf seleteImageFormSystemBlcok:^(UIImage *image) {
-            [[UpLoadImageManager shareInstance] upLoadImageType:UploadImagesTypeCar image:image imageSize:CGSizeMake(APPWIDTH, (APPWIDTH/image.size.width)*image.size.height) imageBlock:^(UpLoadImageModal * upLoadImageModal) {
+            [[UpLoadImageManager shareInstance] upLoadImageType:UploadImagesTypeCar image:image  imageBlock:^(UpLoadImageModal * upLoadImageModal) {
                 [_fengmianImageUrl setValue:upLoadImageModal.imgurl forKey:ImageDefault];
                 [_fengmianImageUrl setValue:upLoadImageModal.abbr_imgurl forKey:ImageDiagram];
                 [[ToolManager shareInstance] imageView:weakSelf.feimianBtn setImageWithURL:upLoadImageModal.abbr_imgurl placeholderType:PlaceholderTypeOther];
@@ -598,7 +598,7 @@ typedef NS_ENUM(int,SwitchActionTag) {
     weakSelf.feimianBtn.didClickBtnBlock = ^
     {
         [[ToolManager shareInstance] seleteImageFormSystem:weakSelf seleteImageFormSystemBlcok:^(UIImage *image) {
-            [[UpLoadImageManager shareInstance] upLoadImageType:@"property" image:image imageSize:CGSizeMake(APPWIDTH, (APPWIDTH/image.size.width)*image.size.height) imageBlock:^(UpLoadImageModal * upLoadImageModal) {
+            [[UpLoadImageManager shareInstance] upLoadImageType:@"property" image:image  imageBlock:^(UpLoadImageModal * upLoadImageModal) {
                 
                 [_fengmianImageUrl setValue:upLoadImageModal.abbr_imgurl forKey:ImageDiagram];
                 [_fengmianImageUrl setValue:upLoadImageModal.imgurl forKey:ImageDefault];

@@ -192,7 +192,7 @@
                 
                 [[ToolManager shareInstance] seleteImageFormSystem:weakSelf seleteImageFormSystemBlcok:^(UIImage *image) {
                     
-                    [[UpLoadImageManager shareInstance] upLoadImageType:UploadImagesTypeCar image:image imageSize:CGSizeMake(APPWIDTH, (APPWIDTH/image.size.width)*image.size.height) imageBlock:^(UpLoadImageModal * upLoadImageModal) {
+                    [[UpLoadImageManager shareInstance] upLoadImageType:UploadImagesTypeCar image:image  imageBlock:^(UpLoadImageModal * upLoadImageModal) {
                         
                         [imageDic setValue:upLoadImageModal.imgurl forKey:ImageDefault];
                         [imageDic setValue:upLoadImageModal.abbr_imgurl forKey:ImageDiagram];

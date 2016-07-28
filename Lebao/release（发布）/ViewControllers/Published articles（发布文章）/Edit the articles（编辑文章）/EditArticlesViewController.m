@@ -225,7 +225,7 @@ typedef NS_ENUM(int,SwitchActionTag) {
     {
         [[ToolManager shareInstance] seleteImageFormSystem:weakSelf seleteImageFormSystemBlcok:^(UIImage *image) {
             
-            [[UpLoadImageManager shareInstance] upLoadImageType:@"cover" image:image imageSize:CGSizeMake(120, 120) imageBlock:^(UpLoadImageModal * upLoadImageModal) {
+            [[UpLoadImageManager shareInstance] upLoadImageType:@"cover" image:image  imageBlock:^(UpLoadImageModal * upLoadImageModal) {
                 weakSelf.data.imageurl = upLoadImageModal.imgurl;
                 [[ToolManager shareInstance] imageView:weakSelf.coverImage setImageWithURL:weakSelf.data.imageurl placeholderType:PlaceholderTypeImageProcessing];
             }];

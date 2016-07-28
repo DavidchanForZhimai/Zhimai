@@ -37,7 +37,7 @@ typedef void (^ImageBlock)(UpLoadImageModal * upLoadImageModal);
 + (instancetype)shareInstance;
 
 //上传图片
-- (void)upLoadImageType:(NSString *)type image:(UIImage *)image imageSize:(CGSize )size imageBlock:(ImageBlock)imageBlock;
+- (void)upLoadImageType:(NSString *)type image:(UIImage *)image imageBlock:(ImageBlock)imageBlock;
 @end
 
 

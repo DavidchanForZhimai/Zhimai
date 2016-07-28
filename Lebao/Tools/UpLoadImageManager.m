@@ -28,11 +28,11 @@ static dispatch_once_t once;
     
 }
 
-- (void)upLoadImageType:(NSString *)type image:(UIImage *)image imageSize:(CGSize )size imageBlock:(ImageBlock)imageBlock
+- (void)upLoadImageType:(NSString *)type image:(UIImage *)image imageBlock:(ImageBlock)imageBlock
 {
     
     XLFileConfig *fileConfig = allocAndInit(XLFileConfig);
-    UIImage *newImage = [image imageByScalingAndCroppingForSize:size];
+    UIImage *newImage = [image imageByScalingAndCroppingForSize:CGSizeMake(image.size.width, image.size.height)];
     NSData *imageData = UIImageJPEGRepresentation(newImage,0.00001);
     fileConfig.fileData = imageData;
     fileConfig.name = @"imageFile";

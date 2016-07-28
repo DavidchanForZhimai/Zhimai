@@ -683,7 +683,7 @@ typedef NS_ENUM(int,SwitchActionTag) {
     weakSelf.feimianBtn.didClickBtnBlock = ^
     {
         [[ToolManager shareInstance] seleteImageFormSystem:weakSelf seleteImageFormSystemBlcok:^(UIImage *image) {
-            [[UpLoadImageManager shareInstance] upLoadImageType:UploadImagesTypeProperty image:image imageSize:CGSizeMake(APPWIDTH, (APPWIDTH/image.size.width)*image.size.height) imageBlock:^(UpLoadImageModal * upLoadImageModal) {
+            [[UpLoadImageManager shareInstance] upLoadImageType:UploadImagesTypeProperty image:image imageBlock:^(UpLoadImageModal * upLoadImageModal) {
               
                 [_fengmianImageUrl setValue:upLoadImageModal.abbr_imgurl forKey:ImageDiagram];
                 [_fengmianImageUrl setValue:upLoadImageModal.imgurl forKey:ImageDefault];

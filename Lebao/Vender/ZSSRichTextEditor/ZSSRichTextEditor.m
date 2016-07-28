@@ -937,16 +937,8 @@ static Class hackishFixClass = Nil;
     
     [[ToolManager shareInstance] seleteImageFormSystem:self seleteImageFormSystemBlcok:^(UIImage *image) {
         
-        float w =0;
-        float h =0;
-        w = image.size.width;
-        h = image.size.height;
-        if (image.size.width>500) {
-            w = 500;
-            h = 500*image.size.height/image.size.width;
-            
-        }
-        [[UpLoadImageManager shareInstance] upLoadImageType:UploadImagesTypeRelease image:image imageSize:CGSizeMake(w, h) imageBlock:^(UpLoadImageModal * upLoadImageModal) {
+       
+        [[UpLoadImageManager shareInstance] upLoadImageType:UploadImagesTypeRelease image:image  imageBlock:^(UpLoadImageModal * upLoadImageModal) {
 //            if (!weakSelf.selectedImageURL) {
             
                 [weakSelf insertImage:[NSString stringWithFormat:@"%@%@",ImageURLS,upLoadImageModal.imgurl] alt:[NSString stringWithFormat:@"%@%@",ImageURLS,upLoadImageModal.imgurl]];
