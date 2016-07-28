@@ -580,12 +580,11 @@
     [_xsDetailV addSubview:detailLab];
     
     
-       UIImageView *soundImg;
+    float soundImgH = CGRectGetMaxY(detailLab.frame);
     if (_xiansDic[@"audios"]&&![_xiansDic[@"audios"] isEqualToString:@""]) {
-        
-        soundImg=[[UIImageView alloc]init];//语音button
+       UIImageView *soundImg=[[UIImageView alloc]init];//语音button
         UIImage *image = [UIImage imageNamed:@"bofangyuyuying3"];
-        soundImg.frame=CGRectMake((frameWidth(_xsDetailV) - image.size.width*1.7)/2.0,CGRectGetMaxY(detailLab.frame), image.size.width*1.7,  image.size.height*1.7);
+        soundImg.frame=CGRectMake((frameWidth(_xsDetailV) - image.size.width*1.7)/2.0,soundImgH, image.size.width*1.7,  image.size.height*1.7);
         soundImg.image=image;
         soundImg.animationImages = @[[UIImage imageNamed:@"bofangyuyuying1"],[UIImage imageNamed:@"bofangyuyuying2"],[UIImage imageNamed:@"bofangyuyuying3"]];
         soundImg.animationDuration = 1.5;
@@ -600,11 +599,11 @@
         
         _url=[NSString stringWithFormat:@"%@%@",ImageURLS,_xiansDic[@"audios"]];
         
-        
+        soundImgH = CGRectGetMaxY(soundImg.frame);
     }
 
     
-    UIView * sxV = [[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetMaxY(soundImg.frame), _xsDetailV.frame.size.width-20, 1)];
+    UIView * sxV = [[UIView alloc]initWithFrame:CGRectMake(10,soundImgH , _xsDetailV.frame.size.width-20, 1)];
     sxV.backgroundColor = [UIColor colorWithRed:0.925 green:0.925 blue:0.929 alpha:1.000];
     [_xsDetailV addSubview:sxV];
     
