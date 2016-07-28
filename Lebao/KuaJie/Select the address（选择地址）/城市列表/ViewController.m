@@ -73,22 +73,18 @@
     [self navView];
     
     
-    
-    
-   
-    
 //    __weak ViewController *weakSelf =self;
 //    [[ToolManager shareInstance] locationPositionBlock:^(NSString *locate) {
 //    [_locationCity replaceObjectAtIndex:0 withObject:locate];
 //     weakSelf.navTitle.text = [NSString stringWithFormat:@"当前位置-%@",locate];
 //    [_tableView reloadData];
 //    }];
-    
+
     [self loadData];
     [self initTableView];
     [self initSearchController];
 
-    NSDate *date2= [[NSUserDefaults standardUserDefaults]objectForKey:@"dateForLocation4"];
+    NSDate *date2= [[NSUserDefaults standardUserDefaults]objectForKey:@"dateForLocation9"];
     NSLog(@"date2=============%@",date2);
    
     if (date2!=nil) {
@@ -101,7 +97,7 @@
     [[LoCationManager shareInstance]getLatitudeAndLongitude];
     NSDate *date=[NSDate date];
     
-    [[NSUserDefaults standardUserDefaults]setObject:date forKey:@"dateForLocation4"];
+//    [[NSUserDefaults standardUserDefaults]setObject:date forKey:@"dateForLocation8"];
 
 
 }

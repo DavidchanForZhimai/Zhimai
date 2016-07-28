@@ -49,9 +49,9 @@ static LoCationManager *locationManager;
         [_locationMNG requestWhenInUseAuthorization];
     }
     
-    NSLog(@"![CLLocationManager locationServicesEnabled]=%d",[CLLocationManager locationServicesEnabled]);
+   
     if ([CLLocationManager locationServicesEnabled]&&[CLLocationManager authorizationStatus]!= kCLAuthorizationStatusDenied) {
-       
+        NSLog(@"![CLLocationManager locationServicesEnabled]=%d",[CLLocationManager locationServicesEnabled]);
     }else{
         [[ToolManager shareInstance] showAlertViewTitle:@"温馨提示" contentText:@"请到设置-隐私-定位-开启知脉定位" showAlertViewBlcok:^{
             
@@ -65,9 +65,9 @@ static LoCationManager *locationManager;
     _locationMNG.desiredAccuracy=kCLLocationAccuracyBest;
      //设置定位更新的最小距离(米)
     _locationMNG.distanceFilter=100.0f;
-    if (iOS8) {
-        [_locationMNG requestWhenInUseAuthorization];//使用程序其间允许访问位置数据（iOS8定位需要）
-    }
+//    if (iOS8) {
+//        [_locationMNG requestWhenInUseAuthorization];//使用程序其间允许访问位置数据（iOS8定位需要）
+//    }
 
     [_locationMNG startUpdatingLocation];
 }
@@ -85,19 +85,18 @@ static LoCationManager *locationManager;
     
     coordinate2D=cllocation.coordinate;
     
-    NSLog(@"纬度: %f, 经度: %f", coordinate2D.latitude, coordinate2D.longitude);
+    NSLog(@"纬度: %f, 经度: %lf", coordinate2D.latitude, coordinate2D.longitude);
     
     
     NSMutableDictionary *param = [Parameter parameterWithSessicon];
-    
+
     [param setObject:@(1) forKey:@"source"];
-    [param setObject:@(coordinate2D.latitude) forKey:@"latitude"];
-    [param setObject:@(coordinate2D.longitude) forKey:@"longitude"];
-    
-  
+    [param setObject:[NSString stringWithFormat:@"%.6f",coordinate2D.latitude] forKey:@"latitude"];
+    [param setObject:[NSString stringWithFormat:@"%.6f",coordinate2D.longitude] forKey:@"longitude"];
+
     
     [XLDataService postWithUrl:[NSString stringWithFormat:@"%@user/locationlog",HttpURL] param:param modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-        
+        NSLog(@"dataObj=%@",dataObj);
         NSLog(@"定位上传error=%@",error);
         
     }];

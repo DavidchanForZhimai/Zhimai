@@ -175,7 +175,7 @@
   
     
     if (sender.tag==1001) {//开始录音
-        
+        _repeatBtn.userInteractionEnabled=NO;
         [[MP3PlayerManager shareInstance] audioRecorderWithURl:kRecordAudioFile];
         
         
@@ -190,8 +190,11 @@
         
 
         [self timerStart];
-        
+        _repeatBtn.userInteractionEnabled=YES;
+        _soundBtn.userInteractionEnabled=NO;
+       
     }else if(sender.tag==1002){//停止录音
+        
         [self timerEnd];
         allTm=addtm;
         sender.tag=1003;
@@ -210,27 +213,43 @@
         
         
         [[MP3PlayerManager shareInstance] audioPlayerWithURl:kRecordAudioFile];
-        addtm=0;
+        
         
         sender.tag=1004;
         [_soundBtn setImage:[UIImage imageNamed:@"zanting"] forState:UIControlStateNormal];
-        self.shapeLayer.strokeEnd=0;
+//        self.shapeLayer.strokeEnd=0;
         self.shapeLayer.hidden=NO;
         
         [self timerStart];
+        [MP3PlayerManager shareInstance].playFinishBlock=^(BOOL succeed){
+            
+            if (succeed) {
+                self.shapeLayer.hidden=YES;
+                self.shapeLayer.strokeEnd=0;
+                addtm=0;
+                [self timerEnd];
+                sender.tag=1003;
+                [_soundBtn setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
+                
+                return;
+              
+            }
+        };
+
         
     }else if(sender.tag==1004){//暂停
         sender.tag=1003;
-        [[MP3PlayerManager shareInstance]stopPlayer];
+        [[MP3PlayerManager shareInstance]pausePlayer];
         [self timerEnd];
         [_soundBtn setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
-        self.shapeLayer.hidden=YES;
-        self.shapeLayer.strokeEnd=0;
+//        self.shapeLayer.hidden=YES;
+//        self.shapeLayer.strokeEnd=0;
        
     }
 }
 -(void)repeatBtnAction:(UIButton *)sender//重录
 {
+    _soundBtn.userInteractionEnabled=NO;
     btnMark=NO;
     [[MP3PlayerManager shareInstance] removeAudioRecorder];
     [self timerEnd];
@@ -246,14 +265,14 @@
     
     addtm=0;
     allTm=6000;
-    
+     _soundBtn.userInteractionEnabled=YES;
 }
 
 
 -(void)timerChange  //定时器事件
 {
-    //    NSLog(@"addtm=%ld",addtm);
-    //    NSLog(@"alltm=%ld",allTm);
+//        NSLog(@"addtm=%ld",addtm);
+//        NSLog(@"alltm=%ld",allTm);
     angle=1.0/(allTm+8);
     if(addtm<allTm+10){
         _timerLab.text=[NSString stringWithFormat:@"%ld\"",addtm/
@@ -262,12 +281,21 @@
         
         //        NSLog(@"%lf",self.shapeLayer.strokeEnd);
         addtm+=1;
+        if (addtm>30) {
+            _soundBtn.userInteractionEnabled=YES;
+        }
     }
     else if(addtm>=allTm){
         [self timerEnd];
         if (_soundBtn.tag==1004) {
-            _soundBtn.tag=1004;
-            [self soundBtnAction:_soundBtn];
+            self.shapeLayer.hidden=YES;
+            self.shapeLayer.strokeEnd=0;
+            addtm=0;
+            
+            _soundBtn.tag=1003;
+            [_soundBtn setImage:[UIImage imageNamed:@"bofang"] forState:UIControlStateNormal];
+            
+            return;
         }
       else
             if (_soundBtn.tag==1002) {
