@@ -105,6 +105,8 @@
 //选择地址
 - (void)navLeftAddressBtn
 {
+    
+    
     if (![CoreArchive strForKey:AddressID]) {
         [CoreArchive setStr:@"全国" key:LocationAddress];
         [CoreArchive setStr:@"0" key:AddressID];
@@ -146,14 +148,7 @@
         [weakSelf.navigationController pushViewController:vc animated:NO];
     };
     
-    
-    
-    
-    
-    
-    
-    
-    
+
     
 }
 //选择行业

@@ -110,8 +110,8 @@ typedef void(^ShowAlertViewBlcok) (void);//提示选择
 
 #pragma mark
 #pragma mark 定位
-@property(nonatomic,copy)LocationPositionBlock locationPositionBlock;
-- (void)locationPositionBlock:(LocationPositionBlock)locationPositionBlock;
+//@property(nonatomic,copy)LocationPositionBlock locationPositionBlock;
+//- (void)locationPositionBlock:(LocationPositionBlock)locationPositionBlock;
 #pragma mark
 #pragma mark 新版本提示
 - (void)update;

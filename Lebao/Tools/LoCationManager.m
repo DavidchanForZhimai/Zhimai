@@ -49,13 +49,15 @@ static LoCationManager *locationManager;
         [_locationMNG requestWhenInUseAuthorization];
     }
     
-    
-    if (![CLLocationManager locationServicesEnabled]) {
+    NSLog(@"![CLLocationManager locationServicesEnabled]=%d",[CLLocationManager locationServicesEnabled]);
+    if ([CLLocationManager locationServicesEnabled]&&[CLLocationManager authorizationStatus]!= kCLAuthorizationStatusDenied) {
+       
+    }else{
         [[ToolManager shareInstance] showAlertViewTitle:@"温馨提示" contentText:@"请到设置-隐私-定位-开启知脉定位" showAlertViewBlcok:^{
             
         }];
         return;
-    };
+    }
     
     
     _locationMNG.delegate=self;
@@ -63,7 +65,10 @@ static LoCationManager *locationManager;
     _locationMNG.desiredAccuracy=kCLLocationAccuracyBest;
      //设置定位更新的最小距离(米)
     _locationMNG.distanceFilter=100.0f;
-    
+    if (iOS8) {
+        [_locationMNG requestWhenInUseAuthorization];//使用程序其间允许访问位置数据（iOS8定位需要）
+    }
+
     [_locationMNG startUpdatingLocation];
 }
 

@@ -197,7 +197,7 @@ static MP3PlayerManager* mP3PlayerManager;
 {
     _audioPlayer=nil;
     if (_playFinishBlock) {
-        _playFinishBlock(flag);
+        _playFinishBlock(YES);
     }
 }
 

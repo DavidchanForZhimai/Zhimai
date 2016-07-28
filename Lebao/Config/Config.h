@@ -12,11 +12,11 @@
 //网络请求
 //请求URL
 //测试
-#define ImageURLS @"http://pic.lmlm.cn"
-#define HttpURL @"http://api.lmlm.cn/v1/"
+//#define ImageURLS @"http://pic.lmlm.cn"
+//#define HttpURL @"http://api.lmlm.cn/v1/"
 //////正式
-//#define ImageURLS @"http://pic.any98.com"
-//#define HttpURL @"http://api.any98.com/v1/"
+#define ImageURLS @"http://pic.any98.com"
+#define HttpURL @"http://api.any98.com/v1/"
 
 //请求参数
 #define DeviceToken @"deviceToken"

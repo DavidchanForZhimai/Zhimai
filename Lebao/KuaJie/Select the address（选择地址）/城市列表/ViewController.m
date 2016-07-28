@@ -18,6 +18,7 @@
 #import "CoreArchive.h"
 #import "XLDataService.h"
 #import "NSArray+Extend.h"
+#import "LoCationManager.h"
 #define commonSelectan [NSString stringWithFormat:@"%@common/select-an",HttpURL]
 #define HotCity @"HotCity"
 @interface ViewController ()<UISearchControllerDelegate,UISearchResultsUpdating,UISearchBarDelegate,UITableViewDataSource,UITableViewDelegate,NBSearchResultControllerDelegate,CityViewCellDelegate>
@@ -69,14 +70,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self navView];
+    [[LoCationManager shareInstance]getLatitudeAndLongitude];
+
     
-    
-    __weak ViewController *weakSelf =self;
-    [[ToolManager shareInstance] locationPositionBlock:^(NSString *locate) {
-    [_locationCity replaceObjectAtIndex:0 withObject:locate];
-     weakSelf.navTitle.text = [NSString stringWithFormat:@"当前位置-%@",locate];
-    [_tableView reloadData];
-    }];
+//    __weak ViewController *weakSelf =self;
+//    [[ToolManager shareInstance] locationPositionBlock:^(NSString *locate) {
+//    [_locationCity replaceObjectAtIndex:0 withObject:locate];
+//     weakSelf.navTitle.text = [NSString stringWithFormat:@"当前位置-%@",locate];
+//    [_tableView reloadData];
+//    }];
     
     [self loadData];
     [self initTableView];
