@@ -19,6 +19,7 @@
 #import "XLDataService.h"
 #import "NSArray+Extend.h"
 #import "LoCationManager.h"
+#import "DateHelper.h"
 #define commonSelectan [NSString stringWithFormat:@"%@common/select-an",HttpURL]
 #define HotCity @"HotCity"
 @interface ViewController ()<UISearchControllerDelegate,UISearchResultsUpdating,UISearchBarDelegate,UITableViewDataSource,UITableViewDelegate,NBSearchResultControllerDelegate,CityViewCellDelegate>
@@ -70,8 +71,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self navView];
-    [[LoCationManager shareInstance]getLatitudeAndLongitude];
-
+    
+    
+    
+    
+   
     
 //    __weak ViewController *weakSelf =self;
 //    [[ToolManager shareInstance] locationPositionBlock:^(NSString *locate) {
@@ -84,7 +88,21 @@
     [self initTableView];
     [self initSearchController];
 
+    NSDate *date2= [[NSUserDefaults standardUserDefaults]objectForKey:@"dateForLocation4"];
+    NSLog(@"date2=============%@",date2);
+   
+    if (date2!=nil) {
+        if (![DateHelper calculatorExpireDatetimeWithData:date2]) {
+            return;
+        }
+        
+    }
     
+    [[LoCationManager shareInstance]getLatitudeAndLongitude];
+    NSDate *date=[NSDate date];
+    
+    [[NSUserDefaults standardUserDefaults]setObject:date forKey:@"dateForLocation4"];
+
 
 }
 //- (void)viewWillAppear:(BOOL)animated
