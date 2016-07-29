@@ -10,7 +10,6 @@
 #import "MoreXSCell.h"
 #import "MJRefresh.h"
 #import "JJRDetailInfo.h"
-
 #import "MyLQDetailVC.h"
 #import "MyXSDetailVC.h"
 @interface MoreXianSuoVC ()<UITableViewDelegate,UITableViewDataSource>

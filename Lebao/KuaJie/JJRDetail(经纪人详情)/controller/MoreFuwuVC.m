@@ -17,7 +17,7 @@
 #import "TheSecondaryHouseViewController.h"
 #import "TheSecondCarHomeViewController.h"
 #import "WetChatShareManager.h"
-@interface MoreFuwuVC ()<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate>
+@interface MoreFuwuVC ()<UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *myTab;
 @property (assign,nonatomic)int page;
 @property (strong,nonatomic)NSMutableArray * jsonArr;
@@ -149,7 +149,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    __weak typeof(self) weakSelf =self;
+
     if (_jsonArr.count>indexPath.row) {
         fuwuDic = _jsonArr[indexPath.row];
         MoreFWCell * cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -158,6 +158,7 @@
             MyContentDetailViewController *detail = allocAndInit(MyContentDetailViewController);
             detail.shareImage = fuwuImg.image;
             detail.ID =fuwuDic[@"id"];
+            detail.isNoEdit = YES;
             detail.uid =fuwuDic[@"userid"];
             detail.imageurl = fuwuDic[@"imgurl"];
             PushView(self, detail);
@@ -167,6 +168,7 @@
             MyProductDetailViewController *detail = allocAndInit(MyProductDetailViewController);
             detail.shareImage = fuwuImg.image;
             detail.ID =fuwuDic[@"id"];
+            detail.isNoEdit = YES;
             detail.uid =fuwuDic[@"userid"];
             detail.imageurl =fuwuDic[@"imgurl"];
             PushView(self, detail);
@@ -176,37 +178,35 @@
         else if([fuwuDic[@"industry"] isEqualToString:@"property"])
         {
             
-            BaseButton *rightBtn = [[BaseButton alloc]initWithFrame:frame(APPWIDTH - 50, StatusBarHeight, 50, NavigationBarHeight) setTitle:@"选项" titleSize:28*SpacedFonts titleColor:BlackTitleColor textAlignment:NSTextAlignmentCenter backgroundColor:[UIColor clearColor] inView:nil];
-            rightBtn.didClickBtnBlock = ^
+            BaseButton *share = [[BaseButton alloc]initWithFrame:frame(APPWIDTH - 50, StatusBarHeight, 50, NavigationBarHeight) backgroundImage:nil iconImage:[UIImage imageNamed:@"icon_widelyspreaddetail_share"] highlightImage:nil inView:self.view];
+            
+            share.didClickBtnBlock = ^
             {
-                UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:weakSelf cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"编辑",@"分享", nil];
-                actionSheet.tag =1;
-                [actionSheet showInView:self.view];
+                
+                [[WetChatShareManager shareInstance] shareToWeixinApp:fuwuDic[@"title"] desc:@"" image:fuwuImg.image  shareID:fuwuDic[@"id"] isWxShareSucceedShouldNotice:NO isAuthen:[fuwuDic[@"isgetclue"] boolValue]];
                 
                 
             };
             
-            [[ToolManager shareInstance] loadWebViewWithUrl:[NSString stringWithFormat:@"%@show/estate?acid=%@",HttpURL,fuwuDic[@"id"]] title:@"产品详情" pushView:self rightBtn:rightBtn];
-            
+            [[ToolManager shareInstance] loadWebViewWithUrl:[NSString stringWithFormat:@"%@show/estate?acid=%@",HttpURL,[NSString stringWithFormat:@"%@",fuwuDic[@"id"]]] title:@"产品详情" pushView:self rightBtn:share];
         }
         
         //这是车行的产品
         else if([fuwuDic[@"industry"] isEqualToString:@"car"])
         {
             
-            BaseButton *rightBtn = [[BaseButton alloc]initWithFrame:frame(APPWIDTH - 50, StatusBarHeight, 50, NavigationBarHeight) setTitle:@"选项" titleSize:28*SpacedFonts titleColor:BlackTitleColor textAlignment:NSTextAlignmentCenter backgroundColor:[UIColor clearColor] inView:nil];
-            rightBtn.didClickBtnBlock = ^
+            BaseButton *share = [[BaseButton alloc]initWithFrame:frame(APPWIDTH - 50, StatusBarHeight, 50, NavigationBarHeight) backgroundImage:nil iconImage:[UIImage imageNamed:@"icon_widelyspreaddetail_share"] highlightImage:nil inView:self.view];
+            
+            share.didClickBtnBlock = ^
             {
                 
-                UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:weakSelf cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"编辑",@"分享", nil];
-                actionSheet.tag =2;
-                [actionSheet showInView:self.view];
+                
+               [[WetChatShareManager shareInstance] shareToWeixinApp:fuwuDic[@"title"] desc:@"" image:fuwuImg.image  shareID:fuwuDic[@"id"] isWxShareSucceedShouldNotice:NO isAuthen:[fuwuDic[@"isgetclue"] boolValue]];
                 
                 
             };
             
-            [[ToolManager shareInstance] loadWebViewWithUrl:[NSString stringWithFormat:@"%@show/car?acid=%@",HttpURL,fuwuDic[@"id"]] title:@"产品详情" pushView:self rightBtn:rightBtn];
-            
+            [[ToolManager shareInstance] loadWebViewWithUrl:[NSString stringWithFormat:@"%@show/car?acid=%@",HttpURL,[NSString stringWithFormat:@"%@",fuwuDic[@"id"]]] title:@"产品详情" pushView:self rightBtn:share];
         }
         
     }
@@ -214,33 +214,7 @@
 
     
 }
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
 
-    if (buttonIndex == 0) {
-        
-        if (actionSheet.tag ==1) {
-            TheSecondaryHouseViewController *theSecondaryHouseViewController =  allocAndInit(TheSecondaryHouseViewController);
-            theSecondaryHouseViewController.isEdit = YES;
-            theSecondaryHouseViewController.acid = fuwuDic[@"id"];
-            theSecondaryHouseViewController.uid = fuwuDic[@"userid"];
-            PushView(self, theSecondaryHouseViewController);
-        }
-        else
-        {
-            TheSecondCarHomeViewController *theSecondCarHomeViewController =  allocAndInit(TheSecondCarHomeViewController);
-            theSecondCarHomeViewController.isEdit = YES;
-            theSecondCarHomeViewController.acid = fuwuDic[@"id"];
-            theSecondCarHomeViewController.uid = fuwuDic[@"userid"];
-            PushView(self, theSecondCarHomeViewController);
-        }
-        
-        
-    }else if (buttonIndex == 1) {
-        
-        [[WetChatShareManager shareInstance] shareToWeixinApp:fuwuDic[@"title"] desc:@"" image:fuwuImg.image  shareID:fuwuDic[@"id"] isWxShareSucceedShouldNotice:NO isAuthen:[fuwuDic[@"isgetclue"] boolValue]];
-    }
-    
-}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

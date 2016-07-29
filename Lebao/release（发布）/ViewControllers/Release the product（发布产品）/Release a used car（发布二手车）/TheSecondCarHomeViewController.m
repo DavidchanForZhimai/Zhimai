@@ -146,8 +146,8 @@
         
     };
     [self reloadImagesView:weakSelf inView:view];
-    if (CGRectGetMaxX(_nextBtn.frame) + 10>frameHeight(_mainScrollView)) {
-        _mainScrollView.contentSize = CGSizeMake(frameWidth(_mainScrollView), CGRectGetMaxX(_nextBtn.frame) + 10);
+    if (CGRectGetMaxY(_nextBtn.frame) + 10>frameHeight(_mainScrollView)) {
+        _mainScrollView.contentSize = CGSizeMake(frameWidth(_mainScrollView), CGRectGetMaxY(_nextBtn.frame) + 10);
     }
     
     
@@ -242,7 +242,7 @@
             [ _comboBox.valueLabel setText:imageDic[ImageDiagramType]];
             _comboBox.changedBlock = ^(FSComboListView *comboListView,NSString * toValue)
             {
-                NSLog(@"comboboxClosed2=%@ imageDic2=%@",toValue,imageDic);
+//                NSLog(@"comboboxClosed2=%@ imageDic2=%@",toValue,imageDic);
                 
                 [imageDic setValue:toValue forKey:ImageDiagramType];
                 if (!imageDic[ImageDefault]||[imageDic[ImageDefault] isEqualToString:@""]) {

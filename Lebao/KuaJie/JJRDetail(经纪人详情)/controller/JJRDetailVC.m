@@ -26,7 +26,7 @@
 #import "NSString+Extend.h"
 
 
-@interface JJRDetailVC ()<UIActionSheetDelegate>
+@interface JJRDetailVC ()
 {
     UIScrollView * bottomScr;
     UIView * biaoQianV;
@@ -631,13 +631,14 @@
 #pragma mark - labTap
 - (void)backVTap:(UITapGestureRecognizer *)sender
 {
-    __weak typeof(self) weakSelf =self;
+
     if (_gdfwArr.count>sender.view.tag - 1000) {
         fuwuDic = _gdfwArr[sender.view.tag - 1000];
         fuwuImg= (UIImageView *)[sender.view viewWithTag:100];
     if ([fuwuDic[@"actype"] isEqualToString:@"article"]) {
         MyContentDetailViewController *detail = allocAndInit(MyContentDetailViewController);
         detail.shareImage = fuwuImg.image;
+        detail.isNoEdit = YES;
         detail.ID =fuwuDic[@"id"];
         detail.uid =fuwuDic[@"userid"];
         detail.imageurl = fuwuDic[@"imgurl"];
@@ -647,6 +648,7 @@
         {
         MyProductDetailViewController *detail = allocAndInit(MyProductDetailViewController);
         detail.shareImage = fuwuImg.image;
+        detail.isNoEdit = YES;
         detail.ID =fuwuDic[@"id"];
         detail.uid =fuwuDic[@"userid"];
         detail.imageurl =fuwuDic[@"imgurl"];
@@ -657,17 +659,18 @@
         else if([fuwuDic[@"industry"] isEqualToString:@"property"])
         {
         
-        BaseButton *rightBtn = [[BaseButton alloc]initWithFrame:frame(APPWIDTH - 50, StatusBarHeight, 50, NavigationBarHeight) setTitle:@"选项" titleSize:28*SpacedFonts titleColor:BlackTitleColor textAlignment:NSTextAlignmentCenter backgroundColor:[UIColor clearColor] inView:nil];
-        rightBtn.didClickBtnBlock = ^
+            BaseButton *share = [[BaseButton alloc]initWithFrame:frame(APPWIDTH - 50, StatusBarHeight, 50, NavigationBarHeight) backgroundImage:nil iconImage:[UIImage imageNamed:@"icon_widelyspreaddetail_share"] highlightImage:nil inView:self.view];
+            
+            share.didClickBtnBlock = ^
             {
-           UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:weakSelf cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"编辑",@"分享", nil];
-                actionSheet.tag =1;
-            [actionSheet showInView:self.view];
-        
-        
+                
+                
+               [[WetChatShareManager shareInstance] shareToWeixinApp:fuwuDic[@"title"] desc:@"" image:fuwuImg.image  shareID:fuwuDic[@"id"] isWxShareSucceedShouldNotice:NO isAuthen:[fuwuDic[@"isgetclue"] boolValue]];
+                
+                
             };
-        
-            [[ToolManager shareInstance] loadWebViewWithUrl:[NSString stringWithFormat:@"%@show/estate?acid=%@",HttpURL,fuwuDic[@"id"]] title:@"产品详情" pushView:self rightBtn:rightBtn];
+            
+            [[ToolManager shareInstance] loadWebViewWithUrl:[NSString stringWithFormat:@"%@show/estate?acid=%@",HttpURL,[NSString stringWithFormat:@"%@",fuwuDic[@"id"]]] title:@"产品详情" pushView:self rightBtn:share];
         
             }
         
@@ -675,51 +678,23 @@
             else if([fuwuDic[@"industry"] isEqualToString:@"car"])
             {
         
-                BaseButton *rightBtn = [[BaseButton alloc]initWithFrame:frame(APPWIDTH - 50, StatusBarHeight, 50, NavigationBarHeight) setTitle:@"选项" titleSize:28*SpacedFonts titleColor:BlackTitleColor textAlignment:NSTextAlignmentCenter backgroundColor:[UIColor clearColor] inView:nil];
-                    rightBtn.didClickBtnBlock = ^
+                BaseButton *share = [[BaseButton alloc]initWithFrame:frame(APPWIDTH - 50, StatusBarHeight, 50, NavigationBarHeight) backgroundImage:nil iconImage:[UIImage imageNamed:@"icon_widelyspreaddetail_share"] highlightImage:nil inView:self.view];
+                
+                share.didClickBtnBlock = ^
                 {
-        
-            UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:weakSelf cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"编辑",@"分享", nil];
-                actionSheet.tag =2;
-                [actionSheet showInView:self.view];
-                        
-                        
-                    };
                     
-            [[ToolManager shareInstance] loadWebViewWithUrl:[NSString stringWithFormat:@"%@show/car?acid=%@",HttpURL,fuwuDic[@"id"]] title:@"产品详情" pushView:self rightBtn:rightBtn];
+                    
+                    [[WetChatShareManager shareInstance] shareToWeixinApp:fuwuDic[@"title"] desc:@"" image:fuwuImg.image  shareID:fuwuDic[@"id"] isWxShareSucceedShouldNotice:NO isAuthen:[fuwuDic[@"isgetclue"] boolValue]];
+                    
+                    
+                };
+                
+                [[ToolManager shareInstance] loadWebViewWithUrl:[NSString stringWithFormat:@"%@show/car?acid=%@",HttpURL,[NSString stringWithFormat:@"%@",fuwuDic[@"id"]]] title:@"产品详情" pushView:self rightBtn:share];
                     
                 }
  
     }
     
-    
-}
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    
-    
-    if (buttonIndex == 0) {
-        
-        if (actionSheet.tag ==1) {
-            TheSecondaryHouseViewController *theSecondaryHouseViewController =  allocAndInit(TheSecondaryHouseViewController);
-            theSecondaryHouseViewController.isEdit = YES;
-            theSecondaryHouseViewController.acid = fuwuDic[@"id"];
-            theSecondaryHouseViewController.uid = fuwuDic[@"userid"];
-            PushView(self, theSecondaryHouseViewController);
-        }
-        else
-        {
-            TheSecondCarHomeViewController *theSecondCarHomeViewController =  allocAndInit(TheSecondCarHomeViewController);
-            theSecondCarHomeViewController.isEdit = YES;
-            theSecondCarHomeViewController.acid = fuwuDic[@"id"];
-            theSecondCarHomeViewController.uid = fuwuDic[@"userid"];
-            PushView(self, theSecondCarHomeViewController);
-        }
-        
-        
-    }else if (buttonIndex == 1) {
-        
-        [[WetChatShareManager shareInstance] shareToWeixinApp:fuwuDic[@"title"] desc:@"" image:fuwuImg.image  shareID:fuwuDic[@"id"] isWxShareSucceedShouldNotice:NO isAuthen:[fuwuDic[@"isgetclue"] boolValue]];
-    }
     
 }
 

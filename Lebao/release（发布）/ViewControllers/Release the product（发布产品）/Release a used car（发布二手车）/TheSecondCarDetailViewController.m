@@ -51,14 +51,15 @@
 #pragma mark TableView
 - (void)addTableView
 {
+    
     if (_modal.datas.keyid) {
         _keyID = _modal.datas.keyid;
     }
     if (_modal.datas.series_id) {
-        _series_id = _modal.datas.keyid;
+        _series_id = _modal.datas.series_id;
     }
     if (_modal.datas.model_id) {
-        _model_id = _modal.datas.keyid;
+        _model_id = _modal.datas.model_id;
     }
     _comboBoxColorArray = [NSMutableArray arrayWithObjects:@"黑",@"白",@"红", @"灰",@"银",@"蓝",@"黄",@"棕",@"绿",@"橙",@"紫",@"香槟",@"金",@"粉",@"其他",nil];
     _comboBoxMonArray = [NSMutableArray arrayWithObjects:@"1月",@"2月",@"3月", @"4月",@"5月",@"6月",@"7月",@"8月",@"9月",@"10月",@"11月",@"12月",nil];

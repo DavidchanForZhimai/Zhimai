@@ -99,7 +99,7 @@ typedef enum{
         [weakSelf addBotoomView:weakSelf];
     };
    
-    articleDetailView.isEdit = YES;
+    articleDetailView.isEdit = !_isNoEdit;
     [self.view addSubview:articleDetailView];
 }
 - (void)addBotoomView:(MyContentDetailViewController *)weakSelf

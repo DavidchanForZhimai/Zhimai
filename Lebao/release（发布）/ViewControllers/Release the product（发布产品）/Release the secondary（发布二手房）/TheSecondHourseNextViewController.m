@@ -261,8 +261,8 @@
         
     };
     [_mainScrollView addSubview:_comboBox];
-    if (CGRectGetMaxX(_nextBtn.frame) + 10>frameHeight(_mainScrollView)) {
-        _mainScrollView.contentSize = CGSizeMake(frameWidth(_mainScrollView), CGRectGetMaxX(_nextBtn.frame) + 10);
+    if (CGRectGetMaxY(_nextBtn.frame) + 10>frameHeight(_mainScrollView)) {
+        _mainScrollView.contentSize = CGSizeMake(frameWidth(_mainScrollView), CGRectGetMaxY(_nextBtn.frame) + 10);
     }
 }
 -(UITextField *)createframe:(CGRect)frame title:(NSString *)title inView:(UIView *)view text:(NSString *)text
