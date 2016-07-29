@@ -62,86 +62,89 @@ typedef NS_ENUM(NSUInteger,ButtonActionTag) {
 //    [self createLoundView];
     [self netWork:NO isFooter:NO isShouldClear:NO isSend:NO];
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(touchView)];
-    [self.clueCommunityView addGestureRecognizer:tap];
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(touchView)];
+//    [self.clueCommunityView addGestureRecognizer:tap];
     
     
     
 }
-
--(void)createLoundView
-{
-    
-    bjV = [[UIView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 200)];
-    bjV.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:bjV];
-
-    _timerLab=[[UILabel alloc]init];//时间秒数
-    _timerLab.textColor= [UIColor colorWithRed:0.243 green:0.553 blue:1.000 alpha:1.000];
-    _timerLab.text=@"0\"";
-    _timerLab.font = [UIFont systemFontOfSize:18];
-    _timerLab.frame=CGRectMake(0, 20, SCREEN_WIDTH, 20);
-    _timerLab.textAlignment=NSTextAlignmentCenter;
-    [bjV addSubview:_timerLab];
-    
-    _promptLab=[[UILabel alloc]init];//最长时间秒数提示
-    _promptLab.text=@"最长可录音60s";
-    _promptLab.frame=CGRectMake(0, 50, SCREEN_WIDTH, 20);
-    _promptLab.textAlignment=NSTextAlignmentCenter;
-    _promptLab.font = [UIFont systemFontOfSize:13];
-    [bjV addSubview:_promptLab];
-    
-    _soundBtn=[UIButton buttonWithType:UIButtonTypeCustom];//语音按钮
-    _soundBtn.frame=CGRectMake(SCREEN_WIDTH/2-SCREEN_WIDTH/8, 85, SCREEN_WIDTH/4, SCREEN_WIDTH/4);
-    _soundBtn.layer.cornerRadius=SCREEN_WIDTH/8;
-    _soundBtn.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
-    [_soundBtn setImage:[UIImage imageNamed:@"yuying@3x"] forState:UIControlStateNormal];
-    [_soundBtn setBackgroundImage:[UIImage imageNamed:@"yuan"] forState:UIControlStateNormal];
-    [_soundBtn addTarget:self action:@selector(soundBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-    _soundBtn.tag=1001;
-    [bjV addSubview:_soundBtn];
-    
-    
-    //贝塞尔曲线属性
-    self.shapeLayer=[CAShapeLayer layer];
-    self.shapeLayer.frame=CGRectMake(0, 0, SCREEN_WIDTH/4-2, SCREEN_WIDTH/4-2);
-    self.shapeLayer.position=_soundBtn.center;
-    self.shapeLayer.fillColor=[UIColor clearColor].CGColor;//填充色
-    self.shapeLayer.lineWidth=3.0f;//线宽
-    self.shapeLayer.strokeColor=[UIColor orangeColor].CGColor;//线色
-    UIBezierPath *circlePath=[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, SCREEN_WIDTH/4-2, SCREEN_WIDTH/4-2)];//创建出圆形贝塞尔曲线
-    
-    self.shapeLayer.path=circlePath.CGPath;//让贝塞尔曲线与CAShapeLayer产生联系
-    self.shapeLayer.strokeStart=0;
-    self.shapeLayer.strokeEnd=0;
-    [bjV.layer addSublayer:self.shapeLayer];
-    
-    _repeatBtn=[UIButton buttonWithType:UIButtonTypeCustom];//重录按钮
-    _repeatBtn.frame=CGRectMake(SCREEN_WIDTH/2+SCREEN_WIDTH/4, _soundBtn.frame.origin.y/8*9.2, SCREEN_WIDTH/8, SCREEN_WIDTH/8);
-    _repeatBtn.layer.cornerRadius=SCREEN_WIDTH/16;
-    _repeatBtn.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
-    [_repeatBtn setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
-    _repeatBtn.titleLabel.font=[UIFont systemFontOfSize:14];
-    [_repeatBtn setTitle:@"重录" forState:UIControlStateNormal];
-    [_repeatBtn addTarget:self action:@selector(repeatAndSendBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-    _repeatBtn.userInteractionEnabled=NO;
-    _repeatBtn.tag=1101;
-    [bjV addSubview:_repeatBtn];
-    
-    _sendSound=[UIButton buttonWithType:UIButtonTypeCustom];//发送语音按钮
-    _sendSound.frame=CGRectMake(SCREEN_WIDTH/8, _soundBtn.frame.origin.y/8*9.2, SCREEN_WIDTH/8, SCREEN_WIDTH/8);
-    _sendSound.layer.cornerRadius=SCREEN_WIDTH/16;
-    _sendSound.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
-    [_sendSound setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
-    _sendSound.titleLabel.font=[UIFont systemFontOfSize:14];
-    [_sendSound setTitle:@"发送" forState:UIControlStateNormal];
-    [_sendSound addTarget:self action:@selector(repeatAndSendBtnAction:) forControlEvents:UIControlEventTouchUpInside];
-    _sendSound.userInteractionEnabled=NO;
-    _sendSound.tag=1102;
-    [bjV addSubview:_sendSound];
-
-
-}
+//-(void)touchView
+//{
+//    
+//}
+//-(void)createLoundView
+//{
+//    
+//    bjV = [[UIView alloc]initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 200)];
+//    bjV.backgroundColor = [UIColor whiteColor];
+//    [self.view addSubview:bjV];
+//
+//    _timerLab=[[UILabel alloc]init];//时间秒数
+//    _timerLab.textColor= [UIColor colorWithRed:0.243 green:0.553 blue:1.000 alpha:1.000];
+//    _timerLab.text=@"0\"";
+//    _timerLab.font = [UIFont systemFontOfSize:18];
+//    _timerLab.frame=CGRectMake(0, 20, SCREEN_WIDTH, 20);
+//    _timerLab.textAlignment=NSTextAlignmentCenter;
+//    [bjV addSubview:_timerLab];
+//    
+//    _promptLab=[[UILabel alloc]init];//最长时间秒数提示
+//    _promptLab.text=@"最长可录音60s";
+//    _promptLab.frame=CGRectMake(0, 50, SCREEN_WIDTH, 20);
+//    _promptLab.textAlignment=NSTextAlignmentCenter;
+//    _promptLab.font = [UIFont systemFontOfSize:13];
+//    [bjV addSubview:_promptLab];
+//    
+//    _soundBtn=[UIButton buttonWithType:UIButtonTypeCustom];//语音按钮
+//    _soundBtn.frame=CGRectMake(SCREEN_WIDTH/2-SCREEN_WIDTH/8, 85, SCREEN_WIDTH/4, SCREEN_WIDTH/4);
+//    _soundBtn.layer.cornerRadius=SCREEN_WIDTH/8;
+//    _soundBtn.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
+//    [_soundBtn setImage:[UIImage imageNamed:@"yuying@3x"] forState:UIControlStateNormal];
+//    [_soundBtn setBackgroundImage:[UIImage imageNamed:@"yuan"] forState:UIControlStateNormal];
+//    [_soundBtn addTarget:self action:@selector(soundBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+//    _soundBtn.tag=1001;
+//    [bjV addSubview:_soundBtn];
+//    
+//    
+//    //贝塞尔曲线属性
+//    self.shapeLayer=[CAShapeLayer layer];
+//    self.shapeLayer.frame=CGRectMake(0, 0, SCREEN_WIDTH/4-2, SCREEN_WIDTH/4-2);
+//    self.shapeLayer.position=_soundBtn.center;
+//    self.shapeLayer.fillColor=[UIColor clearColor].CGColor;//填充色
+//    self.shapeLayer.lineWidth=3.0f;//线宽
+//    self.shapeLayer.strokeColor=[UIColor orangeColor].CGColor;//线色
+//    UIBezierPath *circlePath=[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, SCREEN_WIDTH/4-2, SCREEN_WIDTH/4-2)];//创建出圆形贝塞尔曲线
+//    
+//    self.shapeLayer.path=circlePath.CGPath;//让贝塞尔曲线与CAShapeLayer产生联系
+//    self.shapeLayer.strokeStart=0;
+//    self.shapeLayer.strokeEnd=0;
+//    [bjV.layer addSublayer:self.shapeLayer];
+//    
+//    _repeatBtn=[UIButton buttonWithType:UIButtonTypeCustom];//重录按钮
+//    _repeatBtn.frame=CGRectMake(SCREEN_WIDTH/2+SCREEN_WIDTH/4, _soundBtn.frame.origin.y/8*9.2, SCREEN_WIDTH/8, SCREEN_WIDTH/8);
+//    _repeatBtn.layer.cornerRadius=SCREEN_WIDTH/16;
+//    _repeatBtn.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
+//    [_repeatBtn setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
+//    _repeatBtn.titleLabel.font=[UIFont systemFontOfSize:14];
+//    [_repeatBtn setTitle:@"重录" forState:UIControlStateNormal];
+//    [_repeatBtn addTarget:self action:@selector(repeatAndSendBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+//    _repeatBtn.userInteractionEnabled=NO;
+//    _repeatBtn.tag=1101;
+//    [bjV addSubview:_repeatBtn];
+//    
+//    _sendSound=[UIButton buttonWithType:UIButtonTypeCustom];//发送语音按钮
+//    _sendSound.frame=CGRectMake(SCREEN_WIDTH/8, _soundBtn.frame.origin.y/8*9.2, SCREEN_WIDTH/8, SCREEN_WIDTH/8);
+//    _sendSound.layer.cornerRadius=SCREEN_WIDTH/16;
+//    _sendSound.backgroundColor=[UIColor colorWithRed:0.976 green:0.965 blue:0.969 alpha:1.000];
+//    [_sendSound setTitleColor:[UIColor colorWithWhite:0.655 alpha:1.000] forState:UIControlStateNormal];
+//    _sendSound.titleLabel.font=[UIFont systemFontOfSize:14];
+//    [_sendSound setTitle:@"发送" forState:UIControlStateNormal];
+//    [_sendSound addTarget:self action:@selector(repeatAndSendBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+//    _sendSound.userInteractionEnabled=NO;
+//    _sendSound.tag=1102;
+//    [bjV addSubview:_sendSound];
+//
+//
+//}
 
 
 - (void)addTableView

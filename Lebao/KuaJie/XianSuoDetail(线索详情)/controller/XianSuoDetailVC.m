@@ -293,6 +293,10 @@
     }
     
 }
+-(void)firstResponder
+{
+    
+}
 -(void)keyBoardHide:(NSNotificationCenter *)sender{
     
     self.view.transform = CGAffineTransformIdentity;
@@ -532,6 +536,8 @@
     JJRDetailVC * jjrV = allocAndInit(JJRDetailVC);
     jjrV.jjrID  = [_xiansDic objectForKey:@"brokerid"];
     [self.navigationController pushViewController:jjrV animated:YES];
+    
+
 }
 -(void)addTheDuiHuaV:(CGFloat)orgY
 {
@@ -814,9 +820,11 @@
 }
 -(void)txTapAction:(UITapGestureRecognizer *)sender
 {
+    
     JJRDetailVC* jjrV =  [[JJRDetailVC alloc]init];
     jjrV.jjrID = [_coopArr[sender.view.tag - 200] objectForKey:@"id"];
-    [self.navigationController pushViewController:jjrV animated:YES];
+    
+    PushView(self, jjrV);
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {

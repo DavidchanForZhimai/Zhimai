@@ -28,8 +28,8 @@
     //时间差 从给定时间到现在
     NSDateComponents *d = [cal components:unitFlags fromDate:date2 toDate:date1 options:0];
     
-    NSLog(@"d=================%@",d);
-    NSLog(@"date1=================%@",date1);
+//    NSLog(@"d=================%@",d);
+//    NSLog(@"date1=================%@",date1);
     if ([d year]>1) {
         return YES;
     }

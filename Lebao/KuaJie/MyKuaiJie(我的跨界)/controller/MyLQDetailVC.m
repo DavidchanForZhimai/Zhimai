@@ -194,7 +194,9 @@
 {
     JJRDetailVC * jjrV = allocAndInit(JJRDetailVC);
     jjrV.jjrID = [_xiansuoDic objectForKey:@"brokerid"];
-    [self.navigationController pushViewController:jjrV animated:YES];
+    PushView(self, jjrV);
+    
+    
 }
 #pragma mark  View
 -(void)addTheXSV:(CGFloat)orgY

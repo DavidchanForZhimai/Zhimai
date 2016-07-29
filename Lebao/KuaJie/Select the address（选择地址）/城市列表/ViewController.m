@@ -84,8 +84,8 @@
     [self initTableView];
     [self initSearchController];
 
-    NSDate *date2= [[NSUserDefaults standardUserDefaults]objectForKey:@"dateForLocation9"];
-    NSLog(@"date2=============%@",date2);
+    NSDate *date2= [[NSUserDefaults standardUserDefaults]objectForKey:@"dateForLocation"];
+//    NSLog(@"date2=============%@",date2);
    
     if (date2!=nil) {
         if (![DateHelper calculatorExpireDatetimeWithData:date2]) {
@@ -97,7 +97,7 @@
     [[LoCationManager shareInstance]getLatitudeAndLongitude];
     NSDate *date=[NSDate date];
     
-//    [[NSUserDefaults standardUserDefaults]setObject:date forKey:@"dateForLocation8"];
+    [[NSUserDefaults standardUserDefaults]setObject:date forKey:@"dateForLocation"];
 
 
 }

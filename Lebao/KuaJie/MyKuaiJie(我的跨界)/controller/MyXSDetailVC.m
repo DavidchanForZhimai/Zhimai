@@ -428,7 +428,9 @@
 {
     JJRDetailVC * jjrV = allocAndInit(JJRDetailVC);
     jjrV.jjrID = [_coopArr[0] objectForKey:@"brokerid"];
-    [self.navigationController pushViewController:jjrV animated:YES];
+    PushView(self, jjrV);
+    
+
 }
 -(void)customBMMYSSV:(CGFloat)orgY
 {
