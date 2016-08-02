@@ -25,7 +25,7 @@
 #import "MyXSDetailVC.h"
 #import "NSString+Extend.h"
 
-
+#import "OtherDynamicdViewController.h"
 @interface JJRDetailVC ()
 {
     UIScrollView * bottomScr;
@@ -479,6 +479,10 @@
 #pragma mark 查看更多动态
 -(void)lookMoreDongtai
 {
+    OtherDynamicdViewController *otherDynamicdViewController = allocAndInit(OtherDynamicdViewController);
+    otherDynamicdViewController.dynamicdID = _jjrID;
+    otherDynamicdViewController.dynamicdName =[_jjrJsonDic objectForKey:@"realname"];
+    PushView(self, otherDynamicdViewController);
     
 }
 -(void)lookMoreXianSuo

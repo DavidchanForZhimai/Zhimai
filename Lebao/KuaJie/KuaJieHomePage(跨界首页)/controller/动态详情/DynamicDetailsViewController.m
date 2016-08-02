@@ -61,6 +61,7 @@
 -(void)setButtomScr
 {
     buttomScr = [[UIScrollView alloc]initWithFrame:CGRectMake(0,StatusBarHeight + NavigationBarHeight, SCREEN_WIDTH, SCREEN_HEIGHT-(StatusBarHeight + NavigationBarHeight))];
+    buttomScr.contentSize = CGSizeMake(SCREEN_WIDTH, frameHeight(buttomScr));
     buttomScr.backgroundColor = [UIColor clearColor];
     buttomScr.scrollEnabled = YES;
     buttomScr.delegate = self;

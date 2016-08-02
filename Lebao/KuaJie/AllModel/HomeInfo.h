@@ -17,7 +17,7 @@ typedef void (^HomePageCallbackType2)(BOOL issucced, NSString* info, NSDictionar
 //跨界经纪人列表
 -(void)getHomePageJJR:(int)pageNub andCityID:(int)cityID  andhangye:(NSString *)hangye andcallBack:(HomePageCallbackType1)callback;
 //动态列表
--(void)getHomePageDT:(int)pageNub andcallBack:(HomePageCallbackType2)callback;
+-(void)getHomePageDT:(int)pageNub brokerid:(NSString *)brokerid andcallBack:(HomePageCallbackType2)callback;
 
 //动态详情
 -(void)getHomePageDTdetailID:(NSString *)ID andcallBack:(HomePageCallbackType2)callback;

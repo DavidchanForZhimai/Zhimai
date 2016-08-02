@@ -286,7 +286,7 @@
 -(void)getjjrJson
 {
   
-    [[HomeInfo shareInstance]getHomePageDT:jjrpageNumb andcallBack:^(BOOL issucced, NSString* info, NSDictionary* jsonDic) {
+    [[HomeInfo shareInstance]getHomePageDT:jjrpageNumb brokerid:nil andcallBack:^(BOOL issucced, NSString* info, NSDictionary* jsonDic) {
         if (issucced == YES) {
             
             StatusModel *model = [StatusModel mj_objectWithKeyValues:jsonDic];

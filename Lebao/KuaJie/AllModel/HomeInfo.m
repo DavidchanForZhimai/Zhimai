@@ -82,7 +82,7 @@
 //    NSDictionary * dic;
      NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
     if (cityID || cityID == 0) {
-//        dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",pageNub],@"page",userName,@"username",passWord,@"password",[NSString stringWithFormat:@"%d",cityID],@"cityid",nil];
+
 
         [parameters setValue:@(cityID) forKey:@"cityid"];
         [parameters setValue:@(pageNub) forKey:@"page"];
@@ -110,11 +110,14 @@
 
 }
 //动态列表
--(void)getHomePageDT:(int)pageNub andcallBack:(HomePageCallbackType2)callback
+-(void)getHomePageDT:(int)pageNub   brokerid:(NSString *)brokerid andcallBack:(HomePageCallbackType2)callback
 {
     NSString * url = [NSString stringWithFormat:@"%@dynamic/list",HOST_URL];
     NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
     [parameters setValue:@(pageNub) forKey:@"page"];
+    if (brokerid) {
+        [parameters setValue:brokerid forKey:@"brokerid"];
+    }
    
     [[ToolManager shareInstance]showWithStatus];
     [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
