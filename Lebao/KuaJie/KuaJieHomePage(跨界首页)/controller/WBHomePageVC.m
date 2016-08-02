@@ -27,10 +27,11 @@
 #import "GallopUtils.h"
 #import "StatusModel.h"
 #import "CellLayout.h"
-#import "CommentView.h"
+#define kToolBarH 44
+#define kTextFieldH 30
 #define xsTabTag  110
 #define jjrTabTag 120
-@interface WBHomePageVC ()<UITableViewDelegate,UITableViewDataSource,TableViewCellDelegate,UIScrollViewDelegate>
+@interface WBHomePageVC ()<UITableViewDelegate,UITableViewDataSource,TableViewCellDelegate,UIScrollViewDelegate,UITextFieldDelegate>
 {
     UIScrollView * buttomScr;
     UIButton * xsBtn;
@@ -38,18 +39,23 @@
     UIView * xhxV;
     int xspageNumb;
     int jjrpageNumb;
+    
+    UIImageView *_toolBar;
+    UITextField *_textField;
 }
 @property (strong,nonatomic)NSMutableArray * xsJsonArr;
 @property (strong,nonatomic)NSMutableArray * jjrJsonArr;
 @property (strong,nonatomic)NSMutableArray * fakeDatasource;
 @property (strong,nonatomic)UITableView *xsTab;
 @property (strong,nonatomic)UITableView *dtTab;
-@property (nonatomic,strong) CommentView* commentView;
-@property (nonatomic,strong) StatusComment* postComment;
+@property (nonatomic,strong) NSString* replayid;//评论中的rep_brokerid
+@property (nonatomic,strong) NSString* dynamicID;//动态ID
+@property (nonatomic,strong) NSString* commentType;//评论值为：comment； 回复值为：replay
+@property (nonatomic,strong)TableViewCell *commentCell;
+@property (nonatomic,strong)NSIndexPath *commentIndex;
 @property (strong,nonatomic)BaseButton  *selectedIndustryBg;
 @property (strong,nonatomic)NSString  *hyStr;
 @property (strong,nonatomic) BaseButton *selectedBtn;
-@property (strong,nonatomic)  CellLayout* layout;
 @end
 
 @implementation WBHomePageVC
@@ -65,41 +71,13 @@
         [self.homePageBtn setImage:[UIImage imageNamed:@"icon_dicover_me"] forState:UIControlStateNormal];
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardDidAppearNotifications:)
-                                                 name:UIKeyboardWillShowNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardDidHidenNotifications:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
-   
-}
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardDidShowNotification
-                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardDidHideNotification
-                                                  object:nil];
 }
 
 #pragma mark - KeyboardNotifications
 
 - (void)tapView:(id)sender {
-    [self.commentView endEditing:YES];
-}
-
-- (void)keyboardDidAppearNotifications:(NSNotification *)notifications {
-    NSDictionary *userInfo = [notifications userInfo];
-    CGSize keyboardSize = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    CGFloat keyboardHeight = keyboardSize.height;
-    self.commentView.frame = CGRectMake(0.0f, SCREEN_HEIGHT - 44.0f - keyboardHeight, SCREEN_WIDTH, 44.0f);
-}
-
-- (void)keyboardDidHidenNotifications:(NSNotification *)notifications {
-    self.commentView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 44.0f);
+    _textField.text = @"";
+    [_textField resignFirstResponder];
 }
 
 - (void)viewDidLoad {
@@ -147,7 +125,7 @@
     };
     
     //评论
-    [self.view addSubview:self.commentView];
+     [self addToolBar];
 }
 
 
@@ -477,20 +455,41 @@
 }
 #pragma mark - Getter
 
-- (CommentView *)commentView {
-    if (_commentView) {
-        return _commentView;
-    }
-    __weak typeof(self) wself = self;
-    _commentView = [[CommentView alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, 54.0f)
-                                            sendBlock:^(NSString *content) {
-                                                __strong  typeof(wself) swself = wself;
-                                                swself.postComment.info.content = content;
-                                                [swself postCommentWithCommentModel:swself.postComment];
-                                            }];
-    return _commentView;
+/**
+ *  添加工具栏
+ */
+- (void)addToolBar
+{
+    UIImageView *bgView = [[UIImageView alloc] init];
+    bgView.frame = CGRectMake(APPWIDTH, frameHeight(buttomScr), APPWIDTH, kToolBarH);
+    bgView.layer.borderWidth = 0.5;
+    bgView.layer.borderColor= LineBg.CGColor;
+    bgView.backgroundColor = WhiteColor ;
+    bgView.userInteractionEnabled = YES;
+    _toolBar = bgView;
+    [buttomScr addSubview:bgView];
+    
+    UIView *textView = allocAndInitWithFrame(UIView,frame(10*ScreenMultiple, 8, APPWIDTH - 20*ScreenMultiple, 28));
+    textView.userInteractionEnabled  =YES;
+    textView.backgroundColor = WhiteColor;
+    textView.layer.borderWidth = 0.5;
+    textView.layer.borderColor= LineBg.CGColor;
+    textView.layer.masksToBounds = YES;
+    textView.layer.cornerRadius = 3.0;
+    [_toolBar addSubview:textView];
+    
+    _textField = [[UITextField alloc] init];
+    _textField.userInteractionEnabled  =YES;
+    _textField.returnKeyType = UIReturnKeySend;
+    _textField.enablesReturnKeyAutomatically = YES;
+    
+    _textField.leftViewMode = UITextFieldViewModeAlways;
+    _textField.frame = frame(10, 0, frameWidth(textView) - 40, frameHeight(textView));
+    _textField.placeholder = @"请输入";
+    _textField.font = Size(28);
+    _textField.delegate = self;
+    [textView addSubview:_textField];
 }
-
 #pragma mark----两个tableview写在这里
 -(void)addTheTab
 {
@@ -738,33 +737,8 @@
 
     }
 }
--(void)jjrAction:(UIGestureRecognizer *)sender
-{
-    JJRDetailVC * jjrV = [[JJRDetailVC alloc]init];
-    jjrV.jjrID = [_jjrJsonArr[sender.view.tag-500] objectForKey:@"id"];
-    [self.navigationController pushViewController:jjrV animated:YES];
-}
--(void)guanzhuAction:(UIButton *)sender
-{
-    NSString * target_id = [_jjrJsonArr[sender.tag-300] objectForKey:@"id"];
-    //isfollow:1代表取消关注,0代表关注
-    int isfollow;
-    if (sender.selected == YES) {
-        isfollow = 1;
-    }else
-    {
-        isfollow = 0;
-    }
-    [[HomeInfo shareInstance]guanzhuTargetID:[target_id intValue] andIsFollow:isfollow andcallBack:^(BOOL issucced, NSString *info, NSArray *jsonArr) {
-        if (issucced == YES) {
-            sender.selected = !sender.selected;
-        }else
-        {
-            HUDText(info);
-        }
-        
-    }];
-}
+
+
 #pragma mark----线索那边的头像那块view的点击事件
 -(void)btnVAction:(UITapGestureRecognizer *)sender
 {
@@ -800,7 +774,9 @@
  */
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    
     CGPoint point = buttomScr.contentOffset;
+    
     [UIView animateWithDuration:0.3f animations:^{
         if ((int)point.x % (int)SCREEN_WIDTH == 0) {
             if (point.x/SCREEN_WIDTH ==1) {
@@ -820,25 +796,36 @@
     }];
     
 }
+
+
 /***  点击评论 ***/
 - (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
           atIndexPath:(NSIndexPath *)indexPath {
-//    NSLog(@"indexPathindexPath");
-    self.commentView.placeHolder = @"评论";
-    [self.commentView.textView becomeFirstResponder];
-    self.postComment.info.rep_realname = @"Waynezxcv的粉丝";
-    self.postComment.info.realname = @"";
-    self.postComment.info.index = indexPath.row;
+    [_textField becomeFirstResponder];
+    _textField.placeholder =@"评论";
+    _dynamicID =[NSString stringWithFormat:@"%ld",layout.statusModel.ID];
+    _commentType = @"comment";
+    _replayid = @"0";
+    _commentCell =cell;
+    _commentIndex = indexPath;
+}
+#pragma mark - UITextField的代理方法
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+
+{
+    
+    [self postComment];
+    return YES;
 }
 
 /***  发表评论 ***/
-- (void)postCommentWithCommentModel:(StatusComment *)model {
+- (void)postComment {
     
     /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
      延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
-    UITableViewCell* cell = [self.dtTab cellForRowAtIndexPath:[NSIndexPath indexPathForRow:model.info.index inSection:0]];
-    UIImage* screenshot = [GallopUtils screenshotFromView:cell];
-    UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.dtTab convertRect:cell.frame toView:self.dtTab]];
+   
+    UIImage* screenshot = [GallopUtils screenshotFromView:_commentCell];
+    UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.dtTab convertRect:_commentCell.frame toView:self.dtTab]];
     imgView.image = screenshot;
     [self.dtTab addSubview:imgView];
     
@@ -847,64 +834,108 @@
     });
     
     
-    CellLayout* layout = [self.jjrJsonArr objectAtIndex:model.info.index];
+    CellLayout* layout =  _commentCell.cellLayout;
     NSMutableArray* newCommentLists = [[NSMutableArray alloc] initWithArray:layout.statusModel.comment];
-    NSDictionary* newComment = @{@"from":model.info.realname,
-                                 @"to":model.info.rep_realname,
-                                 @"content":model.info.content};
-    [newCommentLists addObject:newComment];
-    StatusDatas* statusModel = layout.statusModel;
-    statusModel.comment = newCommentLists;
-    layout = [self layoutWithStatusModel:statusModel index:model.info.index];
-    [self.jjrJsonArr replaceObjectAtIndex:model.info.index withObject:layout];
-    [self.dtTab reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:model.info.index inSection:0]]
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
+    [[HomeInfo shareInstance] addDynamicComment:_dynamicID replayid:_replayid type:_commentType content:_textField.text andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
+        _textField.text = @"";
+        [_textField resignFirstResponder];
+        if (issucced) {
+            if (jsonDic[@"datas"]) {
+                 StatusComment *newComment = allocAndInit(StatusComment);
+                 newComment.ID = [jsonDic[@"datas"][@"id"] integerValue];
+                 newComment.me = [jsonDic[@"datas"][@"self"] boolValue];
+                StatusInfo *info = allocAndInit(StatusInfo);
+                 info.brokerid = [jsonDic[@"datas"][@"brokerid"] integerValue];
+                 info.realname = jsonDic[@"datas"][@"realname"];
+                 info.rep_brokerid = [jsonDic[@"datas"][@"rep_brokerid"] integerValue];
+                 info.rep_realname = jsonDic[@"datas"][@"rep_realname"];
+                 info.content = jsonDic[@"datas"][@"content"];
+                newComment.info = info;
+                     [newCommentLists addObject:newComment];
+        
+                     StatusDatas* statusModel = layout.statusModel;
+                     statusModel.comment = newCommentLists;
+                 
+                 
+                     [self.jjrJsonArr replaceObjectAtIndex:_commentIndex.row withObject:[self layoutWithStatusModel:statusModel index:_commentIndex.row]];
+                 
+                     [self.dtTab reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:_commentIndex.row inSection:0]]
+                                           withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
+            
+        }
+        else
+        {
+            [[ToolManager shareInstance] showInfoWithStatus:info];
+        }
+        
+    }];
+
     
 }
 /***  点赞 ***/
-- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike atIndexPath:(NSIndexPath *)indexPath {
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeWithCellLayout:(CellLayout *)layout atIndexPath:(NSIndexPath *)indexPath {
     
     /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
      延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
-    
-   
     UIImage* screenshot = [GallopUtils screenshotFromView:cell];
     UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.dtTab convertRect:cell.frame toView:self.dtTab]];
     imgView.image = screenshot;
     [self.dtTab addSubview:imgView];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [imgView removeFromSuperview];
     });
-    
-    _layout = [self.jjrJsonArr objectAtIndex:indexPath.row];
-    __weak typeof(self) weakSelf =self;
-    [[HomeInfo shareInstance ]dynamicIsLike:[NSString stringWithFormat:@"%li",weakSelf.layout.statusModel.ID] islike:(BOOL)!weakSelf.layout.statusModel.islike andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
-         NSLog(@"jsonDic =%@",jsonDic);
+    self.view.userInteractionEnabled = NO;
+    [[HomeInfo shareInstance ]dynamicIsLike:[NSString stringWithFormat:@"%li",layout.statusModel.ID] islike:layout.statusModel.islike andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
+        self.view.userInteractionEnabled = YES;
         if (issucced == YES) {
-            [[ToolManager shareInstance]dismiss];
-            
-            if (isLike) {
-                NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:weakSelf.layout.statusModel.like];
-                [newLikeList addObject:@"waynezxcv的粉丝"];
-                StatusDatas* statusModel = weakSelf.layout.statusModel;
+            if (jsonDic[@"datas"]) {
+                
+                StatusLike *like = [[StatusLike alloc]init];
+                like.brokerid = [jsonDic[@"datas"][@"brokerid"] integerValue];
+                like.sex = [jsonDic[@"datas"][@"sex"] boolValue];
+                like.imgurl = jsonDic[@"datas"][@"imgurl"];
+                NSString * urlpic = like.imgurl;
+                if (![urlpic hasPrefix:@"http"]) {
+                    urlpic = [NSString stringWithFormat:@"%@%@",ImageURLS,urlpic];
+                }
+                like.imgurl =urlpic;
+                
+            if (!layout.statusModel.islike) {
+                [[ToolManager shareInstance] showSuccessWithStatus:@"点赞成功"];
+                NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.like];
+                if (![newLikeList containsObject:like]) {
+                    [newLikeList insertObject:like atIndex:0];
+                }
+                
+                StatusDatas* statusModel =layout.statusModel;
                 statusModel.like = newLikeList;
-                statusModel.islike = YES;
-                weakSelf.layout = [self layoutWithStatusModel:statusModel index:indexPath.row];
-                [self.jjrJsonArr replaceObjectAtIndex:indexPath.row withObject:weakSelf.layout];
+                statusModel.islike = [jsonDic[@"datas"][@"islike"] boolValue];
+                statusModel.ID =[jsonDic[@"datas"][@"id"] integerValue];
+                
+                [self.jjrJsonArr replaceObjectAtIndex:indexPath.row withObject:[self layoutWithStatusModel:statusModel index:indexPath.row]];
                 [self.dtTab reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]
                                   withRowAnimation:UITableViewRowAnimationAutomatic];
             } else {
-                NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:weakSelf.layout.statusModel.like];
-                [newLikeList removeObject:@"waynezxcv的粉丝"];
-                StatusDatas* statusModel = weakSelf.layout.statusModel;
+                 [[ToolManager shareInstance] showSuccessWithStatus:@"取消赞成功"];
+                NSMutableArray* newLikeList = [[NSMutableArray alloc] initWithArray:layout.statusModel.like];
+                for (StatusLike *statusLike in layout.statusModel.like) {
+                    if (statusLike.brokerid ==like.brokerid) {
+                        [newLikeList removeObject:statusLike];
+                    }
+                }
+                
+                StatusDatas* statusModel = layout.statusModel;
                 statusModel.like = newLikeList;
-                statusModel.islike = NO;
-                weakSelf.layout = [self layoutWithStatusModel:statusModel index:indexPath.row];
-                [self.jjrJsonArr replaceObjectAtIndex:indexPath.row withObject:weakSelf.layout];
+                statusModel.islike = [jsonDic[@"datas"][@"islike"] boolValue];
+                statusModel.ID =[jsonDic[@"datas"][@"id"] integerValue];
+            
+                [self.jjrJsonArr replaceObjectAtIndex:indexPath.row withObject:[self layoutWithStatusModel:statusModel index:indexPath.row]];
                 [self.dtTab reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]
                                   withRowAnimation:UITableViewRowAnimationAutomatic];
                 
+            }
             }
 
             
@@ -938,39 +969,145 @@
     [imageBrowser show];
 }
 /***  点击链接 ***/
-- (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data {
+- (void)tableViewCell:(TableViewCell *)cell  cellLayout:(CellLayout *)layout  atIndexPath:(NSIndexPath *)indexPath didClickedLinkWithData:(id)data {
+
     if ([data isKindOfClass:[StatusComment class]]) {
+       
         StatusComment* commentModel = (StatusComment *)data;
-        self.commentView.placeHolder = [NSString stringWithFormat:@"回复%@:",commentModel.info.rep_realname];
-        [self.commentView.textView becomeFirstResponder];
-        self.postComment.info.realname = @"waynezxcv的粉丝";
-        self.postComment.info.rep_realname = commentModel.info.rep_realname;
-        self.postComment.info.index = commentModel.info.index;
+        if (commentModel.me) {
+            
+            [[ToolManager shareInstance] showAlertViewTitle:@"删除？" contentText:@"删除此评论？" showAlertViewBlcok:^{
+                
+                /* 由于是异步绘制，而且为了减少View的层级，整个显示内容都是在同一个UIView上面，所以会在刷新的时候闪一下，这里可以先把原先Cell的内容截图覆盖在Cell上，
+                 延迟0.25s后待刷新完成后，再将这个截图从Cell上移除 */
+                UIImage* screenshot = [GallopUtils screenshotFromView:cell];
+                UIImageView* imgView = [[UIImageView alloc] initWithFrame:[self.dtTab convertRect:cell.frame toView:self.dtTab]];
+                imgView.image = screenshot;
+                [self.dtTab addSubview:imgView];
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [imgView removeFromSuperview];
+                });
+                self.view.userInteractionEnabled = NO;
+                [[HomeInfo shareInstance ] deleteDynamicComment:[NSString stringWithFormat:@"%ld",commentModel.ID] andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
+                 
+                    self.view.userInteractionEnabled = YES;
+                    if (issucced == YES) {
+                
+                NSMutableArray* newcommentList = [[NSMutableArray alloc] initWithArray:layout.statusModel.comment];
+                for (StatusComment*statusComment in layout.statusModel.comment) {
+                if (statusComment.ID ==commentModel.ID) {
+                    [newcommentList removeObject:statusComment];
+                    }
+                    
+                StatusDatas* statusModel = layout.statusModel;
+                statusModel.comment = newcommentList;
+                                
+               [self.jjrJsonArr replaceObjectAtIndex:indexPath.row withObject:[self layoutWithStatusModel:statusModel index:indexPath.row]];
+                [self.dtTab reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]]withRowAnimation:UITableViewRowAnimationAutomatic];
+                                
+                        
+                    }
+                        
+                        
+                    }else
+                    {
+                        [[ToolManager shareInstance]showAlertMessage:info];
+                    }
+                    
+                    
+                }];
+
+                
+            }];
+        }
+        else
+        {
+            [_textField becomeFirstResponder];
+             _textField.placeholder =[NSString stringWithFormat:@"回复%@:",commentModel.info.realname];
+            _dynamicID =[NSString stringWithFormat:@"%ld",layout.statusModel.ID];
+            _commentType = @"replay";
+            _replayid = [NSString stringWithFormat:@"%ld",commentModel.info.brokerid];
+             _commentCell =cell;
+            _commentIndex = indexPath;
+        }
+
     } else {
         if ([data isKindOfClass:[NSString class]]) {
             
+            JJRDetailVC * jjrV = [[JJRDetailVC alloc]init];
+            jjrV.jjrID = data;
+            [self.navigationController pushViewController:jjrV animated:YES];
+  
         }
     }
 }
 //点击点赞头像
-- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithCellLayout:(CellLayout *)layout
-              atIndex:(NSInteger)index
-{
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithJJRId:(NSString *)JJRId{
 
-    StatusLike *like = layout.statusModel.like[index];
     JJRDetailVC * jjrV = [[JJRDetailVC alloc]init];
-    jjrV.jjrID = [NSString stringWithFormat:@"%ld",like.brokerid
-                  ];
+    jjrV.jjrID = JJRId;
     [self.navigationController pushViewController:jjrV animated:YES];
     
 }
-- (void)tableViewCell:(TableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    JJRDetailVC * jjrV = [[JJRDetailVC alloc]init];
-    CellLayout *data = _jjrJsonArr[indexPath.row];
-    jjrV.jjrID = [NSString stringWithFormat:@"%ld",data.statusModel.brokerid
-                  ];
-    [self.navigationController pushViewController:jjrV animated:YES];
+//更多按钮事件
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsSelf:(BOOL)isSelf andDynamicID:(NSString *)andDynamicID atIndexPath:(NSIndexPath *)indexPath andIndex:(NSInteger)index
+{   
+
+    if (isSelf) {
+        self.view.userInteractionEnabled = NO;
+        [[HomeInfo shareInstance ]deleteDynamic:andDynamicID andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
+            self.view.userInteractionEnabled = YES;
+            if (issucced == YES) {
+               
+                [self.jjrJsonArr removeObjectAtIndex:indexPath.row];
+                
+                [self.dtTab reloadData];
+                
+            }else
+            {
+                [[ToolManager shareInstance]showAlertMessage:info];
+            }
+            
+            
+        }];
+        
+        
+    }
+    else
+    {
+        if (index ==0) {
+            
+            CellLayout *cell = _jjrJsonArr[indexPath.row];
+            [[HomeInfo shareInstance]guanzhuTargetID:cell.statusModel.brokerid andIsFollow:cell.statusModel.isfollow andcallBack:^(BOOL issucced, NSString *info, NSArray *jsonArr) {
+                if (issucced == YES) {
+                    
+                    if (cell.statusModel.isfollow ) {
+                        [[ToolManager shareInstance] showSuccessWithStatus:@"取消关注成功"];
+                    }
+                    else
+                    {
+                         [[ToolManager shareInstance] showSuccessWithStatus:@"关注成功"];
+                    }
+                    cell.statusModel.isfollow = !cell.statusModel.isfollow;
+                    
+                    
+                }else
+                {
+                    HUDText(info);
+                }
+                
+            }];
+
+        }
+        else
+        {
+            [[ToolManager shareInstance] showSuccessWithStatus:@"举报成功"];
+        }
+        
+    }
+    
+    
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

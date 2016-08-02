@@ -24,20 +24,28 @@
 
 @protocol TableViewCellDelegate <NSObject>
 
+//点击图片
 - (void)tableViewCell:(TableViewCell *)cell didClickedImageWithCellLayout:(CellLayout *)layout
               atIndex:(NSInteger)index;
 
-- (void)tableViewCell:(TableViewCell *)cell didClickedLinkWithData:(id)data;
+//点击文本链接
+- (void)tableViewCell:(TableViewCell *)cell  cellLayout:(CellLayout *)layout  atIndexPath:(NSIndexPath *)indexPath didClickedLinkWithData:(id)data;
 
+//评论
 - (void)tableViewCell:(TableViewCell *)cell didClickedCommentWithCellLayout:(CellLayout *)layout
               atIndexPath:(NSIndexPath *)indexPath;
 
-- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsLike:(BOOL)isLike atIndexPath:(NSIndexPath *)indexPath;
-//
-- (void)tableViewCell:(TableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
-//
-- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithCellLayout:(CellLayout *)layout
-          atIndex:(NSInteger)index;
+//点赞
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeWithCellLayout:(CellLayout *)layout atIndexPath:(NSIndexPath *)indexPath;
+
+
+//点击点赞头像查看详情
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithJJRId:(NSString *)JJRId;
+
+//更多按钮事件
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsSelf:(BOOL)isSelf andDynamicID:(NSString *)andDynamicID atIndexPath:(NSIndexPath *)indexPath andIndex:(NSInteger)index;
+
+
 @end
 
 @interface TableViewCell : UITableViewCell

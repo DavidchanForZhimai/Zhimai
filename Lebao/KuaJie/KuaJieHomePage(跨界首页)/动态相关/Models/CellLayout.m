@@ -68,7 +68,7 @@
         //行业
         LWTextStorage* industryTextStorage = [[LWTextStorage alloc] init];
         
-        industryTextStorage.text = [Parameter industryForChinese: statusModel.industry];
+        industryTextStorage.text = [NSString stringWithFormat:@"%@  %@",statusModel.address,statusModel.workyear];
         industryTextStorage.textColor = [UIColor colorWithRed:0.549 green:0.5569 blue:0.5608 alpha:1.0];
         industryTextStorage.font = Size(24.0);
         industryTextStorage.frame = CGRectMake(nameTextStorage.left, nameTextStorage.bottom + 8, nameTextStorage.width, CGFLOAT_MAX);
@@ -78,7 +78,11 @@
         contentTextStorage.text = statusModel.content;
         contentTextStorage.font = Size(26.0);
         contentTextStorage.textColor = [UIColor colorWithRed:0.1294 green:0.1333 blue:0.1333 alpha:1.0];
+       
         contentTextStorage.frame = CGRectMake(industryTextStorage.left, industryTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
+        if ([statusModel.address isEqualToString:@""]&&[statusModel.workyear isEqualToString:@""]) {
+            contentTextStorage.frame = CGRectMake(nameTextStorage.left, nameTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
+        }
         [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
         [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
                                         linkColor:RGB(113, 129, 161, 1)
@@ -188,12 +192,18 @@
         //评论位置
         UIImage *commentImage = [UIImage imageNamed:@"dongtai_pinglun"];
         NSString *commentStr = [NSString stringWithFormat:@"%ld评论",statusModel.comment.count];
+        if (statusModel.comment.count ==0) {
+            commentStr = @"评论";
+        }
         CGSize commentsize = [commentStr sizeWithFont:Size(22) maxSize:CGSizeMake(100, 22*SpacedFonts)];
     
         self.commentPosition = frame(APPWIDTH - 15 - commentImage.size.width - commentsize.width,dateTextStorage.top, commentImage.size.width + commentsize.width + 5, 16);
         //点赞位置
         UIImage *priseImage = [UIImage imageNamed:@"dongtai_dianzan_normal"];
         NSString *priseStr = [NSString stringWithFormat:@"%ld赞",statusModel.like.count];
+        if (statusModel.like.count ==0) {
+            priseStr = @"赞";
+        }
         CGSize prisesize = [priseStr sizeWithFont:Size(22) maxSize:CGSizeMake(100, 22*SpacedFonts)];
          self.prisePosition = frame(self.commentPosition.origin.x - 25 - priseImage.size.width - prisesize.width,dateTextStorage.top, priseImage.size.width + prisesize.width + 5, 16);
         
@@ -278,28 +288,23 @@
                     commentTextStorage.font = Size(26.0f);
                     commentTextStorage.textColor = [UIColor colorWithRed:0.3059 green:0.3098 blue:0.3137 alpha:1.0];
                     commentTextStorage.frame = CGRectMake(rect.origin.x, rect.origin.y + 20.0f + offsetY,nameTextStorage.width + 24, CGFLOAT_MAX);
+                
+                    [commentTextStorage lw_addLinkForWholeTextStorageWithData:commentDict linkColor:nil highLightColor:RGB(0, 0, 0, 0.15)];
                     
-                    StatusComment* commentModel1 = [[StatusComment alloc] init];
-                    commentModel1.info.rep_realname = commentDict.info.realname;
-                    commentModel1.info.index = index;
-                    [commentTextStorage lw_addLinkForWholeTextStorageWithData:commentModel1 linkColor:nil highLightColor:RGB(0, 0, 0, 0.15)];
-                    
-                    [commentTextStorage lw_addLinkWithData:commentModel1
+                    [commentTextStorage lw_addLinkWithData:[NSString stringWithFormat:@"%ld",commentDict.info.brokerid]
                                                      range:NSMakeRange(0,[(NSString *)commentDict.info.realname length])
                                                  linkColor:AppMainColor
-                                            highLightColor:AppMainColor];
+                                            highLightColor:[UIColor colorWithRed:0.9569 green:0.9569 blue:0.9569 alpha:1.0]];
                     
-                    StatusComment* commentModel2 = [[StatusComment alloc] init];
-                    commentModel2.info.rep_realname = commentDict.info.rep_realname;
-                    commentModel2.info.index = index;
-                    [commentTextStorage lw_addLinkWithData:commentModel2
+
+                    [commentTextStorage lw_addLinkWithData:[NSString stringWithFormat:@"%ld",commentDict.info.rep_brokerid]
                                                      range:NSMakeRange([(NSString *)commentDict.info.realname length] + 2,[(NSString *)commentDict.info.rep_realname length])
                                                  linkColor:AppMainColor
-                                            highLightColor:AppMainColor];
+                                            highLightColor:[UIColor colorWithRed:0.9569 green:0.9569 blue:0.9569 alpha:1.0]];
                     
                     [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                     linkColor:AppMainColor
-                                               highlightColor:AppMainColor];
+                                               highlightColor:[UIColor colorWithRed:0.9569 green:0.9569 blue:0.9569 alpha:1.0]];
                     [LWTextParser parseEmojiWithTextStorage:commentTextStorage];
                     [tmp addObject:commentTextStorage];
                     offsetY += commentTextStorage.height + 5;
@@ -313,14 +318,12 @@
                     commentTextStorage.linespacing = 2.0f;
                     commentTextStorage.frame = CGRectMake(rect.origin.x, rect.origin.y + 20.0f + offsetY,nameTextStorage.width + 24, CGFLOAT_MAX);
                     
-                    StatusComment* commentModel = [[StatusComment alloc] init];
-                    commentModel.info.rep_realname = commentDict.info.realname;
-                    commentModel.info.index = index;
-                    [commentTextStorage lw_addLinkForWholeTextStorageWithData:commentModel linkColor:nil highLightColor:RGB(0, 0, 0, 0.15)];
-                    [commentTextStorage lw_addLinkWithData:commentModel
+                
+                    [commentTextStorage lw_addLinkForWholeTextStorageWithData:commentDict linkColor:nil highLightColor:RGB(0, 0, 0, 0.15)];
+                    [commentTextStorage lw_addLinkWithData:[NSString stringWithFormat:@"%ld",commentDict.info.brokerid]
                                                      range:NSMakeRange(0,[(NSString *)commentDict.info.realname length])
                                                  linkColor:AppMainColor
-                                            highLightColor:AppMainColor];
+                                            highLightColor:[UIColor colorWithRed:0.9569 green:0.9569 blue:0.9569 alpha:1.0]];
                     
                     [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                     linkColor:AppMainColor

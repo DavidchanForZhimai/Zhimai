@@ -21,6 +21,14 @@ typedef void (^HomePageCallbackType2)(BOOL issucced, NSString* info, NSDictionar
 
 //点赞与取消点赞
 -(void)dynamicIsLike:(NSString *)ID  islike:(BOOL)islike andcallBack:(HomePageCallbackType2)callback;
+
+//删除动态
+-(void)deleteDynamic:(NSString *)ID  andcallBack:(HomePageCallbackType2)callback;
+//删除动态评论
+-(void)deleteDynamicComment:(NSString *)ID  andcallBack:(HomePageCallbackType2)callback;
+//评论与回复
+-(void)addDynamicComment:(NSString *)ID   replayid:(NSString *)replayid type:(NSString *)type content:(NSString *)content andcallBack:(HomePageCallbackType2)callback;
+
 //添加或取消关注
--(void)guanzhuTargetID:(int)targetID andIsFollow:(int)isfl andcallBack:(HomePageCallbackType1)callback;
+-(void)guanzhuTargetID:(NSInteger)targetID andIsFollow:(int)isfl andcallBack:(HomePageCallbackType1)callback;
 @end

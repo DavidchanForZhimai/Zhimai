@@ -28,8 +28,9 @@
 
 @property (nonatomic, copy) NSString *type;//自己添加
 
-
 @property (nonatomic, assign) NSInteger likenum;
+
+@property (nonatomic, assign) BOOL isfollow;
 
 @property (nonatomic, strong) NSMutableArray<StatusLike *> *like;
 
@@ -43,7 +44,7 @@
 
 @property (nonatomic, copy) NSString *industry;
 
-@property (nonatomic, assign) NSInteger me;
+@property (nonatomic, assign) BOOL me;
 
 @property (nonatomic, copy) NSString *realname;
 
@@ -83,8 +84,6 @@
 
 @property (nonatomic, assign) NSInteger ID;
 
-
-
 @property (nonatomic, strong) StatusInfo *info;
 
 @property (nonatomic, assign) NSInteger me;
@@ -115,6 +114,7 @@
 @property (nonatomic, assign) NSInteger sex;
 
 @property (nonatomic, assign) NSInteger brokerid;
+
 
 @end
 

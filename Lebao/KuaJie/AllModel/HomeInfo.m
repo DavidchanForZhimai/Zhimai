@@ -139,7 +139,7 @@
     NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
     [parameters setValue:@(islike) forKey:@"islike"];
      [parameters setValue:ID forKey:@"id"];
-    [[ToolManager shareInstance]showWithStatus];
+
     [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([[responseObject objectForKey:@"rtcode"] intValue]==1) {
             [[ToolManager shareInstance]dismiss];
@@ -155,7 +155,76 @@
     }];
 
 }
--(void)guanzhuTargetID:(int)targetID andIsFollow:(int)isfl andcallBack:(HomePageCallbackType1)callback
+-(void)deleteDynamic:(NSString *)ID  andcallBack:(HomePageCallbackType2)callback
+{
+    NSString * url = [NSString stringWithFormat:@"%@dynamic/delete",HOST_URL];
+    NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
+    [parameters setValue:ID forKey:@"id"];
+    
+    [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([[responseObject objectForKey:@"rtcode"] intValue]==1) {
+            [[ToolManager shareInstance]showSuccessWithStatus:@"删除成功"];
+            callback(YES,nil,responseObject);
+        }else
+        {
+            callback(NO,[responseObject objectForKey:@"rtmsg"],nil);
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        callback(NO,@"请检查您的网络",nil);
+    }];
+
+    
+}
+//删除动态评论
+-(void)deleteDynamicComment:(NSString *)ID  andcallBack:(HomePageCallbackType2)callback
+{
+    NSString * url = [NSString stringWithFormat:@"%@dynamic/delcomment",HOST_URL];
+    NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
+    [parameters setValue:ID forKey:@"id"];
+    
+    [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([[responseObject objectForKey:@"rtcode"] intValue]==1) {
+            [[ToolManager shareInstance]showSuccessWithStatus:@"删除成功"];
+            callback(YES,nil,responseObject);
+        }else
+        {
+            callback(NO,[responseObject objectForKey:@"rtmsg"],nil);
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        callback(NO,@"请检查您的网络",nil);
+    }];
+    
+ 
+}
+//评论与回复
+-(void)addDynamicComment:(NSString *)ID   replayid:(NSString *)replayid type:(NSString *)type content:(NSString *)content andcallBack:(HomePageCallbackType2)callback
+{
+    NSString * url = [NSString stringWithFormat:@"%@dynamic/comment",HOST_URL];
+    NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
+    [parameters setValue:ID forKey:@"id"];
+    [parameters setValue:replayid forKey:@"replayid"];
+    [parameters setValue:content forKey:@"content"];
+    [parameters setValue:type forKey:@"type"];
+    [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([[responseObject objectForKey:@"rtcode"] intValue]==1) {
+            [[ToolManager shareInstance]showSuccessWithStatus:@"评论成功"];
+            callback(YES,nil,responseObject);
+        }else
+        {
+            callback(NO,[responseObject objectForKey:@"rtmsg"],nil);
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        callback(NO,@"请检查您的网络",nil);
+    }];
+
+}
+-(void)guanzhuTargetID:(NSInteger)targetID andIsFollow:(int)isfl andcallBack:(HomePageCallbackType1)callback
 {
     NSString * url = [NSString stringWithFormat:@"%@broker/follow",HOST_URL];
     
@@ -163,10 +232,10 @@
      [parameters setValue:@(targetID) forKey:@"id"];
      [parameters setValue:@(isfl) forKey:@"isfollow"];
 //    NSDictionary *  dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",targetID],@"id",userName,@"username",passWord,@"password",[NSString stringWithFormat:@"%d",isfl],@"isfollow",nil];
-    [[ToolManager shareInstance]showWithStatus];
+   
     [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([[responseObject objectForKey:@"rtcode"] intValue]==1) {
-            [[ToolManager shareInstance]dismiss];
+           
             callback(YES,@"操作成功",nil);
         }else
         { 

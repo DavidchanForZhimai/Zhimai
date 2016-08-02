@@ -10,19 +10,13 @@
 
 
 
-
-
-
-
-
 #import "TableViewCell.h"
 #import "GallopUtils.h"
 #import "LWImageStorage.h"
-#import "Menu.h"
-#import "LikeButton.h"
 #import "BaseButton.h"
 #import "UILabel+Extend.h"
 #import "NSString+Extend.h"
+#import "CLDropDownMenu.h"
 @interface TableViewCell ()<LWAsyncDisplayViewDelegate>
 
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
@@ -62,14 +56,15 @@
     NSLog(@"tag:%ld",imageStorage.tag);//这里可以通过判断Tag来执行相应的回调。
     //点击更多
     if (imageStorage.tag ==30) {
-        [self didClickedMenuButton];
+        [self didClickedMenuButton:imageStorage];
         return;
     }
   // 作者头像
     else if(imageStorage.tag ==9){
-        if ([self.delegate respondsToSelector:@selector(tableViewCell:atIndexPath:)] &&
+        if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithJJRId:)] &&
             [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-            [self.delegate tableViewCell:self atIndexPath:self.indexPath];
+            StatusDatas *like = self.cellLayout .statusModel;
+            [self.delegate tableViewCell:self didClickedLikeButtonWithJJRId:[NSString stringWithFormat:@"%ld",like.brokerid]];
         }
 
     }
@@ -89,9 +84,11 @@
         for (NSInteger i = 0; i < self.cellLayout.prisePostionArray.count; i ++) {
             CGRect prisePosition = CGRectFromString(self.cellLayout.prisePostionArray[i]);
             if (CGRectContainsPoint(prisePosition, point)) {
-                if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithCellLayout:atIndex:)] &&
+                if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithJJRId:)] &&
                     [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-                    [self.delegate tableViewCell:self didClickedLikeButtonWithCellLayout:self.cellLayout atIndex:i];
+                    
+                    StatusLike *like = self.cellLayout .statusModel.like[i];
+                    [self.delegate tableViewCell:self didClickedLikeButtonWithJJRId:[NSString stringWithFormat:@"%ld",like.brokerid]];
                 }
             }
         }
@@ -101,17 +98,46 @@
 
 /***  点击文本链接 ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
-    NSLog(@"tag:%ld",textStorage.tag);//这里可以通过判断Tag来执行相应的回调。
-    if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLinkWithData:)] &&
+//    NSLog(@"tag:%ld",textStorage.tag);//这里可以通过判断Tag来执行相应的回调。
+    if ([self.delegate respondsToSelector:@selector(tableViewCell:cellLayout: atIndexPath: didClickedLinkWithData:)] &&
         [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-        [self.delegate tableViewCell:self didClickedLinkWithData:data];
+        [self.delegate tableViewCell:self cellLayout:self.cellLayout  atIndexPath:_indexPath didClickedLinkWithData:data];
     }
 }
 
 /***  点击菜单按钮  ***/
-- (void)didClickedMenuButton {
+- (void)didClickedMenuButton:(LWImageStorage *)imageStorage {
   
+//    NSLog(@"imageStorage =%@",imageStorage.tag);
+    CLDropDownMenu *dropMenu = [[CLDropDownMenu alloc] initWithBtnPressedByWindowFrame:imageStorage.frame Pressed:^(NSInteger index) {
+        
+        NSLog(@"点击了第%ld个btn",index+1);
+        if ([self.delegate respondsToSelector:@selector(tableViewCell: didClickedLikeButtonWithIsSelf:andDynamicID: atIndexPath: andIndex:)] &&
+            [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
+
+            [self.delegate tableViewCell:self didClickedLikeButtonWithIsSelf:self.cellLayout.statusModel.me andDynamicID:[NSString stringWithFormat:@"%ld",self.cellLayout.statusModel.ID] atIndexPath:_indexPath andIndex:index];
+        }
+
+        
+    }];
     
+    dropMenu.direction = CLDirectionTypeBottom;
+    if (self.cellLayout.statusModel.me) {
+        dropMenu.titleList = @[@"删除"];
+    }
+    else
+    {
+        if (self.cellLayout.statusModel.isfollow) {
+            dropMenu.titleList = @[@"取消关注",@"举报"];
+        }
+        else
+        {
+            dropMenu.titleList = @[@"关注",@"举报"]; 
+        }
+        
+    }
+
+    [self.contentView addSubview:dropMenu];
 }
 - (BOOL)canBecomeFirstResponder{
     
@@ -136,7 +162,11 @@
     self.likeButton.frame = self.cellLayout.prisePosition;
     self.comentButton.frame = self.cellLayout.commentPosition;
     self.line.frame = self.cellLayout.lineRect;
-    [self.comentButton setTitle:[NSString stringWithFormat:@"%ld评论",self.cellLayout.statusModel.comment.count] forState:UIControlStateNormal];
+    NSString *pinlun =[NSString stringWithFormat:@"%ld评论",self.cellLayout.statusModel.comment.count];
+    if (_cellLayout.statusModel.comment.count ==0) {
+        pinlun = @"评论";
+    }
+    [self.comentButton setTitle:pinlun forState:UIControlStateNormal];
     UIImage *priseImage = [UIImage imageNamed:@"dongtai_dianzan_normal"];
     if (_cellLayout.statusModel.islike) {
         priseImage = [UIImage imageNamed:@"dongtai_dianzan_pressed"];
@@ -149,6 +179,9 @@
     [self.likeButton setImage:priseImage forState:UIControlStateNormal];
     
     NSString *priseStr = [NSString stringWithFormat:@"%ld赞",_cellLayout.statusModel.like.count];
+    if (_cellLayout.statusModel.like.count ==0) {
+        priseStr = @"赞";
+    }
     CGSize prisesize = [priseStr sizeWithFont:Size(22) maxSize:CGSizeMake(100, 22*SpacedFonts)];
     self.likeLb.frame = frame(self.cellLayout.prisePosition.origin.x +priseImage.size.width + 12, self.cellLayout.prisePosition.origin.y + 2, prisesize.width, 22*SpacedFonts);
     self.likeLb.text = priseStr;
@@ -209,8 +242,8 @@
     _likeButton.didClickBtnBlock = ^
     {
       
-        if ([weakSelf.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithIsLike:atIndexPath:)]) {
-            [weakSelf.delegate tableViewCell:weakSelf didClickedLikeButtonWithIsLike:!weakSelf.cellLayout.statusModel.islike atIndexPath:weakSelf.indexPath];
+        if ([weakSelf.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeWithCellLayout:atIndexPath:)]) {
+            [weakSelf.delegate tableViewCell:weakSelf didClickedLikeWithCellLayout:weakSelf.cellLayout atIndexPath:weakSelf.indexPath];
         }
        
     };
@@ -222,13 +255,12 @@
         return _comentButton;
     }
     
-   UIImage *commentImage = [UIImage imageNamed:@"dongtai_pinglun"];
-   
+    UIImage *commentImage = [UIImage imageNamed:@"dongtai_pinglun"];
    
     _comentButton = [[BaseButton alloc]initWithFrame:self.cellLayout.commentPosition setTitle:[NSString stringWithFormat:@"%ld评论",self.cellLayout.statusModel.comment.count] titleSize:22*SpacedFonts titleColor:[UIColor colorWithRed:0.8157 green:0.8157 blue:0.8275 alpha:1.0]backgroundImage:nil iconImage:commentImage highlightImage:commentImage setTitleOrgin:CGPointMake(0 , 3) setImageOrgin:CGPointMake(0, 0) inView:self];
     __weak typeof(self) weakSelf =self;
     _comentButton.didClickBtnBlock = ^{
-        NSLog(@"_comentButton");
+  
         if ([weakSelf.delegate respondsToSelector:@selector(tableViewCell:didClickedCommentWithCellLayout:atIndexPath:)]) {
             [weakSelf.delegate tableViewCell:weakSelf didClickedCommentWithCellLayout:weakSelf.cellLayout atIndexPath:weakSelf.indexPath];
           
