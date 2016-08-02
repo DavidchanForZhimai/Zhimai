@@ -27,6 +27,8 @@
 #import "GallopUtils.h"
 #import "StatusModel.h"
 #import "CellLayout.h"
+
+#import "PublishDynamicVC.h"//发布动态
 #define kToolBarH 44
 #define kTextFieldH 30
 #define xsTabTag  110
@@ -549,6 +551,10 @@
     
     UIImage *image = [UIImage imageNamed:@"dongtai_bianjie"];
     BaseButton *topBtn= [[BaseButton alloc]initWithFrame:frame(10, 10, SCREEN_WIDTH-20, 35) setTitle:@"分享你的新鲜事" titleSize:26*SpacedFonts titleColor:LightBlackTitleColor backgroundImage:nil iconImage:image highlightImage:image setTitleOrgin:CGPointMake((35 -26*SpacedFonts)/2.0 , 10 -image.size.width) setImageOrgin:CGPointMake((35 -image.size.height)/2.0 , SCREEN_WIDTH -image.size.width - 30) inView:topV];
+    topBtn.didClickBtnBlock = ^
+    {
+        PushView(self, allocAndInit(PublishDynamicVC));
+    };
     topBtn.backgroundColor  = [UIColor whiteColor];
    
     return topV;
