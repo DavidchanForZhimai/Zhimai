@@ -19,6 +19,9 @@ typedef void (^HomePageCallbackType2)(BOOL issucced, NSString* info, NSDictionar
 //动态列表
 -(void)getHomePageDT:(int)pageNub andcallBack:(HomePageCallbackType2)callback;
 
+//动态详情
+-(void)getHomePageDTdetailID:(NSString *)ID andcallBack:(HomePageCallbackType2)callback;
+
 //点赞与取消点赞
 -(void)dynamicIsLike:(NSString *)ID  islike:(BOOL)islike andcallBack:(HomePageCallbackType2)callback;
 //发布、保存动态

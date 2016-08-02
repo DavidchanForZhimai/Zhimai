@@ -132,6 +132,29 @@
     }];
  
 }
+//动态详情
+-(void)getHomePageDTdetailID:(NSString *)ID andcallBack:(HomePageCallbackType2)callback
+{
+    NSString * url = [NSString stringWithFormat:@"%@dynamic/detail",HOST_URL];
+    NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
+    [parameters setValue:ID forKey:@"id"];
+    
+    [[ToolManager shareInstance]showWithStatus];
+    [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([[responseObject objectForKey:@"rtcode"] intValue]==1) {
+            [[ToolManager shareInstance]dismiss];
+            callback(YES,nil,responseObject);
+        }else
+        {
+            callback(NO,[responseObject objectForKey:@"rtmsg"],nil);
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        callback(NO,@"请检查您的网络",nil);
+    }];
+
+}
 //发布、保存动态
 -(void)adddynamic:(NSString *)content imgs:(NSString *)imgs andcallBack:(HomePageCallbackType2)callback
 {

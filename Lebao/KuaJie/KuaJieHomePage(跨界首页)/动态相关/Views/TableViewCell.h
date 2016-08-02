@@ -12,9 +12,6 @@
 
 
 
-
-
-
 #import <UIKit/UIKit.h>
 #import "CellLayout.h"
 #import "Gallop.h"
@@ -42,6 +39,10 @@
 //点击点赞头像查看详情
 - (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithJJRId:(NSString *)JJRId;
 
+//点击进入动态详情
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithDTID:(NSString *)DTID;
+
+@optional
 //更多按钮事件
 - (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithIsSelf:(BOOL)isSelf andDynamicID:(NSString *)andDynamicID atIndexPath:(NSIndexPath *)indexPath andIndex:(NSInteger)index;
 

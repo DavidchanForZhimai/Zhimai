@@ -54,8 +54,18 @@
    didCilickedImageStorage:(LWImageStorage *)imageStorage
                      touch:(UITouch *)touch{
     NSLog(@"tag:%ld",imageStorage.tag);//这里可以通过判断Tag来执行相应的回调。
+  
+    //查看动态详情
+    if (imageStorage.tag ==20) {
+    if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithDTID:)] &&
+            [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
+            [self.delegate tableViewCell:self didClickedLikeButtonWithDTID:[NSString stringWithFormat:@"%ld",_cellLayout.statusModel.ID]];
+        }
+            return;
+    }
+    
     //点击更多
-    if (imageStorage.tag ==30) {
+    else if (imageStorage.tag ==30) {
         [self didClickedMenuButton:imageStorage];
         return;
     }

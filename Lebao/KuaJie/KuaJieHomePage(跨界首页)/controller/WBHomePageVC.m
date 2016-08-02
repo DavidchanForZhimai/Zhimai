@@ -29,6 +29,7 @@
 #import "CellLayout.h"
 
 #import "PublishDynamicVC.h"//发布动态
+#import "DynamicDetailsViewController.h"//动态详情
 #define kToolBarH 44
 #define kTextFieldH 30
 #define xsTabTag  110
@@ -539,7 +540,7 @@
     _dtTab.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadMoreJJR)];
     _dtTab.footer.automaticallyHidden = NO;
     [buttomScr addSubview:_dtTab];
-    [self addJJRTopV];
+  
 }
 /**
  *  发布动态
@@ -756,7 +757,26 @@
     }
 }
 
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"didSelectRowAtIndexPath");
+    if (tableView ==_dtTab) {
+         CellLayout* cellLayout = self.jjrJsonArr[indexPath.row];
+        DynamicDetailsViewController*dynamicDetailsViewController = allocAndInit(DynamicDetailsViewController);
+        dynamicDetailsViewController.dynamicdID = [NSString stringWithFormat:@"%ld",cellLayout.statusModel.ID];
+        PushView(self, dynamicDetailsViewController);
+        
+        
+    }
+    
+}
+//点击进入动态详情
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithDTID:(NSString *)DTID
+{
+    DynamicDetailsViewController*dynamicDetailsViewController = allocAndInit(DynamicDetailsViewController);
+    dynamicDetailsViewController.dynamicdID = DTID;
+    PushView(self, dynamicDetailsViewController);
+}
 #pragma mark----线索那边的头像那块view的点击事件
 -(void)btnVAction:(UITapGestureRecognizer *)sender
 {
@@ -1050,13 +1070,22 @@
             _commentIndex = indexPath;
         }
 
-    } else {
+    } else  {
         if ([data isKindOfClass:[NSString class]]) {
             
             JJRDetailVC * jjrV = [[JJRDetailVC alloc]init];
             jjrV.jjrID = data;
             [self.navigationController pushViewController:jjrV animated:YES];
   
+        }
+        else if ([data isKindOfClass:[NSDictionary class]])
+        {
+            if ([data[@"key"] isEqualToString:@"查看更多"]) {
+                
+                DynamicDetailsViewController*dynamicDetailsViewController = allocAndInit(DynamicDetailsViewController);
+                dynamicDetailsViewController.dynamicdID = data[@"id"];
+                PushView(self, dynamicDetailsViewController);
+            }
         }
     }
 }
