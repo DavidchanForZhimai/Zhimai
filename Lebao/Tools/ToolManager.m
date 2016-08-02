@@ -8,8 +8,8 @@
 
 #import "ToolManager.h"
 #import "AppDelegate.h"
-#import "UIImageView+YYWebImage.h"
-#import "UIButton+YYWebImage.h"
+#import "UIImageView+WebCache.h"
+#import "UIButton+WebCache.h"
 #import "SelectedLoginViewController.h"
 //第三方框架 懒加载
 #import "SVProgressHUD.h"
@@ -80,7 +80,6 @@ static dispatch_once_t once;
         
     }
     NSString * url = imageURL;
-   
     if (![imageURL hasPrefix:@"http"]) {
         url = [NSString stringWithFormat:@"%@%@",ImageURLS,url];
     }
@@ -111,8 +110,7 @@ static dispatch_once_t once;
                 break;
         }
         
-        [image yy_setImageWithURL:[NSURL URLWithString:url] placeholder:placeholderImage];
-        
+        [image sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:placeholderImage];
       
     }
     else if ([imageView isKindOfClass:[UIButton class]])
@@ -141,7 +139,7 @@ static dispatch_once_t once;
                 break;
         }
 
-        [button yy_setBackgroundImageWithURL:[NSURL URLWithString:url] forState:UIControlStateNormal placeholder:placeholderImage];
+        [button sd_setImageWithURL:[NSURL URLWithString:url] forState:UIControlStateNormal placeholderImage:placeholderImage];
     }
    
 }

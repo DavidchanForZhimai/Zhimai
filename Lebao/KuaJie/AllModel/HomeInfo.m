@@ -109,6 +109,52 @@
     }];
 
 }
+//动态列表
+-(void)getHomePageDT:(int)pageNub andcallBack:(HomePageCallbackType2)callback
+{
+    NSString * url = [NSString stringWithFormat:@"%@dynamic/list",HOST_URL];
+    NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
+    [parameters setValue:@(pageNub) forKey:@"page"];
+   
+    [[ToolManager shareInstance]showWithStatus];
+    [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([[responseObject objectForKey:@"rtcode"] intValue]==1) {
+            [[ToolManager shareInstance]dismiss];
+            callback(YES,nil,responseObject);
+        }else
+        {
+            callback(NO,[responseObject objectForKey:@"rtmsg"],nil);
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+       
+        callback(NO,@"请检查您的网络",nil);
+    }];
+ 
+}
+//点赞与取消点赞
+-(void)dynamicIsLike:(NSString *)ID  islike:(BOOL)islike andcallBack:(HomePageCallbackType2)callback
+{
+    NSString * url = [NSString stringWithFormat:@"%@dynamic/like",HOST_URL];
+    NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
+    [parameters setValue:@(islike) forKey:@"islike"];
+     [parameters setValue:ID forKey:@"id"];
+    [[ToolManager shareInstance]showWithStatus];
+    [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([[responseObject objectForKey:@"rtcode"] intValue]==1) {
+            [[ToolManager shareInstance]dismiss];
+            callback(YES,nil,responseObject);
+        }else
+        {
+            callback(NO,[responseObject objectForKey:@"rtmsg"],nil);
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+       
+        callback(NO,@"请检查您的网络",nil);
+    }];
+
+}
 -(void)guanzhuTargetID:(int)targetID andIsFollow:(int)isfl andcallBack:(HomePageCallbackType1)callback
 {
     NSString * url = [NSString stringWithFormat:@"%@broker/follow",HOST_URL];

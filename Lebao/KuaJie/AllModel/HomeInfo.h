@@ -16,6 +16,11 @@ typedef void (^HomePageCallbackType2)(BOOL issucced, NSString* info, NSDictionar
 -(void)getHomePageXianSuo:(int)pageNub andCityID:(int)cityID andhangye:(NSString *)hangye andCallBack:(HomePageCallbackType1)callback;
 //跨界经纪人列表
 -(void)getHomePageJJR:(int)pageNub andCityID:(int)cityID  andhangye:(NSString *)hangye andcallBack:(HomePageCallbackType1)callback;
+//动态列表
+-(void)getHomePageDT:(int)pageNub andcallBack:(HomePageCallbackType2)callback;
+
+//点赞与取消点赞
+-(void)dynamicIsLike:(NSString *)ID  islike:(BOOL)islike andcallBack:(HomePageCallbackType2)callback;
 //添加或取消关注
 -(void)guanzhuTargetID:(int)targetID andIsFollow:(int)isfl andcallBack:(HomePageCallbackType1)callback;
 @end
