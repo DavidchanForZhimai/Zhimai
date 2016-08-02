@@ -9,8 +9,10 @@
 #import "PublishDynamicVC.h"
 #import "QTRejectViewCell.h"
 #import "TZImagePickerController.h"
-
+#import "UpLoadImageManager.h"
 #import "XWDragCellCollectionView.h"
+#import "HomeInfo.h"
+#import "MJExtension.h"
 #define PADDING 10
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width
@@ -33,6 +35,8 @@
 {
 //    UIView * bjV;
     XWDragCellCollectionView *_collectionView;
+   
+     NSMutableArray *upLoadphotos;
 }
 //@property (strong,nonatomic)UITextView * contTex;
 
@@ -155,11 +159,56 @@
         return;
     }else {
         
+    //上传图片
+        upLoadphotos = [[NSMutableArray alloc]init];
+        NSLog(@"self.phonelist =%@",self.phonelist);
+        if (self.phonelist.count ==0) {
+            [[HomeInfo shareInstance] adddynamic:self.tfView.text imgs:nil andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
+                NSLog(@"%@",jsonDic);
+                if (issucced) {
+                    if (_faBuSucceedBlock) {
+                        _faBuSucceedBlock();
+                    }
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
+                else
+                {
+                    [[ToolManager shareInstance] showInfoWithStatus:info];
+                }
+            }];
+        }
+        else
+        {
+        for (UIImage *image in self.phonelist) {
+            [[UpLoadImageManager shareInstance] upLoadImageType:@"property" image:image imageBlock:^(UpLoadImageModal *upLoadImageModal) {
+                
+                NSArray *images = [NSArray arrayWithObjects:upLoadImageModal.imgurl,upLoadImageModal.abbr_imgurl, nil];
+                [upLoadphotos addObject:images];
+                
+                if (upLoadphotos.count==self.phonelist.count) {
+                    [[HomeInfo shareInstance] adddynamic:self.tfView.text imgs:[upLoadphotos mj_JSONString] andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
+                       
+                        if (issucced) {
+                            if (_faBuSucceedBlock) {
+                                _faBuSucceedBlock();
+                            }
+                            [self.navigationController popViewControllerAnimated:YES];
+                        }
+                        else
+                        {
+                            [[ToolManager shareInstance] showInfoWithStatus:info];
+                        }
+                    }];
+                }
+                
+              
+                
+            }];
+        }
+        }
         
         
         
-        
-        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

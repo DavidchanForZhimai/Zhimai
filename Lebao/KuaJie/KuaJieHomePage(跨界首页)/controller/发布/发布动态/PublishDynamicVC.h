@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void (^FaBuSucceedBlock) (void);
 @interface PublishDynamicVC : UIViewController
 @property (strong,nonatomic)UIScrollView *svMain;           //背景滚动式图
 @property (strong,nonatomic)UIView *viewBg;                 //上面的文本背景
@@ -15,5 +16,5 @@
 @property (strong,nonatomic)UITextView *tfView;             //文本输入
 @property (strong,nonatomic)NSMutableArray *phonelist;      //图片数组
 @property (strong,nonatomic)UIButton *btnAddPhone;
-
+@property (strong,nonatomic)FaBuSucceedBlock faBuSucceedBlock;//发布成功
 @end

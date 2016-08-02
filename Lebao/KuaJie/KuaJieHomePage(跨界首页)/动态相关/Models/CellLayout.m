@@ -223,23 +223,34 @@
             likeImageSotrage.contents = [UIImage imageNamed:@"dongtai_dianzan_pressed"];
             likeImageSotrage.frame = CGRectMake(rect.origin.x,rect.origin.y + 20.0 + offsetY,16.0, 16.0);
             CGFloat priseWidth = 27.0;
+            
             NSInteger count = 0;
             if (priseCount<3) {
                 count =priseCount;
             }
             else
             {
-                 count =3;
-                 moreImageSotrage.tag = 20;//更多
-                 moreImageSotrage.contents = [UIImage imageNamed:@"dongtai_gengduozan"];
-                 moreImageSotrage.frame = CGRectMake(nameTextStorage.left + (3 * (priseWidth + 8.0)),likeImageSotrage.top,16.0, 16.0);
+                if (!isDetail) {
+                    count =3;
+                    moreImageSotrage.tag = 20;//更多
+                    moreImageSotrage.contents = [UIImage imageNamed:@"dongtai_gengduozan"];
+                    moreImageSotrage.frame = CGRectMake(nameTextStorage.left + (3 * (priseWidth + 8.0)),likeImageSotrage.top,16.0, 16.0);
+                }
+                else
+                {
+                    count =priseCount;
+                }
+                
 
         
             }
+            
+            int row = 1;
+            int rowCount = 0;
             for (int i =0; i<count; i++) {
               
-                CGRect priseRect = CGRectMake(nameTextStorage.left + (i * (priseWidth + 7.5f)),
-                                              likeImageSotrage.top - 6.0,
+                CGRect priseRect = CGRectMake(nameTextStorage.left + (rowCount * (priseWidth + 7.5f)),
+                                              likeImageSotrage.top - 6.0 +(row-1)*(priseWidth + 7.5f),
                                               priseWidth,
                                               priseWidth);
                 NSString* prisePositionString = NSStringFromCGRect(priseRect);
@@ -270,16 +281,31 @@
                 priseStorage.contents = like.imgurl;
                 [priseStorageArray addObject:priseStorage];
                 
-                
+                rowCount++;
+                if ((nameTextStorage.left + (rowCount + 1)*(priseWidth + 7.5f))>APPWIDTH) {
+                    
+                    rowCount = 0;
+                    row +=1;
+                }
             }
-            offsetY += priseWidth;
+            offsetY +=((priseWidth + 7.5)*row - 7.5);
             
         }
         if (statusModel.comment.count != 0 && statusModel.comment != nil) {
           
         
             NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:statusModel.comment.count];
-            for (StatusComment* commentDict in statusModel.comment) {
+            
+            int count =0;
+            if (isDetail||statusModel.comment.count<4) {
+               count=(int) statusModel.comment.count;
+            }
+            else
+            {
+                count =3;
+            }
+            for (int i=0; i<count;i++) {
+                StatusComment* commentDict = statusModel.comment[i];
                 NSString* to = commentDict.info.rep_realname;
                 if (to.length != 0) {
                     NSString* commentString = [NSString stringWithFormat:@"%@回复%@:%@",commentDict.info.realname,to,commentDict.info.content];
@@ -340,9 +366,14 @@
             commentBgStorage.contents = [UIImage imageNamed:@"comment"];
             [commentBgStorage stretchableImageWithLeftCapWidth:40 topCapHeight:15];
         }
+        
         [self addStorage:nameTextStorage];
         [self addStorage:industryTextStorage];
-        [self addStorage:moreStorage];
+        
+        if (!isDetail||statusModel.me) {
+             [self addStorage:moreStorage];
+        }
+       
         [self addStorage:contentTextStorage];
         [self addStorage:dateTextStorage];
         [self addStorages:commentTextStorages];
@@ -364,7 +395,18 @@
         //如果是使用在UITableViewCell上面，可以通过以下方法快速的得到Cell的高度
         
         self.cellHeight = [self suggestHeightWithBottomMargin:20.0f];
+        if (statusModel.comment.count>3&&!isDetail) {
+            //查看更多
+            LWTextStorage* lookMoreStorage = [[LWTextStorage alloc] init];
+            lookMoreStorage.text = @"查看更多";
+            lookMoreStorage.font = Size(26.0);
+            lookMoreStorage.textColor = [UIColor colorWithRed:0.7765 green:0.7843 blue:0.7882 alpha:1.0];
+
+            lookMoreStorage.frame = CGRectMake(SCREEN_WIDTH - 70, self.cellHeight - 20,52, CGFLOAT_MAX);
+            self.cellHeight +=10;
+        }
         self.cellMarginsRect = frame(0, self.cellHeight - 10, APPWIDTH, 10);
+        
     }
     return self;
 }

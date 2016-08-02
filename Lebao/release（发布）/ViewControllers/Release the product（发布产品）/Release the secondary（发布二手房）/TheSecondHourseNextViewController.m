@@ -206,7 +206,7 @@
     }
     _comboBox.changedBlock = ^(FSComboListView *comboListView,NSString * toValue)
     {
-         NSLog(@"comboboxClosed=%@",toValue);
+//         NSLog(@"comboboxClosed=%@",toValue);
        chuanxiang = toValue;
     };
 

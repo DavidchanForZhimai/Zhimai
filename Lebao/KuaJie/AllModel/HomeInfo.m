@@ -133,17 +133,20 @@
  
 }
 //发布、保存动态
--(void)adddynamic:(NSString *)content imgs:(NSMutableArray *)imgs andcallBack:(HomePageCallbackType2)callback
+-(void)adddynamic:(NSString *)content imgs:(NSString *)imgs andcallBack:(HomePageCallbackType2)callback
 {
-    NSString * url = [NSString stringWithFormat:@"%@dynamic/list",HOST_URL];
+    NSString * url = [NSString stringWithFormat:@"%@dynamic/write",HOST_URL];
     NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
     [parameters setValue:content forKey:@"content"];
-    [parameters setValue:imgs forKey:@"imgs"];
-    
+    if (imgs) {
+         [parameters setValue:imgs forKey:@"img"];
+    }
+   
+    NSLog(@"parameters =%@ url =%@",parameters,url);
     [[ToolManager shareInstance]showWithStatus];
     [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([[responseObject objectForKey:@"rtcode"] intValue]==1) {
-            [[ToolManager shareInstance] showSuccessWithStatus:@"上传动态成功"];
+            [[ToolManager shareInstance] showSuccessWithStatus:@"发布动态成功"];
             callback(YES,nil,responseObject);
         }else
         {

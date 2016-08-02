@@ -22,7 +22,7 @@ typedef void (^HomePageCallbackType2)(BOOL issucced, NSString* info, NSDictionar
 //点赞与取消点赞
 -(void)dynamicIsLike:(NSString *)ID  islike:(BOOL)islike andcallBack:(HomePageCallbackType2)callback;
 //发布、保存动态
--(void)adddynamic:(NSString *)content imgs:(NSMutableArray *)imgs andcallBack:(HomePageCallbackType2)callback;
+-(void)adddynamic:(NSString *)content imgs:(NSString *)imgs andcallBack:(HomePageCallbackType2)callback;
 
 //删除动态
 -(void)deleteDynamic:(NSString *)ID  andcallBack:(HomePageCallbackType2)callback;
