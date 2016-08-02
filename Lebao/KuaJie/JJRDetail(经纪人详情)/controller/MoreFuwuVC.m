@@ -110,7 +110,7 @@
     titLab.text = @"Ta的服务";
     titLab.font = [UIFont systemFontOfSize:16];
     [navView addSubview:titLab];
-    UIView * hxV = [[UIView alloc]initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, 0.5)];
+    UIView * hxV = [[UIView alloc]initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, 1)];
     hxV.backgroundColor = [UIColor colorWithRed:0.816 green:0.820 blue:0.827 alpha:1.000];
     [self.view addSubview:hxV];
     

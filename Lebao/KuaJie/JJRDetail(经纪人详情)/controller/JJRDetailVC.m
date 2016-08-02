@@ -200,9 +200,10 @@
     [bottomScr addSubview:xqV];
     [self addTxBtn:xqV];
     [self addTheRoundView:xqV];
+    [self adddongtaiV:xqV];
     [self addJianJieV:xqV];
     [self addBiaoQianV:xqV];
-
+    
     [self addTheXsView:CGRectGetMaxY(xqV.frame) + 10];
 }
 -(void)addTxBtn:(UIView *)sender//头像那一栏
@@ -291,11 +292,43 @@
     hxV.backgroundColor = BACKCOLOR;
     [gRuondV addSubview:hxV];
 }
+
+
+-(void)adddongtaiV:(UIView *)sender
+{
+    UIView * dongtaiV = [[UIView alloc]initWithFrame:CGRectMake(0, 131, sender.frame.size.width, 40)];
+    dongtaiV.backgroundColor = [UIColor clearColor];
+    [sender addSubview:dongtaiV];
+    
+    UILabel * dongtaiLab = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 75, 40)];
+    dongtaiLab.textColor = [UIColor colorWithRed:0.584 green:0.584 blue:0.596 alpha:1.000];
+    dongtaiLab.textAlignment = NSTextAlignmentLeft;
+    dongtaiLab.text = @"他的动态";
+    dongtaiLab.font = [UIFont systemFontOfSize:12];
+    [dongtaiV addSubview:dongtaiLab];
+    
+    UIImage *lookMoreimage = [UIImage imageNamed:@"jjr_gengduo"];
+    NSString *str = [NSString stringWithFormat:@"%@个",_jjrDic[@"count_dynamic"] ];
+    CGSize size = [str sizeWithFont:Size(28*SpacedFonts) maxSize:CGSizeMake(50, 40)];
+    BaseButton * lookMoreBtn = [[BaseButton alloc]initWithFrame:CGRectMake(dongtaiV.frame.size.width-10 -(lookMoreimage.size.width +size.width + 15), 10, lookMoreimage.size.width +size.width + 15 , 28*SpacedFonts) setTitle:str titleSize:28*SpacedFonts titleColor:[UIColor colorWithWhite:0.7141 alpha:1.0] backgroundImage:nil iconImage:lookMoreimage highlightImage:lookMoreimage setTitleOrgin:CGPointMake(0, -lookMoreimage.size.width) setImageOrgin:CGPointMake(4, size.width + 15) inView:dongtaiV];
+    
+    [lookMoreBtn addTarget:self action:@selector(lookMoreDongtai) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIView * hxV = [[UIView alloc]initWithFrame:CGRectMake(10, 40, dongtaiV.frame.size.width-20, 1)];
+    hxV.backgroundColor = [UIColor colorWithRed:0.965 green:0.965 blue:0.969 alpha:1.000];
+    [dongtaiV addSubview:hxV];
+    
+
+
+
+}
 -(void)addJianJieV:(UIView *)sender
 {
-    UIView * jianjieV = [[UIView alloc]initWithFrame:CGRectMake(0, 131, sender.frame.size.width, 40)];
+    UIView * jianjieV = [[UIView alloc]initWithFrame:CGRectMake(0, 171, sender.frame.size.width, 40)];
     jianjieV.backgroundColor = [UIColor clearColor];
     [sender addSubview:jianjieV];
+    
+
     
     UILabel * jianjieLab = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 75, 40)];
     jianjieLab.textColor = [UIColor colorWithRed:0.584 green:0.584 blue:0.596 alpha:1.000];
@@ -315,13 +348,13 @@
     }
     [jianjieV addSubview:contenLab];
     
-    UIView * hxV = [[UIView alloc]initWithFrame:CGRectMake(10, 170, sender.frame.size.width-20, 1)];
+    UIView * hxV = [[UIView alloc]initWithFrame:CGRectMake(10, 210, sender.frame.size.width-20, 1)];
     hxV.backgroundColor = BACKCOLOR;
     [sender addSubview:hxV];
 }
 -(void)addBiaoQianV:(UIView *)sender
 {
-    biaoQianV = [[UIView alloc]initWithFrame:CGRectMake(0, 171, sender.frame.size.width, sender.frame.size.height-171)];
+    biaoQianV = [[UIView alloc]initWithFrame:CGRectMake(0, 211, sender.frame.size.width, sender.frame.size.height-211)];
     [sender addSubview:biaoQianV];
     UILabel * biaoqianLab = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, 75, 40)];
     biaoqianLab.textColor = [UIColor colorWithRed:0.584 green:0.584 blue:0.596 alpha:1.000];
@@ -423,7 +456,7 @@
     UILabel * taLab = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, 80, 30)];
     taLab.textAlignment = NSTextAlignmentLeft;
     taLab.textColor = [UIColor colorWithWhite:0.7141 alpha:1.0];
-    taLab.text = @"Ta的线索";
+    taLab.text = @"最近悬赏";
     taLab.font = [UIFont systemFontOfSize:15];
     [xianSuoV addSubview:taLab];
     
@@ -442,6 +475,11 @@
     [self addTheThreeXianSuoV:xianSuoV];
     
     [self addTheFuWuV:CGRectGetMaxY(xianSuoV.frame)+10];
+}
+#pragma mark 查看更多动态
+-(void)lookMoreDongtai
+{
+    
 }
 -(void)lookMoreXianSuo
 {

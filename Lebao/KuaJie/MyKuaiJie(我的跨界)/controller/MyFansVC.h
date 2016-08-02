@@ -11,4 +11,5 @@
 @interface MyFansVC : UIViewController
 
 @property (weak, nonatomic) IBOutlet UITableView *myTab;
+@property (nonatomic,strong)NSString *Numb;
 @end

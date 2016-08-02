@@ -75,7 +75,7 @@
     _titleLab.textColor = [UIColor whiteColor];
     _titleLab.textAlignment = NSTextAlignmentCenter;
     _titleLab.font= [UIFont systemFontOfSize:18];
-    _titleLab.text = [NSString stringWithFormat:@"%d/%ld",self.currentIndex +1,self.photoArr.count];
+    _titleLab.text = [NSString stringWithFormat:@"%ld/%ld",self.currentIndex +1,self.photoArr.count];
     
     _selectButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.tz_width - 54, 10, 42, 42)];
     [_selectButton setImage:[UIImage imageNamed:@"photo_def_photoPickerVc"] forState:UIControlStateNormal];

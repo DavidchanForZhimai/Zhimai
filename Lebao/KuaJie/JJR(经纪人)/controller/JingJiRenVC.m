@@ -209,14 +209,14 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 119.f;
+    return 98.f;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString * idenfStr = @"jjrCell";
     JJRCell * cell = [tableView dequeueReusableCellWithIdentifier:idenfStr];
     if (!cell) {
-        cell = [[JJRCell alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 119)];
+        cell = [[JJRCell alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 98)];
         cell.backgroundColor = [UIColor clearColor];
         NSString * imgUrl;
         if ([[_jsonArr[indexPath.row]objectForKey:@"imgurl"] rangeOfString:@"http"].location != NSNotFound) {
@@ -247,11 +247,14 @@
         cell.fansLab.text = [NSString stringWithFormat:@"粉丝:%@",[_jsonArr[indexPath.row]objectForKey:@"fansnum"]];
         if ([[_jsonArr[indexPath.row]objectForKey:@"isfollow"] intValue] == 1) {
             cell.guanzhuBtn.selected = YES;
-            
+            if ([[_jsonArr[indexPath.row]objectForKey:@"mutual"]intValue] == 1) {
+                [cell.guanzhuBtn setTitle:@"已互关注" forState:UIControlStateSelected];
+            }
         }else
         {
             cell.guanzhuBtn.selected = NO;
         }
+
         cell.guanzhuBtn.tag = 100+indexPath.row;
         [cell.guanzhuBtn addTarget:self action:@selector(guanzhuAction:) forControlEvents:UIControlEventTouchUpInside];
         UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jjrAction:)];
@@ -260,6 +263,9 @@
         cell.nextV.tag = 500+indexPath.row;
         [cell.nextV addGestureRecognizer:tap];
 
+    }
+    if (![cell.guanzhuBtn.titleLabel.text isEqualToString:@"关注Ta"]) {
+        cell.guanzhuBtn.layer.borderColor=[UIColor colorWithWhite:0.651 alpha:1.000].CGColor;
     }
     return cell;
 }
@@ -287,6 +293,13 @@
     [[HomeInfo shareInstance]guanzhuTargetID:[target_id intValue] andIsFollow:isfollow andcallBack:^(BOOL issucced, NSString *info, NSArray *jsonArr) {
         if (issucced == YES) {
             sender.selected = !sender.selected;
+            if (sender.selected == YES) {
+                sender.layer.borderColor=[UIColor colorWithWhite:0.651 alpha:1.000].CGColor;
+            }
+            else if (sender.selected == NO) {
+                sender.layer.borderColor=[UIColor colorWithRed:0.239 green:0.553 blue:0.996 alpha:1.000].CGColor;
+            }
+
         }else
         {
             [[ToolManager shareInstance] showAlertMessage:info];

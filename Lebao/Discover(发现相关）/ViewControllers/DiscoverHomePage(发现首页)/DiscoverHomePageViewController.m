@@ -12,6 +12,7 @@
 #import "ReadhotViewController.h"//热门阅读
 #import "AlreadysentproductViewController.h"//已发产品
 #import "ReadMeMostViewController.h"//读我最多
+#import "JinJiRenViewController.h"//经纪人
 #import "ReaderAttributesViewController.h"
 #import "XLDataService.h"
 
@@ -86,8 +87,8 @@
         
     }];
     
-    NSArray *title = @[@"红包转发",@"精选文章",@"热门阅读",@"已发产品",@"已发文章",@"",@"读者属性",@"读我最多",@""];
-     NSArray *imageName = @[@"iconfont-hongbao",@"iconfont-jxwenzhang",@"iconfont-chaye",@"iconfont-yfchanpin",@"iconfont-tushuziliaoku",@"",@"yueduzuidu",@"iconfont-yikezaixianduiyi12",@""];
+    NSArray *title = @[@"  经纪人",@"红包转发",@"精选文章",@"热门阅读",@"已发产品",@"已发文章",@"读者属性",@"读我最多",@""];
+     NSArray *imageName = @[@"jingjiren",@"iconfont-hongbao",@"iconfont-jxwenzhang",@"iconfont-chaye",@"iconfont-yfchanpin",@"iconfont-tushuziliaoku",@"yueduzuidu",@"iconfont-yikezaixianduiyi12",@""];
     
     for (int i =0; i<imageName.count; i++) {
         UIImage *image = [UIImage imageNamed:imageName[i]];
@@ -117,19 +118,27 @@
                 
                 switch (i) {
                     case 0:
+                    
+                    {
+                        PushView(weakSelf, allocAndInit(JinJiRenViewController));
+//                        redLabel.hidden = YES;
+                    }
+                        break;
+
+                    case 1:
                         PushView(weakSelf, allocAndInit(RedpacketsforwardingViewController));
                         redLabel.hidden = YES;
                         break;
-                    case 1:
+                    case 2:
                         PushView(weakSelf, allocAndInit(DiscoverViewController));
                         break;
-                    case 2:
+                    case 3:
                         PushView(weakSelf, allocAndInit(ReadhotViewController));
                         break;
-                    case 3:
+                    case 4:
                         PushView(weakSelf, allocAndInit(AlreadysentproductViewController));
                         break;
-                    case 4:
+                    case 5:
                     { AlreadysentproductViewController *article  = allocAndInit(AlreadysentproductViewController);
                         article.isArticle = YES;
                         PushView(weakSelf, article);
@@ -141,7 +150,8 @@
                     case 7:
                         PushView(weakSelf, allocAndInit(ReadMeMostViewController));
                         break;
-           
+                    
+
                     default:
                         break;
                 }

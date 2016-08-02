@@ -391,7 +391,7 @@
                 
             };
             
-            [[ToolManager shareInstance] loadWebViewWithUrl:[NSString stringWithFormat:@"%@show/car?acid=%@",HttpURL,_modal.ID] title:@"产品详情" pushView:self rightBtn:rightBtn];
+            [[ToolManager shareInstance] loadWebViewWithUrl:[NSString stringWithFormat:@"%@show/car?acid=%@",HttpURL,_modal.ID] title:@"Ta的服务" pushView:self rightBtn:rightBtn];
             
         }
         

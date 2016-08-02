@@ -10,4 +10,6 @@
 
 @interface MyGuanZhuVC : UIViewController
 
+@property(nonatomic,strong)NSString *Numb;
+
 @end

@@ -937,7 +937,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView.tag == WHZTABTAG) {
-        return 119;
+        return 98;
     }else
     {
         return 119;
@@ -1003,7 +1003,7 @@
         static NSString * idenfStr = @"xttjCell";
         JJRCell * cell = [tableView dequeueReusableCellWithIdentifier:idenfStr];
         if (!cell) {
-            cell = [[JJRCell alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 119)];
+            cell = [[JJRCell alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 98)];
             
             cell.backgroundColor = [UIColor clearColor];
             cell.renzhImg.image = [[_recomArr[indexPath.row]objectForKey:@"authen"] intValue]==3?[UIImage imageNamed:@"renzhen"]:[UIImage imageNamed:@"weirenzhen"];

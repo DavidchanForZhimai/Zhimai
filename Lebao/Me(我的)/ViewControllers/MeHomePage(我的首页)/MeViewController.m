@@ -63,9 +63,9 @@
     
     NSArray *_sectionOne =[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"我的消息",@"name",@"me_messages",@"image",@"1",@"show",@"NotificationViewController",@"viewController",nil],[NSDictionary dictionaryWithObjectsAndKeys:@"我的跨界",@"name",@"iconfont-wodekuajie",@"image" ,@"1",@"show",@"MyKuaJieVC",@"viewController",nil] ,nil];
     
-     NSArray *_sectionTwo =[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"我的钱包",@"name",@"iconfont-wodeqianbao",@"image",@"1",@"show",@"EarnestMoneyViewController",@"viewController",nil], [NSDictionary dictionaryWithObjectsAndKeys:@"我的资料",@"name",@"iconfont-mingpian",@"image",@"1",@"show",@"BasicInformationViewController",@"viewController",nil],[NSDictionary dictionaryWithObjectsAndKeys:@"认证状态",@"name",@"iconfont-vip",@"image" ,@"1",@"show",@"AuthenticationViewController",@"viewController",nil],nil];
+    NSArray *_sectionTwo =[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"我的钱包",@"name",@"iconfont-wodeqianbao",@"image",@"1",@"show",@"EarnestMoneyViewController",@"viewController",nil], [NSDictionary dictionaryWithObjectsAndKeys:@"我的资料",@"name",@"iconfont-mingpian",@"image",@"1",@"show",@"BasicInformationViewController",@"viewController",nil],[NSDictionary dictionaryWithObjectsAndKeys:@"认证状态",@"name",@"iconfont-vip",@"image" ,@"1",@"show",@"AuthenticationViewController",@"viewController",nil],nil];
     
-     NSArray *_sectionThree =[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"满意值",@"name",@"iconfont-xinyongfen",@"image" ,@"1",@"show",@"SatisfactionViewController",@"viewController",nil],[NSDictionary dictionaryWithObjectsAndKeys:@"活跃值",@"name",@"iconfont-xinyongzhi",@"image" ,@"0",@"show",@"ActiveValueViewController",@"viewController",nil],nil];
+    NSArray *_sectionThree =[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"满意值",@"name",@"iconfont-xinyongfen",@"image" ,@"1",@"show",@"SatisfactionViewController",@"viewController",nil],[NSDictionary dictionaryWithObjectsAndKeys:@"活跃值",@"name",@"iconfont-xinyongzhi",@"image" ,@"0",@"show",@"ActiveValueViewController",@"viewController",nil],nil];
     
     NSArray *_sectionFour =[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"邀请好友",@"name",@"iconfont-yaoqing",@"image" ,@"0",@"show",@"InviteFriendsViewController",@"viewController",nil],nil];
     
@@ -93,7 +93,7 @@
     [customView addSubview:imageView];
     
     [self addHeadView:customView];
-
+    
     _header = [CExpandHeader expandWithScrollView:_meTableView expandView:customView];
     
     
@@ -109,12 +109,12 @@
             [nav pushViewController:allocAndInit((NSClassFromString(@"SettingViewController")))animated:YES];
             
         }];
-
+        
     };
     
     
     
-   
+    
 }
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -150,23 +150,23 @@
     descrip =[UILabel createLabelWithFrame:frame(0, CGRectGetMaxY(username.frame)+ 10, frameWidth(_meTableView), 24.0*SpacedFonts) text:@"钱包余额:00.00元" fontSize:24*SpacedFonts textColor:WhiteColor textAlignment: NSTextAlignmentCenter inView:view];
     
 }
- - (void)netWork
+- (void)netWork
 {
     NSMutableDictionary * parameter =[Parameter parameterWithSessicon];
-
+    
     [XLDataService postWithUrl:PersonalURL param:parameter modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-      
+        
         if (dataObj) {
-           MeViewModal * _modal =[MeViewModal mj_objectWithKeyValues:dataObj];
+            MeViewModal * _modal =[MeViewModal mj_objectWithKeyValues:dataObj];
             modal         = _modal;
             if (modal.rtcode ==1) {
-
+                
                 [[ToolManager shareInstance] imageView:userIcon setImageWithURL:modal.imgurl placeholderType:PlaceholderTypeUserHead];
                 username.text = modal.realname;
                 descrip.text  = [NSString stringWithFormat:@"诚意金:%@元",modal.amount];
                 [_meTableView  reloadData];
-                }
-
+            }
+            
             else
             {
                 [[ToolManager shareInstance] showInfoWithStatus:modal.rtmsg];
@@ -177,7 +177,7 @@
             [[ToolManager shareInstance] showInfoWithStatus];
         }
     }];
-
+    
 }
 #pragma mark
 #pragma mark
@@ -222,25 +222,27 @@
         UIView  *attentionAndfensView = allocAndInitWithFrame(UIView, frame(0, 0, frameWidth(_meTableView), 40));
         attentionAndfensView.backgroundColor = WhiteColor;
         [view addSubview:attentionAndfensView];
-    
+        
         UILabel *line = allocAndInitWithFrame(UILabel , frame(frameWidth(_meTableView)/2.0 - 0.5, 7, 0.5, 26));
         line.backgroundColor = LineBg;
         [view addSubview:line];
         NSString *str = @"0";
         BaseButton *attention = [[BaseButton alloc]initWithFrame:frame(0, 0, frameWidth(attentionAndfensView)/2.0, frameHeight(attentionAndfensView)) setTitle:[NSString stringWithFormat:@"关注(%@)",modal.follownum?modal.follownum:str] titleSize:24*SpacedFonts titleColor:AppMainColor textAlignment:NSTextAlignmentCenter backgroundColor:WhiteColor inView:attentionAndfensView];
-//        __weak typeof(self) weakSelf = self;
+        //        __weak typeof(self) weakSelf = self;
         attention.didClickBtnBlock = ^
         {
             [[ToolManager shareInstance].drawerController closeDrawerAnimated:YES completion:^(BOOL finished) {
                 
                 UITabBarController *tabBar = (UITabBarController *)[ToolManager shareInstance].drawerController.centerViewController;
                 UINavigationController *nav =(UINavigationController *)tabBar.viewControllers[getAppDelegate().mainTab.selectedIndex];
-                [nav pushViewController:allocAndInit(MyGuanZhuVC)animated:YES];
+                MyGuanZhuVC *guanzhuVC=[[MyGuanZhuVC alloc]init];
+                guanzhuVC.Numb=modal.follownum?modal.follownum:str;
+                [nav pushViewController:guanzhuVC animated:YES];
                 
             }];
-
-   
-
+            
+            
+            
         };
         
         BaseButton *fens = [[BaseButton alloc]initWithFrame:frame(CGRectGetMaxX(attention.frame), frameY(attention), frameWidth(attention), frameHeight(attention)) setTitle:[NSString stringWithFormat:@"粉丝(%@)",modal.fansnum?modal.fansnum:str] titleSize:24*SpacedFonts titleColor:AppMainColor textAlignment:NSTextAlignmentCenter backgroundColor:WhiteColor inView:attentionAndfensView];
@@ -250,12 +252,16 @@
                 
                 UITabBarController *tabBar = (UITabBarController *)[ToolManager shareInstance].drawerController.centerViewController;
                 UINavigationController *nav =(UINavigationController *)tabBar.viewControllers[getAppDelegate().mainTab.selectedIndex];
-                [nav pushViewController:allocAndInit(MyFansVC)animated:YES];
+                MyFansVC *fansVC=[[MyFansVC alloc]init];
+                fansVC.Numb=modal.fansnum?modal.fansnum:str;
+                [nav pushViewController:fansVC animated:YES];
+
+//                [nav pushViewController:allocAndInit(MyFansVC)animated:YES];
                 
             }];
-
+            
         };
-
+        
         
         return view;
     }
@@ -280,7 +286,7 @@
     MeCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if (!cell) {
         cell = [[MeCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID cellHeight:cellH cellWidth:frameWidth(_meTableView)];
-       
+        
         
     }
     NSArray * _sectionArray = _meArray[indexPath.section];
@@ -290,7 +296,7 @@
     }
     else
     {
-       cell.message.hidden = YES;
+        cell.message.hidden = YES;
     }
     if ([dict[@"viewController"] isEqualToString:@"MyKuaJieVC"]) {
         cell.detail.hidden = NO;
@@ -326,7 +332,7 @@
         
         cell.authen.hidden = YES;
     }
-   
+    
     [cell setLeftImage:dict[@"image"] Title:dict[@"name"] isShowLine:[dict[@"show"] boolValue]];
     return cell;
     
@@ -339,27 +345,27 @@
     NSDictionary *dict = _sectionArray[indexPath.row];
     
     if ([dict[@"viewController"] hasPrefix:@"http://"]) {
-
+        
         return;
     }
     if (NSClassFromString(dict[@"viewController"])) {
-      
-           [[ToolManager shareInstance].drawerController closeDrawerAnimated:YES completion:^(BOOL finished) {
-          
-               UITabBarController *tabBar = (UITabBarController *)[ToolManager shareInstance].drawerController.centerViewController;
-               UINavigationController *nav =(UINavigationController *)tabBar.viewControllers[getAppDelegate().mainTab.selectedIndex];
-               
-               if ([dict[@"viewController"] isEqualToString:@"AuthenticationViewController"]) {
-                   AuthenticationViewController *authen = allocAndInit(AuthenticationViewController);
-                   authen.authen = modal.authen;
-                   [nav pushViewController:authen animated:YES];
-                   return ;
-               }
-               [nav pushViewController:allocAndInit((NSClassFromString(dict[@"viewController"] )))animated:YES];
-                
-            }];
         
-      
+        [[ToolManager shareInstance].drawerController closeDrawerAnimated:YES completion:^(BOOL finished) {
+            
+            UITabBarController *tabBar = (UITabBarController *)[ToolManager shareInstance].drawerController.centerViewController;
+            UINavigationController *nav =(UINavigationController *)tabBar.viewControllers[getAppDelegate().mainTab.selectedIndex];
+            
+            if ([dict[@"viewController"] isEqualToString:@"AuthenticationViewController"]) {
+                AuthenticationViewController *authen = allocAndInit(AuthenticationViewController);
+                authen.authen = modal.authen;
+                [nav pushViewController:authen animated:YES];
+                return ;
+            }
+            [nav pushViewController:allocAndInit((NSClassFromString(dict[@"viewController"] )))animated:YES];
+            
+        }];
+        
+        
     }
     
 }
@@ -371,13 +377,13 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

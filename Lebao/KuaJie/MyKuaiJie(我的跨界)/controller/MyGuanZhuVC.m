@@ -59,7 +59,7 @@
                 for (NSDictionary * dic in jsonArr) {
                     [_jsonArr addObject:dic];
                 }
-                _titLab.text = [NSString stringWithFormat:@"关注(%ld)",_jsonArr.count];
+                _titLab.text = [NSString stringWithFormat:@"关注(%@)",_Numb];
                 [_myTab reloadData];
             }else
             {
@@ -121,7 +121,7 @@
     static NSString * idenfStr = @"jjrCell";
     JJRCell * cell = [tableView dequeueReusableCellWithIdentifier:idenfStr];
     if (!cell) {
-        cell = [[JJRCell alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 119)];
+        cell = [[JJRCell alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 98)];
         cell.backgroundColor = [UIColor clearColor];
         NSString * imgUrl;
         if ([[_jsonArr[indexPath.row]objectForKey:@"imgurl"] rangeOfString:@"http"].location != NSNotFound) {
@@ -168,6 +168,10 @@
         cell.guanzhuBtn.tag = 100+indexPath.row;
         [cell.guanzhuBtn addTarget:self action:@selector(guanzhuAction:) forControlEvents:UIControlEventTouchUpInside];
     }
+    if (![cell.guanzhuBtn.titleLabel.text isEqualToString:@"关注Ta"]) {
+        cell.guanzhuBtn.layer.borderColor=[UIColor colorWithWhite:0.651 alpha:1.000].CGColor;
+    }
+
     return cell;
 }
 -(void)jjrAction:(UIGestureRecognizer *)sender
@@ -179,7 +183,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 119.f;
+    return 98.f;
 }
 -(void)guanzhuAction:(UIButton *)sender
 {
@@ -195,6 +199,13 @@
     [[HomeInfo shareInstance]guanzhuTargetID:[target_id intValue] andIsFollow:isfollow andcallBack:^(BOOL issucced, NSString *info, NSArray *jsonArr) {
         if (issucced == YES) {
             sender.selected = !sender.selected;
+            if (sender.selected == YES) {
+                sender.layer.borderColor=[UIColor colorWithWhite:0.651 alpha:1.000].CGColor;
+            }
+            else if (sender.selected == NO) {
+                sender.layer.borderColor=[UIColor colorWithRed:0.239 green:0.553 blue:0.996 alpha:1.000].CGColor;
+            }
+
         }else
         {
             [[ToolManager shareInstance] showAlertMessage:info];
