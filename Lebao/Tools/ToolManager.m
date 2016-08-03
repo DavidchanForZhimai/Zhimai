@@ -244,7 +244,7 @@ static dispatch_once_t once;
             // 跳转到相机或相册页面
             UIImagePickerController *imagePickerController = allocAndInit(UIImagePickerController);
             imagePickerController.delegate = self;
-            imagePickerController.allowsEditing = YES;
+            imagePickerController.allowsEditing = NO;
             imagePickerController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
             imagePickerController.sourceType = sourceType;
             Modal(view, imagePickerController);

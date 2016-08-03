@@ -456,7 +456,7 @@
     UILabel * taLab = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, 80, 30)];
     taLab.textAlignment = NSTextAlignmentLeft;
     taLab.textColor = [UIColor colorWithWhite:0.7141 alpha:1.0];
-    taLab.text = @"最近悬赏";
+    taLab.text = @"Ta的线索";
     taLab.font = [UIFont systemFontOfSize:15];
     [xianSuoV addSubview:taLab];
     
