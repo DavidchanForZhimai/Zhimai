@@ -211,7 +211,7 @@
         priseStr = @"赞";
     }
     CGSize prisesize = [priseStr sizeWithFont:Size(22) maxSize:CGSizeMake(100, 22*SpacedFonts)];
-    self.likeLb.frame = frame(self.cellLayout.prisePosition.origin.x +priseImage.size.width + 12, self.cellLayout.prisePosition.origin.y + 2, prisesize.width, 22*SpacedFonts);
+    self.likeLb.frame = frame(self.cellLayout.prisePosition.origin.x +priseImage.size.width + 15, self.cellLayout.prisePosition.origin.y + 2, prisesize.width, 22*SpacedFonts);
     self.likeLb.text = priseStr;
     self.cellline.frame = self.cellLayout.cellMarginsRect;
     self.moreImage.frame = frame(APPWIDTH -30, 10, 16, 16);

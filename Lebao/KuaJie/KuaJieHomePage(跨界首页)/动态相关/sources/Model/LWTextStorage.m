@@ -79,6 +79,7 @@
     self.attributedText = nil;
     self.textColor = [UIColor blackColor];
     self.textBackgroundColor = [UIColor clearColor];
+    self.underlineColor = [UIColor clearColor];
     self.font = [UIFont systemFontOfSize:14.0f];
     self.textAlignment = NSTextAlignmentLeft;
     self.lineBreakMode = NSLineBreakByWordWrapping;

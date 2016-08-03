@@ -176,7 +176,6 @@
         dateTextStorage.font = Size(22);
         dateTextStorage.textColor = [UIColor colorWithRed:0.7216 green:0.7294 blue:0.7333 alpha:1.0];
         
-    
         dateTextStorage.frame = CGRectMake(nameTextStorage.left, contentTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
         if (lastImageStorage) {
              
@@ -211,18 +210,19 @@
         LWImageStorage* commentBgStorage = [[LWImageStorage alloc] init];
         NSArray* commentTextStorages = @[];
         CGRect commentBgPosition = CGRectZero;
-        CGRect rect = CGRectMake(nameTextStorage.left - 23,dateTextStorage.bottom + 5.0f, SCREEN_WIDTH - 80, 20);
+        CGRect rect = CGRectMake(nameTextStorage.left - 28,dateTextStorage.bottom + 5.0f, SCREEN_WIDTH - 80, 20);
         CGFloat offsetY = 0.0f;
         //点赞
         LWImageStorage* likeImageSotrage = [[LWImageStorage alloc] init];
         LWImageStorage* moreImageSotrage = [[LWImageStorage alloc] init];
+        
         NSInteger priseCount = [statusModel.like count];
         NSMutableArray* priseStorageArray = [[NSMutableArray alloc] initWithCapacity:priseCount];
         NSMutableArray* prisePositionArray = [[NSMutableArray alloc] initWithCapacity:priseCount];
         if (self.statusModel.like.count != 0) {
             likeImageSotrage.contents = [UIImage imageNamed:@"dongtai_dianzan_pressed"];
-            likeImageSotrage.frame = CGRectMake(rect.origin.x,rect.origin.y + 20.0 + offsetY,16.0, 16.0);
-            CGFloat priseWidth = 30.0;
+            likeImageSotrage.frame = CGRectMake(rect.origin.x,rect.origin.y + 20.0 + offsetY,20.0, 20.0);
+            CGFloat priseWidth = 32.0;
             
             NSInteger count = 0;
             if (priseCount<6) {
@@ -234,7 +234,7 @@
                     count =5;
                     moreImageSotrage.tag = 20;//更多
                     moreImageSotrage.contents = [UIImage imageNamed:@"dongtai_gengduozan"];
-                    moreImageSotrage.frame = CGRectMake(nameTextStorage.left + (3 * (priseWidth + 8.0)),likeImageSotrage.top,16.0, 16.0);
+                    moreImageSotrage.frame = CGRectMake(nameTextStorage.left + (3 * (priseWidth + 8.0)),likeImageSotrage.top,20.0, 20.0);
                 }
                 else
                 {

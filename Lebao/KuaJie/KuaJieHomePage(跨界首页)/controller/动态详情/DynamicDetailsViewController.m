@@ -25,6 +25,7 @@
     UIScrollView * buttomScr;
     UIImageView *_toolBar;
     UITextField *_textField;
+     UIButton  *_sendBtn;
     
 }
 @property (strong,nonatomic)NSMutableArray * jjrJsonArr;
@@ -42,12 +43,7 @@
     [super viewDidLoad];
     [self navViewTitleAndBackBtn:@"详情"];
     // Do any additional setup after loading the view.
-    UITapGestureRecognizer* tapGestureRecognizer = [[UITapGestureRecognizer alloc]
-                                                    initWithTarget:self
-                                                    action:@selector(tapView:)];
-    tapGestureRecognizer.cancelsTouchesInView = NO;
-    [self.view addGestureRecognizer:tapGestureRecognizer];
-    
+   
      _jjrJsonArr = [[NSMutableArray alloc]init];
     [self setButtomScr];
     [self getjjrJson];
@@ -69,7 +65,6 @@
     buttomScr.alwaysBounceVertical = NO;
     buttomScr.showsHorizontalScrollIndicator = NO;
     buttomScr.showsVerticalScrollIndicator = NO;
-    buttomScr.pagingEnabled = YES;
     buttomScr.bounces = NO;
     [self.view addSubview:buttomScr];
     [self addTheTab];
@@ -86,9 +81,10 @@
     bgView.backgroundColor = WhiteColor ;
     bgView.userInteractionEnabled = YES;
     _toolBar = bgView;
+    
     [buttomScr addSubview:bgView];
     
-    UIView *textView = allocAndInitWithFrame(UIView,frame(10*ScreenMultiple, 8, APPWIDTH - 20*ScreenMultiple, 28));
+    UIView *textView = allocAndInitWithFrame(UIView,frame(10*ScreenMultiple, 8, APPWIDTH - 80*ScreenMultiple, 28));
     textView.userInteractionEnabled  =YES;
     textView.backgroundColor = WhiteColor;
     textView.layer.borderWidth = 0.5;
@@ -108,7 +104,22 @@
     _textField.font = Size(28);
     _textField.delegate = self;
     [textView addSubview:_textField];
+    
+    _sendBtn = [UIButton createButtonWithfFrame:frame(CGRectGetMaxX(textView.frame)+15*ScreenMultiple, 8, 40*ScreenMultiple, 28) title:@"发送" backgroundImage:nil iconImage:nil highlightImage:nil tag:0 inView:bgView];
+    _sendBtn.titleLabel.font = Size(28);
+    [_sendBtn setTitleColor:WhiteColor forState:UIControlStateNormal];
+    [_sendBtn setTitle:@"发送" forState:UIControlStateNormal];
+    _sendBtn.layer.masksToBounds = YES;
+    _sendBtn.layer.cornerRadius = 3.0;
+    _sendBtn.backgroundColor = AppMainColor;
+    [_sendBtn addTarget:self action:@selector(sendAction:) forControlEvents:UIControlEventTouchUpInside];
 }
+- (void)sendAction:(UIButton *)sender
+{
+    
+    [self postComment];
+}
+
 #pragma mark----两个tableview写在这里
 -(void)addTheTab
 {
@@ -125,12 +136,6 @@
    
 }
 
-#pragma mark - KeyboardNotifications
-
-- (void)tapView:(id)sender {
-    _textField.text = @"";
-    [_textField resignFirstResponder];
-}
 #pragma mark
 #pragma mark - buttonAction -
 - (void)buttonAction:(UIButton *)sender
@@ -138,7 +143,6 @@
     if (sender.tag ==0) {
         PopView(self);
     }
-    
     
 }
 -(void)getjjrJson
@@ -269,6 +273,11 @@
     });
     
     
+    if (_textField.text.length==0) {
+        
+        [[ToolManager shareInstance] showInfoWithStatus:@"输入必须大于一个字符"];
+        return;
+    }
     CellLayout* layout =  _commentCell.cellLayout;
     NSMutableArray* newCommentLists = [[NSMutableArray alloc] initWithArray:layout.statusModel.comment];
     [[HomeInfo shareInstance] addDynamicComment:_dynamicID replayid:_replayid type:_commentType content:_textField.text andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
@@ -388,10 +397,10 @@
     
     NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:layout.imagePostionArray.count];
     for (NSInteger i = 0; i < layout.imagePostionArray.count; i ++) {
-        StatusPic *pic= layout.statusModel.pic[i];
+        
         LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:nil
-                                                                              thumbnailURL:[NSURL URLWithString:pic.imgurl]
-                                                                                     HDURL:[NSURL URLWithString:pic.imgurl]
+                                                                              thumbnailURL:[NSURL URLWithString:layout.statusModel.pic[i].abbre_imgurl]
+                                                                                     HDURL:[NSURL URLWithString:layout.statusModel.pic[i].imgurl]
                                                                         imageViewSuperView:cell.contentView
                                                                        positionAtSuperView:CGRectFromString(layout.imagePostionArray[i])
                                                                                      index:index];
