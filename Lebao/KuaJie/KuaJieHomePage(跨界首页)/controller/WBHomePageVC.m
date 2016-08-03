@@ -295,29 +295,18 @@
                 
                 for (NSInteger i = 0; i < model.datas.count; i ++) {
                     StatusDatas *data = model.datas[i];
-                    NSString * url = data.imgurl;
-                    
-                    if (![url hasPrefix:@"http"]) {
-                        url = [NSString stringWithFormat:@"%@%@",ImageURLS,url];
-                    }
-                    data.imgurl = url;
+                    data.imgurl = [[ToolManager shareInstance] urlAppend:data.imgurl];
                     for (int i =0; i<data.pic.count;i++) {
                         StatusPic *pic = data.pic[i];
-                        NSString * urlpic = pic.imgurl;
-                        if (![urlpic hasPrefix:@"http"]) {
-                            urlpic = [NSString stringWithFormat:@"%@%@",ImageURLS,urlpic];
-                        }
-                        pic.imgurl = urlpic;
+                        pic.imgurl = [[ToolManager shareInstance] urlAppend:pic.imgurl];
+                        pic.abbre_imgurl = [[ToolManager shareInstance] urlAppend: pic.abbre_imgurl];
                         [data.pic replaceObjectAtIndex:i withObject:pic];
                         
                     }
                     for (int i =0; i<data.like.count;i++) {
                          StatusLike *like = data.like[i];
-                        NSString * urllike = like.imgurl;
-                        if (![urllike hasPrefix:@"http"]) {
-                            urllike = [NSString stringWithFormat:@"%@%@",ImageURLS,urllike];
-                        }
-                        like.imgurl = urllike;
+                         like.imgurl = [[ToolManager shareInstance] urlAppend:like.imgurl];
+                        
                          [data.like replaceObjectAtIndex:i withObject:like];
                     }
                     
@@ -759,7 +748,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"didSelectRowAtIndexPath");
+   
     if (tableView ==_dtTab) {
          CellLayout* cellLayout = self.jjrJsonArr[indexPath.row];
         DynamicDetailsViewController*dynamicDetailsViewController = allocAndInit(DynamicDetailsViewController);
@@ -929,7 +918,7 @@
         self.view.userInteractionEnabled = YES;
         if (issucced == YES) {
             if (jsonDic[@"datas"]) {
-                
+                NSLog(@"jsonDic =%@",jsonDic);
                 StatusLike *like = [[StatusLike alloc]init];
                 like.brokerid = [jsonDic[@"datas"][@"brokerid"] integerValue];
                 like.sex = [jsonDic[@"datas"][@"sex"] boolValue];

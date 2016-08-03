@@ -52,7 +52,8 @@ typedef void(^ShowAlertViewBlcok) (void);//提示选择
 - (float)bandFonts; //字体换算
 //加载网络图片
 - (void)imageView:(id)imageView setImageWithURL:(NSString *)imageURL placeholderType:(PlaceholderType)placeholderType;
-
+//图片url拼接
+- (NSString *)urlAppend:(NSString *)url;
 //加号视图
 - (void)addReleseDctView:(UIViewController *)view;
 

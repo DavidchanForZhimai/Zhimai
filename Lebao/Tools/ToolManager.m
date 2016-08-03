@@ -68,7 +68,18 @@ static dispatch_once_t once;
     return toolManager;
     
 }
-
+//图片url拼接
+- (NSString *)urlAppend:(NSString *)url
+{
+    if (!url) {
+        return ImageURLS;
+    }
+    NSString * imageURL = url;
+    if (![imageURL hasPrefix:@"http"]) {
+        imageURL = [NSString stringWithFormat:@"%@%@",ImageURLS,imageURL];
+    }
+    return imageURL;
+}
 #pragma mark
 #pragma mark 加载网络图片
 - (void)imageView:(id)imageView setImageWithURL:(NSString *)imageURL placeholderType:(PlaceholderType)placeholderType
@@ -79,11 +90,8 @@ static dispatch_once_t once;
         [imageView setRound];
         
     }
-    NSString * url = imageURL;
-    if (![imageURL hasPrefix:@"http"]) {
-        url = [NSString stringWithFormat:@"%@%@",ImageURLS,url];
-    }
-  
+    NSString * url = [self urlAppend:imageURL];
+
     if ([imageView isKindOfClass:[UIImageView class]]) {
         
         UIImageView *  image =(UIImageView *)imageView;

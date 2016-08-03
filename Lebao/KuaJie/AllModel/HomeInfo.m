@@ -190,7 +190,7 @@
 {
     NSString * url = [NSString stringWithFormat:@"%@dynamic/like",HOST_URL];
     NSMutableDictionary *parameters =  [Parameter parameterWithSessicon];
-    [parameters setValue:@(islike) forKey:@"islike"];
+     [parameters setValue:@(islike) forKey:@"islike"];
      [parameters setValue:ID forKey:@"id"];
 
     [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {

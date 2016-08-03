@@ -16,12 +16,13 @@
 #import "BaseButton.h"
 #import "UILabel+Extend.h"
 #import "NSString+Extend.h"
-#import "CLDropDownMenu.h"
-@interface TableViewCell ()<LWAsyncDisplayViewDelegate>
+
+@interface TableViewCell ()<LWAsyncDisplayViewDelegate,UIActionSheetDelegate>
 
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
 @property (nonatomic,strong) BaseButton* comentButton;
 @property (nonatomic,strong) BaseButton* likeButton;
+@property (nonatomic,strong) UIImageView* moreImage;
 @property (nonatomic,strong) UILabel* likeLb;
 @property (nonatomic,strong) UIView* line;
 @property (nonatomic,strong) UIView* cellline;
@@ -39,7 +40,7 @@
          [self.contentView addSubview:self.likeLb];
         [self.contentView addSubview:self.comentButton];
         [self.contentView addSubview:self.likeButton];
-
+        [self.contentView addSubview:self.moreImage];
         [self.contentView addSubview:self.line];
         [self.contentView addSubview:self.cellline];
     }
@@ -117,37 +118,54 @@
 
 /***  点击菜单按钮  ***/
 - (void)didClickedMenuButton:(LWImageStorage *)imageStorage {
-  
-//    NSLog(@"imageStorage =%@",imageStorage.tag);
-    CLDropDownMenu *dropMenu = [[CLDropDownMenu alloc] initWithBtnPressedByWindowFrame:imageStorage.frame Pressed:^(NSInteger index) {
-        
-        NSLog(@"点击了第%ld个btn",index+1);
-        if ([self.delegate respondsToSelector:@selector(tableViewCell: didClickedLikeButtonWithIsSelf:andDynamicID: atIndexPath: andIndex:)] &&
-            [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-
-            [self.delegate tableViewCell:self didClickedLikeButtonWithIsSelf:self.cellLayout.statusModel.me andDynamicID:[NSString stringWithFormat:@"%ld",self.cellLayout.statusModel.ID] atIndexPath:_indexPath andIndex:index];
-        }
-
-        
-    }];
-    
-    dropMenu.direction = CLDirectionTypeBottom;
+    UIActionSheet *sheet;
     if (self.cellLayout.statusModel.me) {
-        dropMenu.titleList = @[@"删除"];
+     
+        sheet = [[UIActionSheet alloc]initWithTitle:@"操作" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"删除", nil];
+        sheet.tag =88;
+        [sheet showInView:self];
+        
     }
     else
     {
         if (self.cellLayout.statusModel.isfollow) {
-            dropMenu.titleList = @[@"取消关注",@"举报"];
+            sheet = [[UIActionSheet alloc]initWithTitle:@"操作" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"取消关注",@"举报", nil];
+            sheet.tag =888;
+            [sheet showInView:self];
         }
         else
         {
-            dropMenu.titleList = @[@"关注",@"举报"]; 
+            UIActionSheet *sheet = [[UIActionSheet alloc]initWithTitle:@"操作" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"关注",@"举报", nil];
+            sheet.tag =8888;
+            [sheet showInView:self];
         }
         
     }
+    
+    sheet.actionSheetStyle= UIActionSheetStyleBlackOpaque;
+    
+   
+}
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (actionSheet.tag==88) {
+        if (buttonIndex==0) {
+            if ([self.delegate respondsToSelector:@selector(tableViewCell: didClickedLikeButtonWithIsSelf:andDynamicID: atIndexPath: andIndex:)] &&
+                [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
+                [self.delegate tableViewCell:self didClickedLikeButtonWithIsSelf:self.cellLayout.statusModel.me andDynamicID:[NSString stringWithFormat:@"%ld",self.cellLayout.statusModel.ID] atIndexPath:_indexPath andIndex:buttonIndex];
+            }
 
-    [self.contentView addSubview:dropMenu];
+        }
+       
+    }
+    else
+    {
+        if (buttonIndex<2) {
+             [self.delegate tableViewCell:self didClickedLikeButtonWithIsSelf:self.cellLayout.statusModel.me andDynamicID:[NSString stringWithFormat:@"%ld",self.cellLayout.statusModel.ID] atIndexPath:_indexPath andIndex:buttonIndex];
+        }
+    }
+    
+    
 }
 - (BOOL)canBecomeFirstResponder{
     
@@ -196,6 +214,7 @@
     self.likeLb.frame = frame(self.cellLayout.prisePosition.origin.x +priseImage.size.width + 12, self.cellLayout.prisePosition.origin.y + 2, prisesize.width, 22*SpacedFonts);
     self.likeLb.text = priseStr;
     self.cellline.frame = self.cellLayout.cellMarginsRect;
+    self.moreImage.frame = frame(APPWIDTH -30, 10, 16, 16);
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled {
@@ -291,5 +310,12 @@
     _likeLb = [UILabel createLabelWithFrame:CGRectZero text:@"" fontSize:22*SpacedFonts textColor:[UIColor colorWithRed:0.8157 green:0.8157 blue:0.8275 alpha:1.0] textAlignment:0 inView:self];
     
     return _likeLb;
+}
+- (UIImageView *)moreImage
+{
+    if (_moreImage) {
+        return _moreImage;
+    }
+   return  _moreImage =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"dongtai_gengduo"]];
 }
 @end

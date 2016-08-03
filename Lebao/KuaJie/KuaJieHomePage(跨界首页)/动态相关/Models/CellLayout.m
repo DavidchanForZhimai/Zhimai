@@ -43,28 +43,32 @@
         avatarStorage.backgroundColor = [UIColor whiteColor];
         avatarStorage.frame = CGRectMake(10, 10, 40, 40);
         avatarStorage.tag = 9;
-        avatarStorage.cornerBorderWidth = 1.0f;
-        avatarStorage.cornerBorderColor = LineBg;
        
+        NSString *renzen;
+        if (statusModel.authen==3) {
+           renzen = @"[renzhen]";
+        }
+        else
+        {
+           renzen=@"[weirenzhen]";
+        }
         //名字模型 nameTextStorage
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
-        nameTextStorage.text = statusModel.realname;
+        nameTextStorage.text = [NSString stringWithFormat:@"%@ %@",statusModel.realname,renzen];
         nameTextStorage.font = Size(28.0);
         nameTextStorage.frame = CGRectMake(avatarStorage.right + 6, 15.0f, SCREEN_WIDTH - (avatarStorage.right + 6 + 30), CGFLOAT_MAX);
-        [nameTextStorage lw_addLinkWithData:[NSString stringWithFormat:@"%@",statusModel.realname]
+        [nameTextStorage lw_addLinkWithData:[NSString stringWithFormat:@"%ld",statusModel.brokerid]
                                       range:NSMakeRange(0,statusModel.realname.length)
                                   linkColor:BlackTitleColor
-                             highLightColor:BlackTitleColor];
+                             highLightColor:RGB(0, 0, 0, 0.15)];
        
         [LWTextParser parseEmojiWithTextStorage:nameTextStorage];
         
         //更多操作
         LWImageStorage* moreStorage = [[LWImageStorage alloc] initWithIdentifier:@"more"];
         moreStorage.tag = 30;
-        moreStorage.contents = [UIImage imageNamed:@"dongtai_gengduo"];
-        moreStorage.frame = CGRectMake(APPWIDTH - 30, 10, 16, 16);
+         moreStorage.frame = CGRectMake(APPWIDTH - 40, 0, 40, 40);
         
-    
         //行业
         LWTextStorage* industryTextStorage = [[LWTextStorage alloc] init];
         
@@ -109,7 +113,7 @@
                 imageStorage.frame = imageRect;
                 imageStorage.backgroundColor = RGB(240, 240, 240, 1);
                 StatusPic *pic = [statusModel.pic objectAtIndex:0];
-                NSString* URLString = pic.imgurl;
+                NSString* URLString = pic.abbre_imgurl;
                 imageStorage.contents = [NSURL URLWithString:URLString];
                 [imageStorageArray addObject:imageStorage];
             } else {
@@ -126,7 +130,7 @@
                     imageStorage.frame = imageRect;
                     imageStorage.backgroundColor = RGB(240, 240, 240, 1);
                     StatusPic *pic = [statusModel.pic objectAtIndex:i];
-                    NSString* URLString = pic.imgurl;
+                    NSString* URLString = pic.abbre_imgurl;
                     imageStorage.contents = [NSURL URLWithString:URLString];
                     [imageStorageArray addObject:imageStorage];
                     column = column + 1;
@@ -172,23 +176,19 @@
         dateTextStorage.font = Size(22);
         dateTextStorage.textColor = [UIColor colorWithRed:0.7216 green:0.7294 blue:0.7333 alpha:1.0];
         
-        
-        //菜单按钮
-        CGRect menuPosition;
-        if (![self.statusModel.type isEqualToString:@"video"]) {
-            menuPosition = CGRectMake(SCREEN_WIDTH - 54.0f,10.0f + contentTextStorage.bottom  - 14.5f ,44,44);
-            dateTextStorage.frame = CGRectMake(nameTextStorage.left, contentTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
-            
-            if (lastImageStorage) {
-                menuPosition = CGRectMake(SCREEN_WIDTH - 54.0f,10.0f + lastImageStorage.bottom - 14.5f,44,44);
-                dateTextStorage.frame = CGRectMake(nameTextStorage.left, lastImageStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
+    
+        dateTextStorage.frame = CGRectMake(nameTextStorage.left, contentTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
+        if (lastImageStorage) {
+             
+        dateTextStorage.frame = CGRectMake(nameTextStorage.left, lastImageStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
 
-            }
-             self.lineRect = CGRectMake(0, dateTextStorage.bottom + 10.0f,  SCREEN_WIDTH, 1.0f);
         }
-        else {
-            //TODO：
+        
+         self.lineRect = CGRectMake(0, dateTextStorage.bottom + 10.0f,  SCREEN_WIDTH, 0.5f);
+        if (statusModel.like.count==0&&statusModel.comment.count==0) {
+         self.lineRect = CGRectZero;
         }
+        
         //评论位置
         UIImage *commentImage = [UIImage imageNamed:@"dongtai_pinglun"];
         NSString *commentStr = [NSString stringWithFormat:@"%ld评论",statusModel.comment.count];
@@ -197,7 +197,7 @@
         }
         CGSize commentsize = [commentStr sizeWithFont:Size(22) maxSize:CGSizeMake(100, 22*SpacedFonts)];
     
-        self.commentPosition = frame(APPWIDTH - 15 - commentImage.size.width - commentsize.width,dateTextStorage.top, commentImage.size.width + commentsize.width + 5, 16);
+        self.commentPosition = frame(APPWIDTH - 15 - commentImage.size.width - commentsize.width,dateTextStorage.top, commentImage.size.width + commentsize.width + 10, 16);
         //点赞位置
         UIImage *priseImage = [UIImage imageNamed:@"dongtai_dianzan_normal"];
         NSString *priseStr = [NSString stringWithFormat:@"%ld赞",statusModel.like.count];
@@ -205,7 +205,7 @@
             priseStr = @"赞";
         }
         CGSize prisesize = [priseStr sizeWithFont:Size(22) maxSize:CGSizeMake(100, 22*SpacedFonts)];
-         self.prisePosition = frame(self.commentPosition.origin.x - 25 - priseImage.size.width - prisesize.width,dateTextStorage.top, priseImage.size.width + prisesize.width + 5, 16);
+         self.prisePosition = frame(self.commentPosition.origin.x - 25 - priseImage.size.width - prisesize.width,dateTextStorage.top, priseImage.size.width + prisesize.width + 10, 16);
         
         //生成评论背景Storage
         LWImageStorage* commentBgStorage = [[LWImageStorage alloc] init];
@@ -222,16 +222,16 @@
         if (self.statusModel.like.count != 0) {
             likeImageSotrage.contents = [UIImage imageNamed:@"dongtai_dianzan_pressed"];
             likeImageSotrage.frame = CGRectMake(rect.origin.x,rect.origin.y + 20.0 + offsetY,16.0, 16.0);
-            CGFloat priseWidth = 27.0;
+            CGFloat priseWidth = 30.0;
             
             NSInteger count = 0;
-            if (priseCount<4) {
+            if (priseCount<6) {
                 count =priseCount;
             }
             else
             {
                 if (!isDetail) {
-                    count =3;
+                    count =5;
                     moreImageSotrage.tag = 20;//更多
                     moreImageSotrage.contents = [UIImage imageNamed:@"dongtai_gengduozan"];
                     moreImageSotrage.frame = CGRectMake(nameTextStorage.left + (3 * (priseWidth + 8.0)),likeImageSotrage.top,16.0, 16.0);
@@ -255,20 +255,14 @@
                                               priseWidth);
                 NSString* prisePositionString = NSStringFromCGRect(priseRect);
                 [prisePositionArray addObject:prisePositionString];
+                
                 LWImageStorage* priseStorage = [[LWImageStorage alloc] initWithIdentifier:@"prise"];
-                priseStorage.cornerBackgroundColor = [UIColor whiteColor];
-                priseStorage.backgroundColor = [UIColor whiteColor];
-                priseStorage.tag = 10+i;
-                priseStorage.cornerBorderWidth = 1.0f;
-                priseStorage.cornerBorderColor = [UIColor whiteColor];
-                priseStorage.cornerRadius =27.0/2.0;
-                priseStorage.frame = priseRect;
-                StatusLike *like = [statusModel.like objectAtIndex:i];
-              
+                
+                priseStorage.contents = statusModel.like[i].imgurl;
                 priseStorage.placeholder = [UIImage imageNamed:@"defaulthead"];
-                if ([like.imgurl isEqualToString:ImageURLS]) {
+                if ([statusModel.like[i].imgurl isEqualToString:ImageURLS]) {
                     
-                    if (statusModel.sex==1) {
+                    if (statusModel.like[i].sex==1) {
                         priseStorage.contents = [UIImage imageNamed:@"defaulthead"];
                     }
                     else
@@ -277,8 +271,13 @@
                         
                     }
                 }
-    
-                priseStorage.contents = like.imgurl;
+                
+                priseStorage.cornerRadius = priseWidth/2.0;
+                priseStorage.cornerBackgroundColor = [UIColor whiteColor];
+                priseStorage.backgroundColor = [UIColor whiteColor];
+                priseStorage.frame = priseRect;
+                priseStorage.tag = 10+i;
+
                 [priseStorageArray addObject:priseStorage];
                 
                 rowCount++;
@@ -288,7 +287,7 @@
                     row +=1;
                 }
             }
-            offsetY +=((priseWidth + 7.5)*row - 7.5);
+            offsetY +=((priseWidth + 7.5)*row - 4);
             
         }
         if (statusModel.comment.count != 0 && statusModel.comment != nil) {
@@ -297,18 +296,18 @@
             NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:statusModel.comment.count];
             
             int count =0;
-            if (isDetail||statusModel.comment.count<4) {
+            if (isDetail||statusModel.comment.count<11) {
                count=(int) statusModel.comment.count;
             }
             else
             {
-                count =3;
+                count =10;
             }
             for (int i=0; i<count;i++) {
                 StatusComment* commentDict = statusModel.comment[i];
                 NSString* to = commentDict.info.rep_realname;
                 if (to.length != 0) {
-                    NSString* commentString = [NSString stringWithFormat:@"%@回复%@:%@",commentDict.info.realname,to,commentDict.info.content];
+                    NSString* commentString = [NSString stringWithFormat:@"%@回复%@: %@",commentDict.info.realname,to,commentDict.info.content];
                     LWTextStorage* commentTextStorage = [[LWTextStorage alloc] init];
                     commentTextStorage.text = commentString;
                     commentTextStorage.font = Size(26.0f);
@@ -320,22 +319,22 @@
                     [commentTextStorage lw_addLinkWithData:[NSString stringWithFormat:@"%ld",commentDict.info.brokerid]
                                                      range:NSMakeRange(0,[(NSString *)commentDict.info.realname length])
                                                  linkColor:AppMainColor
-                                            highLightColor:[UIColor colorWithRed:0.9569 green:0.9569 blue:0.9569 alpha:1.0]];
+                                            highLightColor:RGB(0, 0, 0, 0.15)];
                     
 
                     [commentTextStorage lw_addLinkWithData:[NSString stringWithFormat:@"%ld",commentDict.info.rep_brokerid]
                                                      range:NSMakeRange([(NSString *)commentDict.info.realname length] + 2,[(NSString *)commentDict.info.rep_realname length])
                                                  linkColor:AppMainColor
-                                            highLightColor:[UIColor colorWithRed:0.9569 green:0.9569 blue:0.9569 alpha:1.0]];
+                                            highLightColor:RGB(0, 0, 0, 0.15)];
                     
                     [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                     linkColor:AppMainColor
-                                               highlightColor:[UIColor colorWithRed:0.9569 green:0.9569 blue:0.9569 alpha:1.0]];
+                                               highlightColor:RGB(0, 0, 0, 0.15)];
                     [LWTextParser parseEmojiWithTextStorage:commentTextStorage];
                     [tmp addObject:commentTextStorage];
                     offsetY += commentTextStorage.height + 5;
                 } else {
-                    NSString* commentString = [NSString stringWithFormat:@"%@:%@",commentDict.info.realname,commentDict.info.content];
+                    NSString* commentString = [NSString stringWithFormat:@"%@: %@",commentDict.info.realname,commentDict.info.content];
                     LWTextStorage* commentTextStorage = [[LWTextStorage alloc] init];
                     commentTextStorage.text = commentString;
                     commentTextStorage.font = Size(26.0f);
@@ -349,11 +348,11 @@
                     [commentTextStorage lw_addLinkWithData:[NSString stringWithFormat:@"%ld",commentDict.info.brokerid]
                                                      range:NSMakeRange(0,[(NSString *)commentDict.info.realname length])
                                                  linkColor:AppMainColor
-                                            highLightColor:[UIColor colorWithRed:0.9569 green:0.9569 blue:0.9569 alpha:1.0]];
+                                            highLightColor:RGB(0, 0, 0, 0.15)];
                     
                     [LWTextParser parseTopicWithLWTextStorage:commentTextStorage
                                                     linkColor:AppMainColor
-                                               highlightColor:AppMainColor];
+                                               highlightColor:RGB(0, 0, 0, 0.15)];
                     [LWTextParser parseEmojiWithTextStorage:commentTextStorage];
                     [tmp addObject:commentTextStorage];
                     offsetY += commentTextStorage.height + 5;
@@ -372,6 +371,7 @@
         
         if (!isDetail||statusModel.me) {
              [self addStorage:moreStorage];
+    
         }
        
         [self addStorage:contentTextStorage];
@@ -394,8 +394,8 @@
         self.statusModel = statusModel;
         //如果是使用在UITableViewCell上面，可以通过以下方法快速的得到Cell的高度
         
-        self.cellHeight = [self suggestHeightWithBottomMargin:20.0f];
-        if (statusModel.comment.count>3&&!isDetail) {
+        self.cellHeight = [self suggestHeightWithBottomMargin:25.0f];
+        if (statusModel.comment.count>10&&!isDetail) {
             //查看更多
             LWTextStorage* lookMoreStorage = [[LWTextStorage alloc] init];
             lookMoreStorage.text = @"查看更多";

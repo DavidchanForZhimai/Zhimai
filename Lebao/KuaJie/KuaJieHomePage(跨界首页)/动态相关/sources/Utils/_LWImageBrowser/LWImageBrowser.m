@@ -212,6 +212,7 @@ LWActionSheetViewDelegate>
 
 - (void)_preDownLoadImageWithIndex:(NSInteger)index {
     SDWebImageManager* manager = [SDWebImageManager sharedManager];
+
     if (index + 1 < self.imageModels.count) {
         LWImageBrowserModel* nextModel = [self.imageModels objectAtIndex:index + 1];
         [manager downloadImageWithURL:nextModel.HDURL

@@ -148,36 +148,26 @@
         if (issucced == YES) {
             StatusDatas *data = [StatusDatas mj_objectWithKeyValues:jsonDic[@"datas"]];
             [[ToolManager shareInstance]dismiss];
-                NSString * url = data.imgurl;
-                    
-                    if (![url hasPrefix:@"http"]) {
-                        url = [NSString stringWithFormat:@"%@%@",ImageURLS,url];
-                    }
-                    data.imgurl = url;
-                    for (int i =0; i<data.pic.count;i++) {
-                        StatusPic *pic = data.pic[i];
-                        NSString * urlpic = pic.imgurl;
-                        if (![urlpic hasPrefix:@"http"]) {
-                            urlpic = [NSString stringWithFormat:@"%@%@",ImageURLS,urlpic];
-                        }
-                        pic.imgurl = urlpic;
-                        [data.pic replaceObjectAtIndex:i withObject:pic];
-                        
-                    }
-                    for (int i =0; i<data.like.count;i++) {
-                        StatusLike *like = data.like[i];
-                        NSString * urllike = like.imgurl;
-                        if (![urllike hasPrefix:@"http"]) {
-                            urllike = [NSString stringWithFormat:@"%@%@",ImageURLS,urllike];
-                        }
-                        like.imgurl = urllike;
-                        [data.like replaceObjectAtIndex:i withObject:like];
-                    }
-                    
-                    data.type = @"image";
-                    LWLayout* layout = [self layoutWithStatusModel:data index:0];
-                    [self.jjrJsonArr addObject:layout];
+           
+            data.imgurl = [[ToolManager shareInstance] urlAppend:data.imgurl];
+            for (int i =0; i<data.pic.count;i++) {
+                StatusPic *pic = data.pic[i];
+                pic.imgurl = [[ToolManager shareInstance] urlAppend:pic.imgurl];
+                pic.abbre_imgurl = [[ToolManager shareInstance] urlAppend: pic.abbre_imgurl];
+                [data.pic replaceObjectAtIndex:i withObject:pic];
                 
+            }
+            for (int i =0; i<data.like.count;i++) {
+                StatusLike *like = data.like[i];
+                like.imgurl = [[ToolManager shareInstance] urlAppend:like.imgurl];
+                [data.like replaceObjectAtIndex:i withObject:like];
+            }
+
+            
+                data.type = @"image";
+                LWLayout* layout = [self layoutWithStatusModel:data index:0];
+                    [self.jjrJsonArr addObject:layout];
+        
                 [_dtTab reloadData];
             
             

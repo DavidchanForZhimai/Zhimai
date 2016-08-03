@@ -92,7 +92,7 @@ static inline NSRegularExpression* TopicRegularExpression() {
         if (textStorage.text.length >= range.location + range.length) {
             [textStorage lw_replaceTextWithImage:[UIImage imageNamed:content]
                                      contentMode:UIViewContentModeScaleAspectFill
-                                       imageSize:CGSizeMake(14, 14)
+                                       imageSize:CGSizeMake(12, 12)
                                        alignment:LWTextAttachAlignmentTop
                                            range:range];
         }

@@ -479,10 +479,17 @@
 #pragma mark 查看更多动态
 -(void)lookMoreDongtai
 {
-    OtherDynamicdViewController *otherDynamicdViewController = allocAndInit(OtherDynamicdViewController);
-    otherDynamicdViewController.dynamicdID = _jjrID;
-    otherDynamicdViewController.dynamicdName =[_jjrJsonDic objectForKey:@"realname"];
-    PushView(self, otherDynamicdViewController);
+    if ([_jjrDic[@"count_dynamic"] integerValue]>0) {
+        OtherDynamicdViewController *otherDynamicdViewController = allocAndInit(OtherDynamicdViewController);
+        otherDynamicdViewController.dynamicdID = _jjrID;
+        otherDynamicdViewController.dynamicdName =[_jjrJsonDic objectForKey:@"realname"];
+        PushView(self, otherDynamicdViewController);
+
+    }
+    else
+    {
+        [[ToolManager shareInstance] showInfoWithStatus:@"没有动态"];
+    }
     
 }
 -(void)lookMoreXianSuo
