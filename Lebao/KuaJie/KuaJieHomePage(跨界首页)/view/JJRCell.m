@@ -37,7 +37,7 @@
     _nextV.userInteractionEnabled = YES;
     [customV addSubview:_nextV];
     
-    _headImg = [[UIImageView alloc]initWithFrame:CGRectMake(10, 15, 41, 41)];
+    _headImg = [[UIImageView alloc]initWithFrame:CGRectMake(10, (customV.frame.size.height-41)/2.0, 41, 41)];
     [_nextV addSubview:_headImg];
     
     _userNameLab = [[UILabel alloc]initWithFrame:CGRectMake(_headImg.frame.origin.x+_headImg.frame.size.width+10, 12, 55, 25)];
@@ -89,7 +89,7 @@
     [_guanzhuBtn setTitleColor:[UIColor colorWithRed:0.239 green:0.553 blue:0.996 alpha:1.000] forState:UIControlStateNormal];
     [_guanzhuBtn setTitleColor:[UIColor colorWithWhite:0.651 alpha:1.000] forState:UIControlStateSelected];
     _guanzhuBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-    _guanzhuBtn.frame = CGRectMake(_nextV.frame.size.width-80,30, 70, 28);
+    _guanzhuBtn.frame = CGRectMake(_nextV.frame.size.width-80,(customV.frame.size.height-28)/2.0, 70, 28);
     _guanzhuBtn.layer.borderWidth=1.0;
     _guanzhuBtn.titleLabel.adjustsFontSizeToFitWidth=YES;
     

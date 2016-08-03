@@ -355,15 +355,15 @@ typedef NS_ENUM(NSUInteger,ButtonActionTag) {
 //    [liyinBtn addTarget:self action:@selector(liyinBtnAction:) forControlEvents:UIControlEventTouchUpInside];
 //    [textView addSubview:liyinBtn];
 //
-//    _sendBtn = [UIButton createButtonWithfFrame:frame(CGRectGetMaxX(textView.frame)+15*ScreenMultiple, 8, 62*ScreenMultiple, 28) title:@"发送" backgroundImage:nil iconImage:nil highlightImage:nil tag:ButtonActionTagSend inView:bgView];
-//    _sendBtn.titleLabel.font = Size(28);
-//    [_sendBtn setTitleColor:WhiteColor forState:UIControlStateNormal];
-//    [_sendBtn setTitle:@"发送" forState:UIControlStateNormal];
-//    _sendBtn.layer.masksToBounds = YES;
-//    _sendBtn.layer.cornerRadius = 3.0;
-//    _sendBtn.backgroundColor = AppMainColor;
-//    [_sendBtn addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-//    
+    _sendBtn = [UIButton createButtonWithfFrame:frame(CGRectGetMaxX(textView.frame)+15*ScreenMultiple, 8, 62*ScreenMultiple, 28) title:@"发送" backgroundImage:nil iconImage:nil highlightImage:nil tag:ButtonActionTagSend inView:bgView];
+    _sendBtn.titleLabel.font = Size(28);
+    [_sendBtn setTitleColor:WhiteColor forState:UIControlStateNormal];
+    [_sendBtn setTitle:@"发送" forState:UIControlStateNormal];
+    _sendBtn.layer.masksToBounds = YES;
+    _sendBtn.layer.cornerRadius = 3.0;
+    _sendBtn.backgroundColor = AppMainColor;
+    [_sendBtn addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
+    
 }
 
 #pragma mark

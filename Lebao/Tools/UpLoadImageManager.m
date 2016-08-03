@@ -41,15 +41,16 @@ static dispatch_once_t once;
     NSMutableDictionary *parameter = [Parameter parameterWithSessicon];
     [parameter setObject:type forKey:Type];
     [parameter setObject:@"imageFile" forKey:@"name"];
-    [[ToolManager shareInstance] showWithStatus:@"上传图片中..."];
+    
     [XLNetworkRequest updateRequest:UploadImagesURL params:parameter fileConfig:fileConfig success:^(id responseObj) {
         NSLog(@"responseObj =%@ parameter= %@",responseObj,parameter);
         if (responseObj) {
             UpLoadImageModal *upLoadImageModal = [UpLoadImageModal mj_objectWithKeyValues:responseObj];
             if (upLoadImageModal.rtcode ==1) {
-                [[ToolManager shareInstance] dismiss];
+                
                 
                 imageBlock(upLoadImageModal);
+               
                 
             }
             else

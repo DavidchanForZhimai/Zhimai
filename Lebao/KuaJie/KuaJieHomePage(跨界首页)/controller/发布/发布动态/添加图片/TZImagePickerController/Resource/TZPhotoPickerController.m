@@ -14,7 +14,7 @@
 #import "UIView+Layout.h"
 #import "TZImageManager.h"
 #import "TZVideoPlayerController.h"
-
+ static  NSInteger imaxImagesCount;
 @interface TZPhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate> {
     UICollectionView *_collectionView;
     NSMutableArray *_photoArr;
@@ -25,7 +25,7 @@
     UILabel *_numberLable;
     UIButton *_originalPhotoButton;
     UILabel *_originalPhotoLable;
-    
+ 
     BOOL _isSelectOriginalPhoto;
     BOOL _shouldScrollToBottom;
 }
@@ -55,6 +55,7 @@ static CGSize AssetGridThumbnailSize;
         [self configBottomToolBar];
     }];
     [self resetCachedAssets];
+   
 }
 
 - (void)configCollectionView {
@@ -149,16 +150,16 @@ static CGSize AssetGridThumbnailSize;
     _okButton.enabled = NO;
     
     _numberImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"photo_number_icon"]];
-    _numberImageView.frame = CGRectMake(self.view.tz_width - 56 - 24, 12, 26, 26);
+    _numberImageView.frame = CGRectMake(self.view.tz_width - 56 - 35,(44-35)/2.0+3, 35, 35);
     _numberImageView.hidden = _selectedPhotoArr.count <= 0;
     _numberImageView.backgroundColor = [UIColor clearColor];
     
     _numberLable = [[UILabel alloc] init];
     _numberLable.frame = _numberImageView.frame;
-    _numberLable.font = [UIFont systemFontOfSize:16];
+    _numberLable.font = [UIFont systemFontOfSize:13];
     _numberLable.textColor = [UIColor whiteColor];
     _numberLable.textAlignment = NSTextAlignmentCenter;
-    _numberLable.text = [NSString stringWithFormat:@"%zd",_selectedPhotoArr.count];
+    _numberLable.text = [NSString stringWithFormat:@"%zd/%zd",_selectedPhotoArr.count,imaxImagesCount];
     _numberLable.hidden = _selectedPhotoArr.count <= 0;
     _numberLable.backgroundColor = [UIColor clearColor];
     
@@ -264,11 +265,13 @@ static CGSize AssetGridThumbnailSize;
         } else {
             // 2. select:check if over the maxImagesCount / 选择照片,检查是否超过了最大个数的限制
             TZImagePickerController *imagePickerVc = (TZImagePickerController *)weakSelf.navigationController;
+            imaxImagesCount=imagePickerVc.maxImagesCount;
             if (weakSelf.selectedPhotoArr.count < imagePickerVc.maxImagesCount) {
                 weakCell.selectPhotoButton.selected = YES;
                 model.isSelected = YES;
                 [weakSelf.selectedPhotoArr addObject:model];
                 [weakSelf refreshBottomToolBarStatus];
+                
             } else {
                 [imagePickerVc showAlertWithTitle:[NSString stringWithFormat:@"你最多只能选择%zd张照片",imagePickerVc.maxImagesCount]];
             }
@@ -313,7 +316,7 @@ static CGSize AssetGridThumbnailSize;
     
     _numberImageView.hidden = _selectedPhotoArr.count <= 0;
     _numberLable.hidden = _selectedPhotoArr.count <= 0;
-    _numberLable.text = [NSString stringWithFormat:@"%zd",_selectedPhotoArr.count];
+    _numberLable.text = [NSString stringWithFormat:@"%zd/%zd",_selectedPhotoArr.count,imaxImagesCount];
     
     _originalPhotoButton.enabled = _selectedPhotoArr.count > 0;
     _originalPhotoButton.selected = (_isSelectOriginalPhoto && _originalPhotoButton.enabled);

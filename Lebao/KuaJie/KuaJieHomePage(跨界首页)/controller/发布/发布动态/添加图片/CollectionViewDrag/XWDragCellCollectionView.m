@@ -58,7 +58,7 @@ typedef NS_ENUM(NSUInteger, XWDragCellCollectionViewScrollDirection) {
 }
 
 - (void)xwp_initializeProperty{
-    _minimumPressDuration = 1;
+    _minimumPressDuration = 0.5;
     _edgeScrollEable = YES;
     _shakeWhenMoveing = YES;
     _shakeLevel = 2.0f;

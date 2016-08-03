@@ -28,6 +28,8 @@
     UILabel *_numberLable;
     UIButton *_originalPhotoButton;
     UILabel *_originalPhotoLable;
+    
+    NSInteger imaxImagesCount;
 }
 
 @end
@@ -128,15 +130,15 @@
     
     _numberImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"photo_number_icon"]];
     _numberImageView.backgroundColor = [UIColor clearColor];
-    _numberImageView.frame = CGRectMake(self.view.tz_width - 56 - 24, 9, 26, 26);
+    _numberImageView.frame = CGRectMake(self.view.tz_width - 56 - 35,(44-35)/2.0, 35, 35);
     _numberImageView.hidden = _selectedPhotoArr.count <= 0;
     
     _numberLable = [[UILabel alloc] init];
     _numberLable.frame = _numberImageView.frame;
-    _numberLable.font = [UIFont systemFontOfSize:16];
+    _numberLable.font = [UIFont systemFontOfSize:13];
     _numberLable.textColor = [UIColor whiteColor];
     _numberLable.textAlignment = NSTextAlignmentCenter;
-    _numberLable.text = [NSString stringWithFormat:@"%zd",_selectedPhotoArr.count];
+    _numberLable.text = [NSString stringWithFormat:@"%zd/%zd",_selectedPhotoArr.count,imaxImagesCount];
     _numberLable.hidden = _selectedPhotoArr.count <= 0;
     _numberLable.backgroundColor = [UIColor clearColor];
 
@@ -174,7 +176,9 @@
     if (!selectButton.isSelected) {
         // 1. select:check if over the maxImagesCount / 选择照片,检查是否超过了最大个数的限制
         TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
+         imaxImagesCount=imagePickerVc.maxImagesCount;
         if (self.selectedPhotoArr.count >= imagePickerVc.maxImagesCount) {
+           
             [imagePickerVc showAlertWithTitle:[NSString stringWithFormat:@"你最多只能选择%zd张照片",imagePickerVc.maxImagesCount]];
             return;
         // 2. if not over the maxImagesCount / 如果没有超过最大个数限制
@@ -264,7 +268,7 @@
 - (void)refreshNaviBarAndBottomBarState {
     TZAssetModel *model = _photoArr[_currentIndex];
     _selectButton.selected = model.isSelected;
-    _numberLable.text = [NSString stringWithFormat:@"%zd",_selectedPhotoArr.count];
+    _numberLable.text = [NSString stringWithFormat:@"%zd/%zd",_selectedPhotoArr.count,imaxImagesCount];
     _numberImageView.hidden = (_selectedPhotoArr.count <= 0 || _isHideNaviBar);
     _numberLable.hidden = (_selectedPhotoArr.count <= 0 || _isHideNaviBar);
     

@@ -75,7 +75,7 @@
     TZAlbumPickerController *albumPickerVc = [[TZAlbumPickerController alloc] init];
     self = [super initWithRootViewController:albumPickerVc];
     if (self) {
-        self.maxImagesCount = maxImagesCount > 0 ? maxImagesCount : 9; // Default is 9 / 默认最大可选9张图片
+        self.maxImagesCount = maxImagesCount; // Default is 9 / 默认最大可选9张图片
         self.pickerDelegate = delegate;
         // Allow user picking original photo and video, you also can set No after this method
         // 默认准许用户选择原图和视频, 你也可以在这个方法后置为NO

@@ -31,14 +31,14 @@
 #define MaxY(v)            CGRectGetMaxY((v).frame) //纵坐标加上控件的高度
 
 
-@interface PublishDynamicVC ()<UITextViewDelegate,UITextFieldDelegate,UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UIImagePickerControllerDelegate,UINavigationControllerDelegate,XWDragCellCollectionViewDataSource, XWDragCellCollectionViewDelegate,UITextFieldDelegate,UIScrollViewDelegate>
+@interface PublishDynamicVC ()<UITextViewDelegate,UITextFieldDelegate,UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UIImagePickerControllerDelegate,UINavigationControllerDelegate,XWDragCellCollectionViewDataSource, XWDragCellCollectionViewDelegate,UITextFieldDelegate,UIScrollViewDelegate,UIActionSheetDelegate>
 {
-//    UIView * bjV;
+
     XWDragCellCollectionView *_collectionView;
-   
+    NSInteger Pnumb;
      NSMutableArray *upLoadphotos;
 }
-//@property (strong,nonatomic)UITextView * contTex;
+
 
 @end
 
@@ -49,6 +49,7 @@
     
     self.view.backgroundColor=BACKCOLOR;
 
+    Pnumb=9;
     [self createUI];
     [self addImg];
 }
@@ -113,7 +114,7 @@
     self.tfView.textColor = [UIColor colorWithRed:0.741 green:0.741 blue:0.745 alpha:1.000];
     self.tfView.returnKeyType = UIReturnKeySend;
     self.tfView.delegate = self;
-//    self.tfView.layer.borderColor = [BACKCOLOR CGColor];
+
     [self.viewBg addSubview:self.tfView];
     
     
@@ -132,9 +133,8 @@
     //添加照片按钮
     self.btnAddPhone = [UIButton buttonWithType:UIButtonTypeCustom];
     self.btnAddPhone.frame = CGRectMake(10, 10, (APPWIDTH-40)/3, (APPWIDTH-40)/3);
-    self.btnAddPhone.backgroundColor=BACKCOLOR;
-    [self.btnAddPhone setImage:[UIImage imageNamed:@"xiangpian"] forState:UIControlStateNormal];
-//    [self.btnAddPhone setImage:[UIImage imageNamed:@"icon_find_phone_tianjia2"] forState:UIControlStateNormal];
+
+    [self.btnAddPhone setImage:[UIImage imageNamed:@"icon_find_phone_tianjia2"] forState:UIControlStateNormal];
     [self.btnAddPhone addTarget:self action:@selector(BtnAddPhoneClick) forControlEvents:UIControlEventTouchUpInside];
     [_collectionView addSubview:self.btnAddPhone];
     
@@ -160,16 +160,17 @@
     }else {
         
     //上传图片
-        upLoadphotos = [[NSMutableArray alloc]init];
-        NSLog(@"self.phonelist =%@",self.phonelist);
+ [[ToolManager shareInstance] showWithStatus:@"疯狂上传中..."];
+//        NSLog(@"self.phonelist =%@",self.phonelist);
         if (self.phonelist.count ==0) {
             [[HomeInfo shareInstance] adddynamic:self.tfView.text imgs:nil andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
-                NSLog(@"%@",jsonDic);
+//                NSLog(@"%@",jsonDic);
                 if (issucced) {
                     if (_faBuSucceedBlock) {
                         _faBuSucceedBlock();
                     }
                     [self.navigationController popViewControllerAnimated:YES];
+                    [[ToolManager shareInstance] dismiss];
                 }
                 else
                 {
@@ -179,7 +180,10 @@
         }
         else
         {
+           
+                    upLoadphotos = [[NSMutableArray alloc]init];
         for (UIImage *image in self.phonelist) {
+            
             [[UpLoadImageManager shareInstance] upLoadImageType:@"property" image:image imageBlock:^(UpLoadImageModal *upLoadImageModal) {
                 
                 NSArray *images = [NSArray arrayWithObjects:upLoadImageModal.imgurl,upLoadImageModal.abbr_imgurl, nil];
@@ -189,10 +193,11 @@
                     [[HomeInfo shareInstance] adddynamic:self.tfView.text imgs:[upLoadphotos mj_JSONString] andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
                        
                         if (issucced) {
+                            [self.navigationController popViewControllerAnimated:YES];
                             if (_faBuSucceedBlock) {
                                 _faBuSucceedBlock();
                             }
-                            [self.navigationController popViewControllerAnimated:YES];
+                            [[ToolManager shareInstance] dismiss];
                         }
                         else
                         {
@@ -239,9 +244,7 @@
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSetFillColorWithColor(context,
-                                   
-                                   color.CGColor);
+    CGContextSetFillColorWithColor(context, color.CGColor);
     CGContextFillRect(context, rect);
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -303,11 +306,34 @@
 //删除照片的事件
 - (void)BtnDelPhone:(UIButton *)sender{
     [self.phonelist removeObjectAtIndex:sender.tag-100];
+    Pnumb++;
     [self resetLayout];
+    
 }
 //添加图片事件
 - (void)BtnAddPhoneClick{
-    [self showSheetView];
+    
+    if (Pnumb==0) {
+        
+        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"温馨提示" message:@"您已选择满9张图片,可删除后替换" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+        [alert show];
+        return;
+    }
+    UIActionSheet *actionSheet=[[UIActionSheet alloc]init];
+    [actionSheet addButtonWithTitle:@"拍照"];
+    [actionSheet addButtonWithTitle:@"从手机选择"];
+    [actionSheet addButtonWithTitle:@"取消"];
+    
+    actionSheet.delegate=self;
+    
+    [actionSheet showInView:self.view];
+//    if(iOS7){
+//        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"温馨提示" message:@"您的系统版本过低,不支持该功能" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
+//        [alert show];
+//        return;
+//    }
+  
+//    [self showSheetView];
 }
 //删除照片
 - (void)DelClick{
@@ -330,60 +356,92 @@
     self.svMain.contentSize = CGSizeMake(kScreenWidth,MaxY(_collectionView));
 }
 
--(void)showSheetView{
-    
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *setAlert = [UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+
+
+#pragma mark - UIActionSheetDelegate
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex==0) {
+        
         [self callCameraOrPhotoWithType:UIImagePickerControllerSourceTypeCamera];
+       
         
-    }];
-    UIAlertAction *PhoneAlert = [UIAlertAction actionWithTitle:@"从手机选择" style:
-                                 UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                                     TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:20 delegate:nil];
-                                     // 你可以通过block或者代理，来得到用户选择的照片.
-                                     [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets) {
-                                         [self.phonelist addObjectsFromArray:photos];
-                                         [self resetLayout];
-                                     }];
-                                     // 在这里设置imagePickerVc的外观
-                                     imagePickerVc.navigationBar.barTintColor = [UIColor blackColor];
-                                     imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
-                                     // imagePickerVc.oKButtonTitleColorNormal = [UIColor greenColor];
-                                     // 设置是否可以选择视频/原图
-                                      imagePickerVc.allowPickingVideo = NO;
-                                     // imagePickerVc.allowPickingOriginalPhoto = NO;
-                                     imagePickerVc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-                                     [self presentViewController:imagePickerVc animated:YES completion:nil];
-                                     
-                                 }];
-    UIAlertAction *hidAlert = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }else if (buttonIndex==1) {
         
-    }];
-    [alert addAction:setAlert];
-    [alert addAction:PhoneAlert];
-    [alert addAction:hidAlert];
-    
-    [self presentViewController:alert animated:YES completion:^{
+        TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:Pnumb delegate:nil];
+        // 你可以通过block或者代理，来得到用户选择的照片.
+        [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets) {
+            [self.phonelist addObjectsFromArray:photos];
+            Pnumb-=photos.count;
+            
+            [self resetLayout];
+        }];
+        // 在这里设置imagePickerVc的外观
+        imagePickerVc.navigationBar.barTintColor = [UIColor blackColor];
+        imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
+        // imagePickerVc.oKButtonTitleColorNormal = [UIColor greenColor];
+        // 设置是否可以选择视频/原图
+        imagePickerVc.allowPickingVideo = NO;
+        // imagePickerVc.allowPickingOriginalPhoto = NO;
+        imagePickerVc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+        [self presentViewController:imagePickerVc animated:YES completion:nil];
         
-    }];
-    
+        
+      
+    }else if (buttonIndex==2) {
+        
+        
+    }
 }
+
+
+
+//-(void)showSheetView{
+//    
+//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleAlert];
+//    UIAlertAction *setAlert = [UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        
+//        
+//    }];
+//
+//    UIAlertAction *PhoneAlert = [UIAlertAction actionWithTitle:@"从手机选择" style:
+//                                 UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {}];
+//    UIAlertAction *hidAlert = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        
+//    }];
+//    [alert addAction:setAlert];
+//    [alert addAction:PhoneAlert];
+//    [alert addAction:hidAlert];
+//    
+//    [self presentViewController:alert animated:YES completion:^{
+//        
+//    }];
+//    
+//}
 
 
 -(void)callCameraOrPhotoWithType:(UIImagePickerControllerSourceType)sourceType{
     BOOL isCamera = YES;
     if (sourceType == UIImagePickerControllerSourceTypeCamera) {//判断是否有相机
         isCamera = [UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera];
+        
     }
     if (isCamera) {
         UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
         imagePicker.delegate = self;
         imagePicker.allowsEditing = NO;//为NO，则不会出现系统的编辑界面
         imagePicker.sourceType = sourceType;
+        
         [self presentViewController:imagePicker animated:YES completion:^(){
             if ([[[UIDevice currentDevice] systemVersion]floatValue]>=7.0) {
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
+                          }
+            else{
+                
             }
+
         }];
     } else {
         
@@ -394,9 +452,13 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)aImage editingInfo:(NSDictionary *)editingInfo{
     
     NSArray *photos = [[NSArray alloc]initWithObjects:aImage, nil];
-    
+   
     [picker dismissViewControllerAnimated:YES completion:^{
         // [self uploadPhotos:photos];
+        [self.phonelist addObjectsFromArray:photos];
+        Pnumb--;
+        [self resetLayout];
+      
     }];
 }
 
