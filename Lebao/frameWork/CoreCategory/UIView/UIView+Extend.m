@@ -259,12 +259,6 @@
 
 
 
-
-
-
-
-
-
 @end
 
 @implementation UIView (Animation)
@@ -293,6 +287,7 @@
     [UIView animateWithDuration:time animations:^{
         self.transform = CGAffineTransformMakeScale(scal,scal);
     }];
+   
 }
 //旋转
 - (void)RevolvingWithTime:(NSTimeInterval)time andDelta:(CGFloat)delta{

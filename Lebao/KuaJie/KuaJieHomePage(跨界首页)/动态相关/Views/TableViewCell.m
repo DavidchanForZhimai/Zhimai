@@ -195,23 +195,31 @@
         pinlun = @"评论";
     }
     [self.comentButton setTitle:pinlun forState:UIControlStateNormal];
-    UIImage *priseImage = [UIImage imageNamed:@"dongtai_dianzan_normal"];
+    UIImage *nomral;
+    UIImage *selected;
     if (_cellLayout.statusModel.islike) {
-        priseImage = [UIImage imageNamed:@"dongtai_dianzan_pressed"];
+        
+        nomral =[UIImage imageNamed:@"dongtai_dianzan_pressed"];
+        selected= [UIImage imageNamed:@"dongtai_dianzan_normal"];
     }
     else
     {
-        priseImage = [UIImage imageNamed:@"dongtai_dianzan_normal"];
+        nomral =[UIImage imageNamed:@"dongtai_dianzan_normal"];
+        selected= [UIImage imageNamed:@"dongtai_dianzan_pressed"];
     }
     
-    [self.likeButton setImage:priseImage forState:UIControlStateNormal];
+    [self.likeButton setImage:nomral forState:UIControlStateNormal];
+    [self.likeButton setImage:selected forState:UIControlStateHighlighted];
+    _likeButton.anmialScal = 1.5;
+    _likeButton.shouldAnmial = !_cellLayout.statusModel.islike;
+    _likeButton.anmialTime = 0.5;
     
     NSString *priseStr = [NSString stringWithFormat:@"%ld赞",_cellLayout.statusModel.like.count];
     if (_cellLayout.statusModel.like.count ==0) {
         priseStr = @"赞";
     }
     CGSize prisesize = [priseStr sizeWithFont:Size(22) maxSize:CGSizeMake(100, 22*SpacedFonts)];
-    self.likeLb.frame = frame(self.cellLayout.prisePosition.origin.x +priseImage.size.width + 15, self.cellLayout.prisePosition.origin.y + 2, prisesize.width, 22*SpacedFonts);
+    self.likeLb.frame = frame(self.cellLayout.prisePosition.origin.x +nomral.size.width + 15, self.cellLayout.prisePosition.origin.y + 2, prisesize.width, 22*SpacedFonts);
     self.likeLb.text = priseStr;
     self.cellline.frame = self.cellLayout.cellMarginsRect;
     self.moreImage.frame = frame(APPWIDTH -30, 10, 16, 16);
@@ -266,11 +274,14 @@
     if (_likeButton) {
         return _likeButton;
     }
-    _likeButton = [[BaseButton alloc]initWithFrame:CGRectZero backgroundImage:nil iconImage:[UIImage imageNamed:@"dongtai_dianzan_normal"] highlightImage:[UIImage imageNamed:@"dongtai_dianzan_normal"] inView:self];
+    
+    
+    _likeButton = [[BaseButton alloc]initWithFrame:CGRectZero backgroundImage:nil iconImage:[UIImage imageNamed:@"dongtai_dianzan_pressed"] highlightImage:[UIImage imageNamed:@"dongtai_dianzan_pressed"] inView:self];
     __weak typeof(self) weakSelf = self;
+    
     _likeButton.didClickBtnBlock = ^
     {
-      
+       
         if ([weakSelf.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeWithCellLayout:atIndexPath:)]) {
             [weakSelf.delegate tableViewCell:weakSelf didClickedLikeWithCellLayout:weakSelf.cellLayout atIndexPath:weakSelf.indexPath];
         }

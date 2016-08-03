@@ -165,7 +165,7 @@
         self.didCancelBtnBlock();
     }
       if (_shouldAnmial) {
-    [self scalingWithTime:_anmialTime andscal:1.0];
+         [self scalingWithTime:_anmialTime andscal:1.0];
       }
     
     

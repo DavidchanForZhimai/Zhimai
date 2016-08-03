@@ -217,23 +217,34 @@ LWActionSheetViewDelegate>
         LWImageBrowserModel* nextModel = [self.imageModels objectAtIndex:index + 1];
         [manager downloadImageWithURL:nextModel.HDURL
                               options:0
-                             progress:nil
+                             progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                                 
+                                
+                             }
                             completed:^(UIImage *image,
                                         NSError *error,
                                         SDImageCacheType cacheType,
                                         BOOL finished,
-                                        NSURL *imageURL) {}];
+                                        NSURL *imageURL) {
+                           
+                            }];
     }
     if (index - 1 >= 0) {
         LWImageBrowserModel* previousModel = [self.imageModels objectAtIndex:index - 1];
         [manager downloadImageWithURL:previousModel.HDURL
                               options:0
-                             progress:nil
+                             progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+                                 
+                                
+                             }
                             completed:^(UIImage *image,
                                         NSError *error,
                                         SDImageCacheType cacheType,
                                         BOOL finished,
-                                        NSURL *imageURL) {}];
+                                        NSURL *imageURL) {
+                            
+                            
+                            }];
     }
 }
 

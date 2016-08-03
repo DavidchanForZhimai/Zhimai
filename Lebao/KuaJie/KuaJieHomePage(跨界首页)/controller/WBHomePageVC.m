@@ -369,7 +369,7 @@
     buttomScr.alwaysBounceVertical = NO;
     buttomScr.showsHorizontalScrollIndicator = NO;
     buttomScr.showsVerticalScrollIndicator = NO;
-//    buttomScr.pagingEnabled = YES;
+    buttomScr.pagingEnabled = YES;
     buttomScr.bounces = NO;
     
     [self.view addSubview:buttomScr];
@@ -846,10 +846,21 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 
 {
-    
+    [buttomScr setPagingEnabled:YES];
     [self postComment];
     return YES;
 }
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+  
+     [buttomScr setPagingEnabled:YES];
+}
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    [buttomScr setPagingEnabled:NO];
+    return YES;
+}
+
 
 /***  发表评论 ***/
 - (void)postComment {
