@@ -17,7 +17,7 @@
 #import "TableViewCell.h"
 #import "GallopUtils.h"
 #import "StatusModel.h"
-#import "CellLayout.h"
+
 #define kToolBarH 44
 #define kTextFieldH 30
 @interface DynamicDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,TableViewCellDelegate,UIScrollViewDelegate,UITextFieldDelegate>
@@ -46,7 +46,7 @@
     
     if (_jjrJsonArr.count>0) {
         CellLayout *layout =  _jjrJsonArr[0];
-        [self layoutWithStatusModel:layout.statusModel index:0];
+        [_jjrJsonArr replaceObjectAtIndex:0 withObject:[self layoutWithStatusModel:layout.statusModel index:0]];
     }
     
     
@@ -147,6 +147,10 @@
 {
     if (sender.tag ==0) {
         PopView(self);
+        if (_deleteDynamicDetailSucceed) {
+            _deleteDynamicDetailSucceed(NO,(CellLayout *)_jjrJsonArr[0]);
+        }
+
     }
     
 }
@@ -473,7 +477,7 @@
             if (issucced == YES) {
                  PopView(self);
                 if (_deleteDynamicDetailSucceed) {
-                    _deleteDynamicDetailSucceed(YES);
+                    _deleteDynamicDetailSucceed(YES,cell.cellLayout);
                 }
                
                 

@@ -758,11 +758,19 @@
         dynamicDetailsViewController.dynamicdID = [NSString stringWithFormat:@"%ld",cellLayout.statusModel.ID];
         dynamicDetailsViewController.jjrJsonArr = [NSMutableArray new];
         [dynamicDetailsViewController.jjrJsonArr addObject:_jjrJsonArr[indexPath.row]];
-        dynamicDetailsViewController.deleteDynamicDetailSucceed = ^(BOOL succeed)
+        dynamicDetailsViewController.deleteDynamicDetailSucceed = ^(BOOL succeed,CellLayout *cellLayout)
         {
             if (succeed) {
                 [_jjrJsonArr removeObjectAtIndex:indexPath.row];
                 [_dtTab reloadData];
+            }
+            else
+            {
+                
+                    CellLayout *currentLayout =_jjrJsonArr[indexPath.row];
+                    
+                    [_jjrJsonArr replaceObjectAtIndex:indexPath.row withObject:[self layoutWithStatusModel:currentLayout.statusModel index:indexPath.row]];
+                    [_dtTab reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             }
             
         };
@@ -779,12 +787,20 @@
     dynamicDetailsViewController.dynamicdID = DTID;
     dynamicDetailsViewController.jjrJsonArr = allocAndInit(NSMutableArray);
      [dynamicDetailsViewController.jjrJsonArr addObject:_jjrJsonArr[indexPath.row]];
-    dynamicDetailsViewController.deleteDynamicDetailSucceed = ^(BOOL succeed)
+    dynamicDetailsViewController.deleteDynamicDetailSucceed = ^(BOOL succeed,CellLayout *cellLayout)
     {
         if (succeed) {
             [_jjrJsonArr removeObjectAtIndex:indexPath.row];
             [_dtTab reloadData];
         }
+        else
+        {
+        
+                CellLayout *currentLayout =_jjrJsonArr[indexPath.row];
+                [_jjrJsonArr replaceObjectAtIndex:indexPath.row withObject:[self layoutWithStatusModel:currentLayout.statusModel index:indexPath.row]];
+                [_dtTab reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        }
+
         
     };
 
@@ -1108,12 +1124,20 @@
                 dynamicDetailsViewController.dynamicdID = data[@"id"];
                 dynamicDetailsViewController.jjrJsonArr = allocAndInit(NSMutableArray);
                 [dynamicDetailsViewController.jjrJsonArr addObject:_jjrJsonArr[indexPath.row]];
-                dynamicDetailsViewController.deleteDynamicDetailSucceed = ^(BOOL succeed)
+                dynamicDetailsViewController.deleteDynamicDetailSucceed = ^(BOOL succeed,CellLayout *cellLayout)
                 {
                     if (succeed) {
                         [_jjrJsonArr removeObjectAtIndex:indexPath.row];
                         [_dtTab reloadData];
                     }
+                    else
+                    {
+                        CellLayout *currentLayout =_jjrJsonArr[indexPath.row];
+                        
+                        [_jjrJsonArr replaceObjectAtIndex:indexPath.row withObject:[self layoutWithStatusModel:currentLayout.statusModel index:indexPath.row]];
+                        [_dtTab reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                    }
+
                     
                 };
 

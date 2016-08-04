@@ -7,7 +7,8 @@
 //
 
 #import "BaseViewController.h"
-typedef void(^DeleteDynamicDetailSucceed) (BOOL succeed);
+#import "CellLayout.h"
+typedef void(^DeleteDynamicDetailSucceed) (BOOL succeed,CellLayout *cellLayout);
 @interface DynamicDetailsViewController : BaseViewController
 @property(nonatomic,strong)NSString *dynamicdID;
 @property (strong,nonatomic)NSMutableArray * jjrJsonArr;
