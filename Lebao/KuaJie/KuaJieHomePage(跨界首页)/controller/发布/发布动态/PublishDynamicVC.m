@@ -13,6 +13,8 @@
 #import "XWDragCellCollectionView.h"
 #import "HomeInfo.h"
 #import "MJExtension.h"
+#import "XLDataService.h"
+#import "Parameter.h"
 #define PADDING 10
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width
@@ -33,10 +35,14 @@
 
 @interface PublishDynamicVC ()<UITextViewDelegate,UITextFieldDelegate,UICollectionViewDataSource, UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UIImagePickerControllerDelegate,UINavigationControllerDelegate,XWDragCellCollectionViewDataSource, XWDragCellCollectionViewDelegate,UITextFieldDelegate,UIScrollViewDelegate,UIActionSheetDelegate>
 {
-
+    
     XWDragCellCollectionView *_collectionView;
     NSInteger Pnumb;
-     NSMutableArray *upLoadphotos;
+    NSMutableArray *upLoadphotos;
+    
+    UIActionSheet *actionSheetTopic;
+    NSMutableArray *objTopic;
+    
 }
 
 
@@ -48,11 +54,76 @@
     [super viewDidLoad];
     
     self.view.backgroundColor=BACKCOLOR;
-
+    
     Pnumb=9;
     [self createUI];
     [self addImg];
+    
+    
+    
 }
+
+-(void)postDataSouce
+{
+    
+    
+    NSMutableDictionary *param = [Parameter parameterWithSessicon];
+    [param setValue:@(1) forKey:@"page"];
+    [[ToolManager shareInstance] showWithStatus];
+    [XLDataService postWithUrl:[NSString stringWithFormat:@"%@dynamic/topic",HttpURL] param:param modelClass:nil responseBlock:^(id dataObj, NSError *error) {
+        
+        objTopic=[[NSMutableArray alloc]init];
+        if (dataObj) {
+            if ([dataObj[@"rtcode"] intValue]==1) {
+                [[ToolManager shareInstance]dismiss];
+    
+                for (id obj in dataObj[@"datas"]) {
+                    [objTopic addObject:obj[@"tipic"]];
+                }
+//                NSLog(@"dataObj =%@",objTopic);
+                actionSheetTopic=[[UIActionSheet alloc]initWithTitle:@"请选择您想要发送的话题" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:nil];
+                
+                if (objTopic.count!=0) {
+                    for (id obj in objTopic) {
+                        
+                        [actionSheetTopic addButtonWithTitle:obj];
+                    }
+                }else{
+                    [actionSheetTopic addButtonWithTitle:@"#知脉有我更精彩#"];
+                }
+                
+                
+              
+                
+                
+                actionSheetTopic.delegate=self;
+                actionSheetTopic.tag=1002;
+                [actionSheetTopic showInView:self.view];
+                
+            }
+            else
+            {
+                [[ToolManager shareInstance]dismiss];
+//                [[ToolManager shareInstance] showInfoWithStatus:dataObj[@"rtmsg"]];
+                 actionSheetTopic=[[UIActionSheet alloc]initWithTitle:@"请选择您想要发送的话题" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"#知脉有我更精彩#",nil];
+                actionSheetTopic.delegate=self;
+                actionSheetTopic.tag=1002;
+                [actionSheetTopic showInView:self.view];
+            }
+        }
+        else
+        {
+           [[ToolManager shareInstance]dismiss];
+//            [[ToolManager shareInstance] showInfoWithStatus];
+             actionSheetTopic=[[UIActionSheet alloc]initWithTitle:@"请选择您想要发送的话题" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"#知脉有我更精彩#",nil];
+            actionSheetTopic.delegate=self;
+            actionSheetTopic.tag=1002;
+            [actionSheetTopic showInView:self.view];
+        }
+    }];
+}
+
+
 
 
 -(void)createUI{
@@ -107,14 +178,14 @@
     self.viewBg = [[UIView alloc]initWithFrame:CGRectMake(0, 10, APPWIDTH, 90)];
     self.viewBg.backgroundColor = [UIColor whiteColor];
     [self.svMain addSubview:self.viewBg];
-
+    
     self.tfView = [[UITextView alloc]initWithFrame:CGRectMake(10, 10, SCREEN_WIDTH-20, 90)];
     self.tfView.font = [UIFont systemFontOfSize:13];
     self.tfView.text = @"请输入您想要分享的新鲜事(最多255个字)";
     self.tfView.textColor = [UIColor colorWithRed:0.741 green:0.741 blue:0.745 alpha:1.000];
     self.tfView.returnKeyType = UIReturnKeySend;
     self.tfView.delegate = self;
-
+    
     [self.viewBg addSubview:self.tfView];
     
     
@@ -133,12 +204,29 @@
     //添加照片按钮
     self.btnAddPhone = [UIButton buttonWithType:UIButtonTypeCustom];
     self.btnAddPhone.frame = CGRectMake(10, 10, (APPWIDTH-40)/3, (APPWIDTH-40)/3);
-
+    self.btnAddPhone.layer.borderWidth=1;
+    self.btnAddPhone.layer.borderColor=[UIColor colorWithWhite:0.875 alpha:1.000].CGColor;
+    self.btnAddPhone.layer.cornerRadius=5;
+    
     [self.btnAddPhone setImage:[UIImage imageNamed:@"icon_find_phone_tianjia2"] forState:UIControlStateNormal];
     [self.btnAddPhone addTarget:self action:@selector(BtnAddPhoneClick) forControlEvents:UIControlEventTouchUpInside];
     [_collectionView addSubview:self.btnAddPhone];
     
+    //添加话题按钮
+    UIImage *image = [UIImage imageNamed:@"2huati"];
+    float btnAddPhoneW = (APPWIDTH-40)/3;
+    float titleSize = 32*SpacedFonts;
+    float juli = 4;
+    self.hotTopicBtn=[[BaseButton alloc]initWithFrame:CGRectMake(20+btnAddPhoneW, 10, btnAddPhoneW, btnAddPhoneW) setTitle:@"话题" titleSize:titleSize titleColor:[UIColor colorWithRed:0.745 green:0.749 blue:0.757 alpha:1.000] backgroundImage:nil iconImage:image highlightImage:image setTitleOrgin:CGPointMake((btnAddPhoneW - image.size.height - titleSize -juli)/2 + image.size.height + juli, (btnAddPhoneW - 2*titleSize)/2- image.size.width ) setImageOrgin:CGPointMake((btnAddPhoneW - image.size.height - titleSize-juli)/2, (btnAddPhoneW - image.size.width)/2) inView:_collectionView];
+    __weak typeof(self) weakSelf = self;
+    self.hotTopicBtn.didClickBtnBlock = ^
+    {
+        [weakSelf BtnhotTopicBtnClick];
+    };
     
+    self.hotTopicBtn.layer.borderWidth=1;
+    self.hotTopicBtn.layer.borderColor=[UIColor colorWithWhite:0.875 alpha:1.000].CGColor;
+    self.hotTopicBtn.layer.cornerRadius=5;
     //滚动视图
     self.svMain.contentSize = CGSizeMake(APPWIDTH,MaxY(_collectionView));
     
@@ -159,12 +247,12 @@
         return;
     }else {
         
-    //上传图片
- [[ToolManager shareInstance] showWithStatus:@"疯狂上传中..."];
-//        NSLog(@"self.phonelist =%@",self.phonelist);
+        //上传图片
+        [[ToolManager shareInstance] showWithStatus:@"疯狂上传中..."];
+        //        NSLog(@"self.phonelist =%@",self.phonelist);
         if (self.phonelist.count ==0) {
             [[HomeInfo shareInstance] adddynamic:self.tfView.text imgs:nil andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
-//                NSLog(@"%@",jsonDic);
+                //                NSLog(@"%@",jsonDic);
                 if (issucced) {
                     if (_faBuSucceedBlock) {
                         _faBuSucceedBlock();
@@ -180,36 +268,36 @@
         }
         else
         {
-           
-                    upLoadphotos = [[NSMutableArray alloc]init];
-        for (UIImage *image in self.phonelist) {
             
-            [[UpLoadImageManager shareInstance] upLoadImageType:@"property" image:image imageBlock:^(UpLoadImageModal *upLoadImageModal) {
+            upLoadphotos = [[NSMutableArray alloc]init];
+            for (UIImage *image in self.phonelist) {
                 
-                NSArray *images = [NSArray arrayWithObjects:upLoadImageModal.imgurl,upLoadImageModal.abbr_imgurl, nil];
-                [upLoadphotos addObject:images];
-                
-                if (upLoadphotos.count==self.phonelist.count) {
-                    [[HomeInfo shareInstance] adddynamic:self.tfView.text imgs:[upLoadphotos mj_JSONString] andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
-                       
-                        if (issucced) {
-                            [self.navigationController popViewControllerAnimated:YES];
-                            if (_faBuSucceedBlock) {
-                                _faBuSucceedBlock();
+                [[UpLoadImageManager shareInstance] upLoadImageType:@"property" image:image imageBlock:^(UpLoadImageModal *upLoadImageModal) {
+                    
+                    NSArray *images = [NSArray arrayWithObjects:upLoadImageModal.imgurl,upLoadImageModal.abbr_imgurl, nil];
+                    [upLoadphotos addObject:images];
+                    
+                    if (upLoadphotos.count==self.phonelist.count) {
+                        [[HomeInfo shareInstance] adddynamic:self.tfView.text imgs:[upLoadphotos mj_JSONString] andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
+                            
+                            if (issucced) {
+                                [self.navigationController popViewControllerAnimated:YES];
+                                if (_faBuSucceedBlock) {
+                                    _faBuSucceedBlock();
+                                }
+                                [[ToolManager shareInstance] dismiss];
                             }
-                            [[ToolManager shareInstance] dismiss];
-                        }
-                        else
-                        {
-                            [[ToolManager shareInstance] showInfoWithStatus:info];
-                        }
-                    }];
-                }
-                
-              
-                
-            }];
-        }
+                            else
+                            {
+                                [[ToolManager shareInstance] showInfoWithStatus:info];
+                            }
+                        }];
+                    }
+                    
+                    
+                    
+                }];
+            }
         }
         
         
@@ -305,6 +393,7 @@
 }
 //删除照片的事件
 - (void)BtnDelPhone:(UIButton *)sender{
+    [self.view endEditing:YES];
     [self.phonelist removeObjectAtIndex:sender.tag-100];
     Pnumb++;
     [self resetLayout];
@@ -312,10 +401,7 @@
 }
 //添加图片事件
 - (void)BtnAddPhoneClick{
-    
-    
     [self.view endEditing:YES];
-    
     if (Pnumb==0) {
         
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"温馨提示" message:@"您已选择满9张图片,可删除后替换" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
@@ -328,9 +414,9 @@
     [actionSheet addButtonWithTitle:@"取消"];
     
     actionSheet.delegate=self;
-    
+    actionSheet.tag=1001;
     [actionSheet showInView:self.view];
-
+    
 }
 //删除照片
 - (void)DelClick{
@@ -338,7 +424,7 @@
     [self resetLayout];
 }
 -(void)resetLayout{
-    int columnCount = ceilf((_phonelist.count + 1) * 1.0 / 3);
+    int columnCount = ceilf((_phonelist.count + 2) * 1.0 / 3);
     float height = columnCount * ((kScreenWidth-40)/3 +10)+10;
     if (height < (kScreenWidth-40)/3+20) {
         height = (kScreenWidth-40)/3+20;
@@ -348,48 +434,86 @@
     _collectionView.frame = rect;
     [_collectionView reloadData];
     
-    self.btnAddPhone.frame = CGRectMake(10+(10+(kScreenWidth-40)/3)*(self.phonelist.count%3), HEIGHT(_collectionView)-(kScreenWidth-40)/3-10,(kScreenWidth-40)/3,(kScreenWidth-40)/3);
+    self.btnAddPhone.frame = CGRectMake(10+(10+(kScreenWidth-40)/3)*(self.phonelist.count%3),10+(10+(kScreenWidth-40)/3)*(self.phonelist.count/3),(kScreenWidth-40)/3,(kScreenWidth-40)/3);
+    
+    self.hotTopicBtn.frame = CGRectMake(10+(10+(kScreenWidth-40)/3)*((self.phonelist.count+1)%3), HEIGHT(_collectionView)-(kScreenWidth-40)/3-10,(kScreenWidth-40)/3,(kScreenWidth-40)/3);
+    
     self.viewlin.frame = CGRectMake(0, HEIGHT(_collectionView)-1, kScreenWidth, 1);
     self.svMain.contentSize = CGSizeMake(kScreenWidth,MaxY(_collectionView));
+    
 }
 
-
-
+#pragma mark - 话题按钮
+-(void)BtnhotTopicBtnClick
+{
+    [self postDataSouce];
+      [self.view endEditing:YES];
+   
+    
+    
+}
 #pragma mark - UIActionSheetDelegate
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex==0) {
-        
-        [self callCameraOrPhotoWithType:UIImagePickerControllerSourceTypeCamera];
-       
-        
-    }else if (buttonIndex==1) {
-        
-        TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:Pnumb delegate:nil];
-        // 你可以通过block或者代理，来得到用户选择的照片.
-        [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets) {
-            [self.phonelist addObjectsFromArray:photos];
-            Pnumb-=photos.count;
+    
+    if (actionSheet.tag==1001) {
+        if (buttonIndex==0) {
             
-            [self resetLayout];
-        }];
-        // 在这里设置imagePickerVc的外观
-        imagePickerVc.navigationBar.barTintColor = [UIColor blackColor];
-        imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
-        // imagePickerVc.oKButtonTitleColorNormal = [UIColor greenColor];
-        // 设置是否可以选择视频/原图
-        imagePickerVc.allowPickingVideo = NO;
-        // imagePickerVc.allowPickingOriginalPhoto = NO;
-        imagePickerVc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        [self presentViewController:imagePickerVc animated:YES completion:nil];
-        
-        
-      
-    }else if (buttonIndex==2) {
-        
+            [self callCameraOrPhotoWithType:UIImagePickerControllerSourceTypeCamera];
+            
+            
+        }else if (buttonIndex==1) {
+            
+            TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:Pnumb delegate:nil];
+            // 你可以通过block或者代理，来得到用户选择的照片.
+            [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets) {
+                [self.phonelist addObjectsFromArray:photos];
+                Pnumb-=photos.count;
+                
+                [self resetLayout];
+            }];
+            // 在这里设置imagePickerVc的外观
+            imagePickerVc.navigationBar.barTintColor = [UIColor blackColor];
+            imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
+            // imagePickerVc.oKButtonTitleColorNormal = [UIColor greenColor];
+            // 设置是否可以选择视频/原图
+            imagePickerVc.allowPickingVideo = NO;
+            // imagePickerVc.allowPickingOriginalPhoto = NO;
+            imagePickerVc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+            [self presentViewController:imagePickerVc animated:YES completion:nil];
+            
+        }else if (buttonIndex==2) {
+            
+            
+        }
         
     }
+    else if (actionSheet.tag==1002) {
+        NSLog(@"-----------%ld",buttonIndex);
+        if (buttonIndex!=0) {
+            if (objTopic.count!=0) {
+                if ([_tfView.text isEqualToString: @"请输入您想要分享的新鲜事(最多255个字)"]) {
+                    _tfView.text =objTopic[buttonIndex-1];
+                    _tfView.textColor=[UIColor blackColor];
+                }else {
+                    _tfView.text =[NSString stringWithFormat:@"%@%@",_tfView.text,objTopic[buttonIndex-1]];
+                    _tfView.textColor=[UIColor blackColor];
+                }
+            }else {
+                if ([_tfView.text isEqualToString: @"请输入您想要分享的新鲜事(最多255个字)"]) {
+                    _tfView.text =@"#知脉有我更精彩#";
+                    _tfView.textColor=[UIColor blackColor];
+                }else {
+                    _tfView.text =[NSString stringWithFormat:@"%@%@",_tfView.text,@"#知脉有我更精彩#"];
+                    _tfView.textColor=[UIColor blackColor];
+                }
+            }
+           
+        }else if(buttonIndex==0){}
+      
+    }
+    
 }
 
 -(void)callCameraOrPhotoWithType:(UIImagePickerControllerSourceType)sourceType{
@@ -407,12 +531,12 @@
         [self presentViewController:imagePicker animated:YES completion:^(){
             if ([[[UIDevice currentDevice] systemVersion]floatValue]>=7.0) {
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    
-                          }
+                
+            }
             else{
                 
             }
-
+            
         }];
     } else {
         
@@ -423,13 +547,13 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)aImage editingInfo:(NSDictionary *)editingInfo{
     
     NSArray *photos = [[NSArray alloc]initWithObjects:aImage, nil];
-   
+    
     [picker dismissViewControllerAnimated:YES completion:^{
         // [self uploadPhotos:photos];
         [self.phonelist addObjectsFromArray:photos];
         Pnumb--;
         [self resetLayout];
-      
+        
     }];
 }
 

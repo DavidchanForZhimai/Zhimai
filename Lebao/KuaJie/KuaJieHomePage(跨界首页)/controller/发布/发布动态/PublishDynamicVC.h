@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "BaseButton.h"
 typedef void (^FaBuSucceedBlock) (void);
 @interface PublishDynamicVC : UIViewController
 @property (strong,nonatomic)UIScrollView *svMain;           //背景滚动式图
@@ -15,6 +15,7 @@ typedef void (^FaBuSucceedBlock) (void);
 @property (strong,nonatomic)UIView *viewlin;                 //上面的线
 @property (strong,nonatomic)UITextView *tfView;             //文本输入
 @property (strong,nonatomic)NSMutableArray *phonelist;      //图片数组
-@property (strong,nonatomic)UIButton *btnAddPhone;
+@property (strong,nonatomic)UIButton *btnAddPhone;          //添加照片
 @property (strong,nonatomic)FaBuSucceedBlock faBuSucceedBlock;//发布成功
+@property (strong,nonatomic)BaseButton *hotTopicBtn;            //话题按钮
 @end
