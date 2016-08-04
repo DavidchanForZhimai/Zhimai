@@ -65,10 +65,20 @@
        
         [LWTextParser parseEmojiWithTextStorage:nameTextStorage];
         
-        //更多操作
-        LWImageStorage* moreStorage = [[LWImageStorage alloc] initWithIdentifier:@"more"];
-        moreStorage.tag = 30;
-         moreStorage.frame = CGRectMake(APPWIDTH - 40, 0, 40, 40);
+        
+        if (!isDetail||statusModel.me) {
+            //更多操作
+            LWImageStorage* moreStorage = [[LWImageStorage alloc] initWithIdentifier:@"more"];
+            moreStorage.tag = 30;
+            moreStorage.frame = CGRectMake(APPWIDTH - 40, 0, 40, 40);
+            [self addStorage:moreStorage];
+            self.isShowMore = YES;
+            
+        }
+        else
+        {
+            self.isShowMore = NO;
+        }
         
         //行业
         LWTextStorage* industryTextStorage = [[LWTextStorage alloc] init];
@@ -377,12 +387,7 @@
         
         [self addStorage:nameTextStorage];
         [self addStorage:industryTextStorage];
-        
-        if (!isDetail||statusModel.me) {
-             [self addStorage:moreStorage];
     
-        }
-       
         [self addStorage:contentTextStorage];
         [self addStorage:dateTextStorage];
         [self addStorages:commentTextStorages];

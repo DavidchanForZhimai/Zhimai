@@ -40,6 +40,7 @@
          [self.contentView addSubview:self.likeLb];
         [self.contentView addSubview:self.comentButton];
         [self.contentView addSubview:self.likeButton];
+        
         [self.contentView addSubview:self.moreImage];
         [self.contentView addSubview:self.line];
         [self.contentView addSubview:self.cellline];
@@ -54,13 +55,13 @@
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
    didCilickedImageStorage:(LWImageStorage *)imageStorage
                      touch:(UITouch *)touch{
-    NSLog(@"tag:%ld",imageStorage.tag);//这里可以通过判断Tag来执行相应的回调。
+//    NSLog(@"tag:%ld",imageStorage.tag);//这里可以通过判断Tag来执行相应的回调。
   
     //查看动态详情
     if (imageStorage.tag ==20) {
-    if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithDTID:)] &&
+        if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithDTID:atIndexPath:)] &&
             [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-            [self.delegate tableViewCell:self didClickedLikeButtonWithDTID:[NSString stringWithFormat:@"%ld",_cellLayout.statusModel.ID]];
+        [self.delegate tableViewCell:self didClickedLikeButtonWithDTID:[NSString stringWithFormat:@"%ld",_cellLayout.statusModel.ID] atIndexPath:_indexPath];
         }
             return;
     }
@@ -224,6 +225,7 @@
     self.likeLb.text = priseStr;
     self.cellline.frame = self.cellLayout.cellMarginsRect;
     self.moreImage.frame = frame(APPWIDTH -30, 10, 16, 16);
+    self.moreImage.hidden = !_cellLayout.isShowMore;
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled {

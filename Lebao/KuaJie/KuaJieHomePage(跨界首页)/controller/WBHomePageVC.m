@@ -151,17 +151,13 @@
             [weakSelf resetSeletedAddressFrame];
             
             xspageNumb = 1;
-            jjrpageNumb = 1;
             if (weakSelf.xsJsonArr.count >0) {
                 [weakSelf.xsJsonArr removeAllObjects];
             }
-            if (weakSelf.jjrJsonArr.count >0) {
-                [weakSelf.jjrJsonArr removeAllObjects];
-            }
+            
             [weakSelf.xsTab reloadData];
-            [weakSelf.dtTab reloadData];
             [weakSelf getxsJson];
-            [weakSelf getjjrJson];
+        
             
         }];
         
@@ -553,7 +549,7 @@
     {   PublishDynamicVC *publishDynamicVC  =  allocAndInit(PublishDynamicVC);
         publishDynamicVC.faBuSucceedBlock = ^
         {
-            NSLog(@"faBuSucceedBlock");
+//            NSLog(@"faBuSucceedBlock");
             jjrpageNumb = 1;
             if (_jjrJsonArr.count >0) {
                 [_jjrJsonArr removeAllObjects];
@@ -760,6 +756,16 @@
          CellLayout* cellLayout = self.jjrJsonArr[indexPath.row];
         DynamicDetailsViewController*dynamicDetailsViewController = allocAndInit(DynamicDetailsViewController);
         dynamicDetailsViewController.dynamicdID = [NSString stringWithFormat:@"%ld",cellLayout.statusModel.ID];
+        dynamicDetailsViewController.jjrJsonArr = [NSMutableArray new];
+        [dynamicDetailsViewController.jjrJsonArr addObject:_jjrJsonArr[indexPath.row]];
+        dynamicDetailsViewController.deleteDynamicDetailSucceed = ^(BOOL succeed)
+        {
+            if (succeed) {
+                [_jjrJsonArr removeObjectAtIndex:indexPath.row];
+                [_dtTab reloadData];
+            }
+            
+        };
         PushView(self, dynamicDetailsViewController);
         
         
@@ -767,10 +773,21 @@
     
 }
 //点击进入动态详情
-- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithDTID:(NSString *)DTID
+- (void)tableViewCell:(TableViewCell *)cell didClickedLikeButtonWithDTID:(NSString *)DTID atIndexPath:(NSIndexPath *)indexPath
 {
     DynamicDetailsViewController*dynamicDetailsViewController = allocAndInit(DynamicDetailsViewController);
     dynamicDetailsViewController.dynamicdID = DTID;
+    dynamicDetailsViewController.jjrJsonArr = allocAndInit(NSMutableArray);
+     [dynamicDetailsViewController.jjrJsonArr addObject:_jjrJsonArr[indexPath.row]];
+    dynamicDetailsViewController.deleteDynamicDetailSucceed = ^(BOOL succeed)
+    {
+        if (succeed) {
+            [_jjrJsonArr removeObjectAtIndex:indexPath.row];
+            [_dtTab reloadData];
+        }
+        
+    };
+
     PushView(self, dynamicDetailsViewController);
 }
 #pragma mark----线索那边的头像那块view的点击事件
@@ -1089,6 +1106,18 @@
                 
                 DynamicDetailsViewController*dynamicDetailsViewController = allocAndInit(DynamicDetailsViewController);
                 dynamicDetailsViewController.dynamicdID = data[@"id"];
+                dynamicDetailsViewController.jjrJsonArr = allocAndInit(NSMutableArray);
+                [dynamicDetailsViewController.jjrJsonArr addObject:_jjrJsonArr[indexPath.row]];
+                dynamicDetailsViewController.deleteDynamicDetailSucceed = ^(BOOL succeed)
+                {
+                    if (succeed) {
+                        [_jjrJsonArr removeObjectAtIndex:indexPath.row];
+                        [_dtTab reloadData];
+                    }
+                    
+                };
+
+
                 PushView(self, dynamicDetailsViewController);
             }
         }

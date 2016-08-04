@@ -7,7 +7,9 @@
 //
 
 #import "BaseViewController.h"
-
+typedef void(^DeleteDynamicDetailSucceed) (BOOL succeed);
 @interface DynamicDetailsViewController : BaseViewController
 @property(nonatomic,strong)NSString *dynamicdID;
+@property (strong,nonatomic)NSMutableArray * jjrJsonArr;
+@property(nonatomic,copy)DeleteDynamicDetailSucceed deleteDynamicDetailSucceed;
 @end

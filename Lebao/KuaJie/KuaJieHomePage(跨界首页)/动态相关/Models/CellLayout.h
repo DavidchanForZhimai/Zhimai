@@ -32,6 +32,7 @@
 @property (nonatomic,copy) NSArray* imagePostionArray;
 @property (nonatomic,copy) NSArray* prisePostionArray;
 @property (nonatomic,strong) StatusDatas* statusModel;
+@property (nonatomic,assign) BOOL isShowMore;
 @property (nonatomic,assign) CGRect websiteRect;
 
 - (id)initWithStatusModel:(StatusDatas *)stautsModel

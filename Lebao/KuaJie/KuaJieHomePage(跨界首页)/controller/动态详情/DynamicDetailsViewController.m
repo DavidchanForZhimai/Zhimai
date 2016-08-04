@@ -23,12 +23,12 @@
 @interface DynamicDetailsViewController ()<UITableViewDelegate,UITableViewDataSource,TableViewCellDelegate,UIScrollViewDelegate,UITextFieldDelegate>
 {
     UIScrollView * buttomScr;
-    UIImageView *_toolBar;
-    UITextField *_textField;
+     UIImageView *_toolBar;
+     UITextField *_textField;
      UIButton  *_sendBtn;
     
 }
-@property (strong,nonatomic)NSMutableArray * jjrJsonArr;
+
 @property (strong,nonatomic)UITableView *dtTab;
 @property (nonatomic,strong) NSString* replayid;//评论中的rep_brokerid
 @property (nonatomic,strong) NSString* dynamicID;//动态ID
@@ -43,10 +43,15 @@
     [super viewDidLoad];
     [self navViewTitleAndBackBtn:@"详情"];
     // Do any additional setup after loading the view.
-   
-     _jjrJsonArr = [[NSMutableArray alloc]init];
+    
+    if (_jjrJsonArr.count>0) {
+        CellLayout *layout =  _jjrJsonArr[0];
+        [self layoutWithStatusModel:layout.statusModel index:0];
+    }
+    
+    
     [self setButtomScr];
-    [self getjjrJson];
+
     //评论
     [self addToolBar];
     
@@ -145,44 +150,7 @@
     }
     
 }
--(void)getjjrJson
-{
-    
-    [[HomeInfo shareInstance]getHomePageDTdetailID:_dynamicdID andcallBack:^(BOOL issucced, NSString* info, NSDictionary* jsonDic) {
-        if (issucced == YES) {
-            StatusDatas *data = [StatusDatas mj_objectWithKeyValues:jsonDic[@"datas"]];
-            [[ToolManager shareInstance]dismiss];
-           
-            data.imgurl = [[ToolManager shareInstance] urlAppend:data.imgurl];
-            for (int i =0; i<data.pic.count;i++) {
-                StatusPic *pic = data.pic[i];
-                pic.imgurl = [[ToolManager shareInstance] urlAppend:pic.imgurl];
-                pic.abbre_imgurl = [[ToolManager shareInstance] urlAppend: pic.abbre_imgurl];
-                [data.pic replaceObjectAtIndex:i withObject:pic];
-                
-            }
-            for (int i =0; i<data.like.count;i++) {
-                StatusLike *like = data.like[i];
-                like.imgurl = [[ToolManager shareInstance] urlAppend:like.imgurl];
-                [data.like replaceObjectAtIndex:i withObject:like];
-            }
 
-            
-                data.type = @"image";
-                LWLayout* layout = [self layoutWithStatusModel:data index:0];
-                    [self.jjrJsonArr addObject:layout];
-        
-                [_dtTab reloadData];
-            
-            
-        }else
-        {
-            [[ToolManager shareInstance] showAlertMessage:info];
-            
-        }
-        
-    }];
-}
 
 /****************************************************************************/
 /**
@@ -503,10 +471,11 @@
         [[HomeInfo shareInstance ]deleteDynamic:andDynamicID andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonDic) {
             self.view.userInteractionEnabled = YES;
             if (issucced == YES) {
-                
-                [self.jjrJsonArr removeObjectAtIndex:indexPath.row];
-                
-                [self.dtTab reloadData];
+                 PopView(self);
+                if (_deleteDynamicDetailSucceed) {
+                    _deleteDynamicDetailSucceed(YES);
+                }
+               
                 
             }else
             {
