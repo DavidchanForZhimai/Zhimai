@@ -313,6 +313,9 @@
 //添加图片事件
 - (void)BtnAddPhoneClick{
     
+    
+    [self.view endEditing:YES];
+    
     if (Pnumb==0) {
         
         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"温馨提示" message:@"您已选择满9张图片,可删除后替换" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
@@ -327,13 +330,7 @@
     actionSheet.delegate=self;
     
     [actionSheet showInView:self.view];
-//    if(iOS7){
-//        UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"温馨提示" message:@"您的系统版本过低,不支持该功能" delegate:self cancelButtonTitle:@"确定" otherButtonTitles: nil];
-//        [alert show];
-//        return;
-//    }
-  
-//    [self showSheetView];
+
 }
 //删除照片
 - (void)DelClick{
@@ -394,32 +391,6 @@
         
     }
 }
-
-
-
-//-(void)showSheetView{
-//    
-//    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleAlert];
-//    UIAlertAction *setAlert = [UIAlertAction actionWithTitle:@"拍照" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        
-//        
-//    }];
-//
-//    UIAlertAction *PhoneAlert = [UIAlertAction actionWithTitle:@"从手机选择" style:
-//                                 UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {}];
-//    UIAlertAction *hidAlert = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        
-//    }];
-//    [alert addAction:setAlert];
-//    [alert addAction:PhoneAlert];
-//    [alert addAction:hidAlert];
-//    
-//    [self presentViewController:alert animated:YES completion:^{
-//        
-//    }];
-//    
-//}
-
 
 -(void)callCameraOrPhotoWithType:(UIImagePickerControllerSourceType)sourceType{
     BOOL isCamera = YES;
