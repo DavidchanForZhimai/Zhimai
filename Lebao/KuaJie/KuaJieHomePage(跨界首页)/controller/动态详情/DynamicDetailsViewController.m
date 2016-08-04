@@ -496,7 +496,13 @@
         if (index ==0) {
             
             CellLayout *cell = _jjrJsonArr[indexPath.row];
-            [[HomeInfo shareInstance]guanzhuTargetID:cell.statusModel.brokerid andIsFollow:cell.statusModel.isfollow andcallBack:^(BOOL issucced, NSString *info, NSArray *jsonArr) {
+            [[HomeInfo shareInstance]guanzhuTargetID:cell.statusModel.brokerid andIsFollow:cell.statusModel.isfollow andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonArr) {
+                if (jsonArr) {
+                    cell.statusModel.isfollow = [jsonArr[@"isfollow"] boolValue];
+                    [_jjrJsonArr replaceObjectAtIndex:indexPath.row withObject:[self layoutWithStatusModel:cell.statusModel index:indexPath.row]];
+                    [_dtTab reloadRowsAtIndexPaths:@[indexPath] withRowAnimation: UITableViewRowAnimationFade];
+                }
+                
                 if (issucced == YES) {
                     
                     if (cell.statusModel.isfollow ) {
@@ -506,7 +512,7 @@
                     {
                         [[ToolManager shareInstance] showSuccessWithStatus:@"关注成功"];
                     }
-                    cell.statusModel.isfollow = !cell.statusModel.isfollow;
+                    
                     
                     
                 }else

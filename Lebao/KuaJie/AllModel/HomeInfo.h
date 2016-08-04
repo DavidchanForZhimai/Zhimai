@@ -36,5 +36,5 @@ typedef void (^HomePageCallbackType2)(BOOL issucced, NSString* info, NSDictionar
 
 
 //添加或取消关注
--(void)guanzhuTargetID:(NSInteger)targetID andIsFollow:(int)isfl andcallBack:(HomePageCallbackType1)callback;
+-(void)guanzhuTargetID:(NSInteger)targetID andIsFollow:(int)isfl andcallBack:(HomePageCallbackType2)callback;
 @end

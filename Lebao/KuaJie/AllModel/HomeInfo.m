@@ -277,7 +277,7 @@
     }];
 
 }
--(void)guanzhuTargetID:(NSInteger)targetID andIsFollow:(int)isfl andcallBack:(HomePageCallbackType1)callback
+-(void)guanzhuTargetID:(NSInteger)targetID andIsFollow:(int)isfl andcallBack:(HomePageCallbackType2)callback
 {
     NSString * url = [NSString stringWithFormat:@"%@broker/follow",HOST_URL];
     
@@ -289,10 +289,10 @@
     [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([[responseObject objectForKey:@"rtcode"] intValue]==1) {
            
-            callback(YES,@"操作成功",nil);
+            callback(YES,@"操作成功",responseObject);
         }else
         { 
-            callback(NO,[responseObject objectForKey:@"rtmsg"],nil);
+            callback(NO,[responseObject objectForKey:@"rtmsg"],responseObject);
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

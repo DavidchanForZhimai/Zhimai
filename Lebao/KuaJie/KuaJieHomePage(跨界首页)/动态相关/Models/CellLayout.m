@@ -105,9 +105,9 @@
             contentTextStorage.frame = CGRectMake(nameTextStorage.left, nameTextStorage.bottom + 10.0f, SCREEN_WIDTH - 80.0f, CGFLOAT_MAX);
         }
         [LWTextParser parseEmojiWithTextStorage:contentTextStorage];
-        [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
-                                        linkColor:RGB(113, 129, 161, 1)
-                                   highlightColor:RGB(0, 0, 0, 0.15)];
+//        [LWTextParser parseTopicWithLWTextStorage:contentTextStorage
+//                                        linkColor:RGB(113, 129, 161, 1)
+//                                   highlightColor:RGB(0, 0, 0, 0.15)];
         //发布的图片模型 imgsStorage
         CGFloat imageWidth = (SCREEN_WIDTH - 100.0f)/3.0f;
         NSInteger imageCount = [statusModel.pic count];

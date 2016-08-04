@@ -192,7 +192,7 @@
     {
         isfollow = 0;
     }
-    [[HomeInfo shareInstance]guanzhuTargetID:[target_id intValue] andIsFollow:isfollow andcallBack:^(BOOL issucced, NSString *info, NSArray *jsonArr) {
+    [[HomeInfo shareInstance]guanzhuTargetID:[target_id intValue] andIsFollow:isfollow andcallBack:^(BOOL issucced, NSString *info, NSDictionary *jsonArr) {
         if (issucced == YES) {
             sender.selected = !sender.selected;
             if (sender.selected == YES) {
