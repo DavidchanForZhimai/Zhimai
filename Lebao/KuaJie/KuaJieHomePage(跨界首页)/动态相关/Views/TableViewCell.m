@@ -207,7 +207,8 @@
         nomral =[UIImage imageNamed:@"dongtai_dianzan_normal"];
         selected= [UIImage imageNamed:@"dongtai_dianzan_pressed"];
     }
-    
+    self.likeButton.imagePoint = CGPointMake(0 , 0);
+    self.likeButton.titlePoint = CGPointMake(0 , 3);
     [self.likeButton setImage:nomral forState:UIControlStateNormal];
     [self.likeButton setImage:selected forState:UIControlStateHighlighted];
     _likeButton.anmialScal = 1.5;

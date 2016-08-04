@@ -54,6 +54,7 @@
         }
         //名字模型 nameTextStorage
         LWTextStorage* nameTextStorage = [[LWTextStorage alloc] init];
+       
         nameTextStorage.text = [NSString stringWithFormat:@"%@ %@",statusModel.realname,renzen];
         nameTextStorage.font = Size(28.0);
         nameTextStorage.frame = CGRectMake(avatarStorage.right + 6, 15.0f, SCREEN_WIDTH - (avatarStorage.right + 6 + 30), CGFLOAT_MAX);
@@ -71,8 +72,14 @@
         
         //行业
         LWTextStorage* industryTextStorage = [[LWTextStorage alloc] init];
-        
-        industryTextStorage.text = [NSString stringWithFormat:@"%@  %@",statusModel.address,statusModel.workyear];
+        if (statusModel.address.length>0) {
+             industryTextStorage.text = [NSString stringWithFormat:@"%@  %@",statusModel.address,statusModel.workyear];
+        }
+        else
+        {
+             industryTextStorage.text = [NSString stringWithFormat:@"%@",statusModel.workyear];
+        }
+       
         industryTextStorage.textColor = [UIColor colorWithRed:0.549 green:0.5569 blue:0.5608 alpha:1.0];
         industryTextStorage.font = Size(24.0);
         industryTextStorage.frame = CGRectMake(nameTextStorage.left, nameTextStorage.bottom + 8, nameTextStorage.width, CGFLOAT_MAX);
@@ -198,6 +205,7 @@
     
         self.commentPosition = frame(APPWIDTH - 15 - commentImage.size.width - commentsize.width,dateTextStorage.top, commentImage.size.width + commentsize.width + 10, 16);
         //点赞位置
+       
         UIImage *priseImage = [UIImage imageNamed:@"dongtai_dianzan_normal"];
         NSString *priseStr = [NSString stringWithFormat:@"%ld赞",statusModel.like.count];
         if (statusModel.like.count ==0) {
@@ -215,7 +223,7 @@
         //点赞
         LWImageStorage* likeImageSotrage = [[LWImageStorage alloc] init];
         LWImageStorage* moreImageSotrage = [[LWImageStorage alloc] init];
-        
+        NSLog(@"[statusModel.like count] =%ld",[statusModel.like count]);
         NSInteger priseCount = [statusModel.like count];
         NSMutableArray* priseStorageArray = [[NSMutableArray alloc] initWithCapacity:priseCount];
         NSMutableArray* prisePositionArray = [[NSMutableArray alloc] initWithCapacity:priseCount];
@@ -234,7 +242,7 @@
                     count =5;
                     moreImageSotrage.tag = 20;//更多
                     moreImageSotrage.contents = [UIImage imageNamed:@"dongtai_gengduozan"];
-                    moreImageSotrage.frame = CGRectMake(nameTextStorage.left + (3 * (priseWidth + 8.0)),likeImageSotrage.top,20.0, 20.0);
+                    moreImageSotrage.frame = CGRectMake(nameTextStorage.left + (5 * (priseWidth + 8.0)),likeImageSotrage.top,20.0, 20.0);
                 }
                 else
                 {
@@ -281,13 +289,14 @@
                 [priseStorageArray addObject:priseStorage];
                 
                 rowCount++;
+                offsetY =((priseWidth + 7.5)*row - 4);
                 if ((nameTextStorage.left + (rowCount + 1)*(priseWidth + 7.5f))>APPWIDTH) {
                     
                     rowCount = 0;
                     row +=1;
                 }
             }
-            offsetY +=((priseWidth + 7.5)*row - 4);
+            
             
         }
         if (statusModel.comment.count != 0 && statusModel.comment != nil) {

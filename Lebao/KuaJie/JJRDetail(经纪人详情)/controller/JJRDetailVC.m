@@ -13,7 +13,8 @@
 #import "ToolManager.h"
 #import "HomeInfo.h"
 #import "CommunicationViewController.h"
-#import "XHPicView.h"
+
+#import "LWImageBrowser.h"
 //产品
 #import "MyContentDetailViewController.h"
 #import "MyProductDetailViewController.h"
@@ -209,13 +210,9 @@
 -(void)addTxBtn:(UIView *)sender//头像那一栏
 {
     UIImageView * headImg = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 41, 41)];
-    NSString * imgUrl;
-    if ([[_jjrJsonDic objectForKey:@"imgurl"] rangeOfString:@"http"].location != NSNotFound) {
-        imgUrl = [_jjrJsonDic objectForKey:@"imgurl"];
-    }else{
-        imgUrl = [NSString stringWithFormat:@"%@%@",IMG_URL,[_jjrJsonDic objectForKey:@"imgurl"]];
-    }
-   
+    NSString * imgUrl =[_jjrJsonDic objectForKey:@"imgurl"];
+    NSLog(@"_jjrJsonDic =%@",_jjrJsonDic);
+    
     [[ToolManager shareInstance]imageView:headImg setImageWithURL:imgUrl placeholderType:PlaceholderTypeUserHead];
     UIGestureRecognizer *TapOneGr=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(TapOne:)];
     [headImg addGestureRecognizer:TapOneGr];
@@ -664,17 +661,25 @@
 #pragma mark -头像点击事件
 -(void)TapOne:(UITapGestureRecognizer *)tap
 {
-    UIImageView *imageView = (UIImageView *)tap.view;
-    XHPicView *picView = [[XHPicView alloc]initWithFrame:self.view.frame withImgs:@[imageView.image] withImgUrl:nil];
-    picView.alpha = 0;
-    [UIView animateWithDuration:0.3 animations:^{
-        picView.alpha = 1;
-    }];
+    NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:1];
+   
+    UIView *cellImageView = [tap view];
+    NSString *url = [_jjrJsonDic objectForKey:@"imgurl"];
     
-    picView.eventBlock = ^(NSString *event){
-        NSLog(@"触发事件%@",event);
-    };
-    [self.view addSubview:picView];
+    LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:nil
+                                                                              thumbnailURL:[NSURL URLWithString: [[ToolManager shareInstance] urlAppend:url] ]
+                                                                                     HDURL:[NSURL URLWithString:[[ToolManager shareInstance] urlAppend:url]]
+                                                                        imageViewSuperView:cellImageView.superview
+                                                                       positionAtSuperView:cellImageView.frame
+                                                                                     index:0];
+    [tmp addObject:imageModel];
+    
+    LWImageBrowser* imageBrowser = [[LWImageBrowser alloc] initWithParentViewController:self
+                                                                            imageModels:tmp
+                                                                           currentIndex:0];
+    imageBrowser.view.backgroundColor = [UIColor blackColor];
+    [imageBrowser show];
+
 
 }
 #pragma mark - labTap

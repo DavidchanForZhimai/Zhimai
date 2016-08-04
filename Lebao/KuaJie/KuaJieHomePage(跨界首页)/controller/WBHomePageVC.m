@@ -547,6 +547,7 @@
     
     UIImage *image = [UIImage imageNamed:@"dongtai_bianjie"];
     BaseButton *topBtn= [[BaseButton alloc]initWithFrame:frame(10, 10, SCREEN_WIDTH-20, 35) setTitle:@"分享你的新鲜事" titleSize:26*SpacedFonts titleColor:LightBlackTitleColor backgroundImage:nil iconImage:image highlightImage:image setTitleOrgin:CGPointMake((35 -26*SpacedFonts)/2.0 , 10 -image.size.width) setImageOrgin:CGPointMake((35 -image.size.height)/2.0 , SCREEN_WIDTH -image.size.width - 30) inView:topV];
+    topBtn.shouldAnmial = NO;
     topBtn.didClickBtnBlock = ^
     
     {   PublishDynamicVC *publishDynamicVC  =  allocAndInit(PublishDynamicVC);
@@ -940,15 +941,9 @@
         if (issucced == YES) {
             if (jsonDic[@"datas"]) {
                 NSLog(@"jsonDic =%@",jsonDic);
-                StatusLike *like = [[StatusLike alloc]init];
-                like.brokerid = [jsonDic[@"datas"][@"brokerid"] integerValue];
-                like.sex = [jsonDic[@"datas"][@"sex"] boolValue];
-                like.imgurl = jsonDic[@"datas"][@"imgurl"];
-                NSString * urlpic = like.imgurl;
-                if (![urlpic hasPrefix:@"http"]) {
-                    urlpic = [NSString stringWithFormat:@"%@%@",ImageURLS,urlpic];
-                }
-                like.imgurl =urlpic;
+                StatusLike *like = [StatusLike mj_objectWithKeyValues:jsonDic[@"datas"]];
+            
+                like.imgurl =[[ToolManager shareInstance] urlAppend:like.imgurl];
                 
             if (!layout.statusModel.islike) {
                 [[ToolManager shareInstance] showSuccessWithStatus:@"点赞成功"];
