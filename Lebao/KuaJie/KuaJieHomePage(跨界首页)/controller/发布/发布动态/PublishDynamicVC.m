@@ -349,17 +349,13 @@
 -(void)onetap:(UITapGestureRecognizer *)sender{
 
     int tag =0;
-    for (int i=0;i<self.phonelist.count;i++) {
-        
-        if ([((UIImageView *)sender.view).image isEqual:(UIImage *)self.phonelist[i]]) {
-            tag = i;
-        }
-    }
     NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:1];
     for (int i=0;i<self.phonelist.count;i++) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
         QTRejectViewCell *cell = (QTRejectViewCell *)[_collectionView cellForItemAtIndexPath:indexPath];
-
+        if ([cell.imageView isEqual:sender.view]) {
+            tag =i;
+        }
         LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithLocalImage:cell.imageView.image imageViewSuperView:cell positionAtSuperView:cell.imageView.frame index:i];
          [tmp addObject:imageModel];
     }

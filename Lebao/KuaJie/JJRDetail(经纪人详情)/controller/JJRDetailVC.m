@@ -310,6 +310,8 @@
     BaseButton * lookMoreBtn = [[BaseButton alloc]initWithFrame:CGRectMake(dongtaiV.frame.size.width-10 -(lookMoreimage.size.width +size.width + 15), 10, lookMoreimage.size.width +size.width + 15 , 28*SpacedFonts) setTitle:str titleSize:28*SpacedFonts titleColor:[UIColor colorWithWhite:0.7141 alpha:1.0] backgroundImage:nil iconImage:lookMoreimage highlightImage:lookMoreimage setTitleOrgin:CGPointMake(0, -lookMoreimage.size.width) setImageOrgin:CGPointMake(4, size.width + 15) inView:dongtaiV];
     
     [lookMoreBtn addTarget:self action:@selector(lookMoreDongtai) forControlEvents:UIControlEventTouchUpInside];
+    UITapGestureRecognizer *oneMore=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(lookMoreDongtai)];
+    [dongtaiV addGestureRecognizer:oneMore];
     
     UIView * hxV = [[UIView alloc]initWithFrame:CGRectMake(10, 40, dongtaiV.frame.size.width-20, 1)];
     hxV.backgroundColor = [UIColor colorWithRed:0.965 green:0.965 blue:0.969 alpha:1.000];
@@ -435,6 +437,8 @@
     BaseButton * lookMoreBtn = [[BaseButton alloc]initWithFrame:CGRectMake(fuwuV.frame.size.width-10 -(lookMoreimage.size.width +size.width + 15), 8, lookMoreimage.size.width +size.width + 15 , 28*SpacedFonts) setTitle:str titleSize:28*SpacedFonts titleColor:[UIColor colorWithWhite:0.7141 alpha:1.0] backgroundImage:nil iconImage:lookMoreimage highlightImage:lookMoreimage setTitleOrgin:CGPointMake(0, -lookMoreimage.size.width) setImageOrgin:CGPointMake(4, size.width + 15) inView:fuwuV];
     
     [lookMoreBtn addTarget:self action:@selector(lookMoreFuwu) forControlEvents:UIControlEventTouchUpInside];
+    UITapGestureRecognizer *oneMore=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(lookMoreFuwu)];
+    [fuwuV addGestureRecognizer:oneMore];
     
     UIView * hxV = [[UIView alloc]initWithFrame:CGRectMake(0, 34, fuwuV.frame.size.width, 1)];
     hxV.backgroundColor = [UIColor colorWithRed:0.965 green:0.965 blue:0.969 alpha:1.000];
@@ -463,7 +467,8 @@
     BaseButton * lookMoreBtn = [[BaseButton alloc]initWithFrame:CGRectMake(xianSuoV.frame.size.width-10 -(lookMoreimage.size.width +size.width + 15), 8, lookMoreimage.size.width +size.width + 15 , 28*SpacedFonts) setTitle:str titleSize:28*SpacedFonts titleColor:[UIColor colorWithWhite:0.7141 alpha:1.0] backgroundImage:nil iconImage:lookMoreimage highlightImage:lookMoreimage setTitleOrgin:CGPointMake(0, -lookMoreimage.size.width) setImageOrgin:CGPointMake(4, size.width + 15) inView:xianSuoV];
 
     [lookMoreBtn addTarget:self action:@selector(lookMoreXianSuo) forControlEvents:UIControlEventTouchUpInside];
-
+    UITapGestureRecognizer *oneMore=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(lookMoreXianSuo)];
+    [xianSuoV addGestureRecognizer:oneMore];
 
     UIView * hxV = [[UIView alloc]initWithFrame:CGRectMake(0, 34, xianSuoV.frame.size.width, 1)];
     hxV.backgroundColor = [UIColor colorWithRed:0.965 green:0.965 blue:0.969 alpha:1.000];
@@ -485,7 +490,7 @@
     }
     else
     {
-        [[ToolManager shareInstance] showInfoWithStatus:@"没有动态"];
+        [[ToolManager shareInstance] showInfoWithStatus:@"暂无他的动态"];
     }
     
 }
@@ -755,7 +760,7 @@
 -(void)lookMoreFuwu
 {
     if (_gdfwArr.count<=0) {
-        [[ToolManager shareInstance]showAlertMessage:@"暂无他的线索"];
+        [[ToolManager shareInstance]showAlertMessage:@"暂无他的服务"];
         return;
     }
     
