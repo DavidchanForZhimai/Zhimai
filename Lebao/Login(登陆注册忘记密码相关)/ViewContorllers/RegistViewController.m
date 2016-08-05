@@ -188,7 +188,7 @@ typedef enum {
 #pragma mark - M80 Delegate
 - (void)m80AttributedLabel:(M80AttributedLabel *)label clickedOnLink:(id)linkData
 {
-    NSLog(@"linkData=%@",linkData);
+//    NSLog(@"linkData=%@",linkData);
 }
 #pragma mark
 #pragma mark - buttonAction -

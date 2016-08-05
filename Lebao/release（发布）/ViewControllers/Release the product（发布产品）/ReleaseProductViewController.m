@@ -687,7 +687,7 @@ typedef NS_ENUM(int,SwitchActionTag) {
     }
     else if (sender.tag ==SwitchActionTagCollect)
     {
-        NSLog(@"sender.isOn =%i",sender.isOn);
+//        NSLog(@"sender.isOn =%i",sender.isOn);
          _redView.hidden = !sender.isOn;
      
         if (sender.isOn) {

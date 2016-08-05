@@ -34,7 +34,7 @@
 
 - (void)setModelWithDic:(NSDictionary *)dic
 {
-    NSLog(@"dic =%@",dic);
+//    NSLog(@"dic =%@",dic);
     NSString *imageName = @"";
     if ([dic[@"industry"] isEqualToString:BAOXIAN]) {
         

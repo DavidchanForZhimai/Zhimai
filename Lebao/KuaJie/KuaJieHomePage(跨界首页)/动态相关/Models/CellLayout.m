@@ -233,7 +233,7 @@
         //点赞
         LWImageStorage* likeImageSotrage = [[LWImageStorage alloc] init];
         LWImageStorage* moreImageSotrage = [[LWImageStorage alloc] init];
-        NSLog(@"[statusModel.like count] =%ld",[statusModel.like count]);
+//        NSLog(@"[statusModel.like count] =%ld",[statusModel.like count]);
         NSInteger priseCount = [statusModel.like count];
         NSMutableArray* priseStorageArray = [[NSMutableArray alloc] initWithCapacity:priseCount];
         NSMutableArray* prisePositionArray = [[NSMutableArray alloc] initWithCapacity:priseCount];

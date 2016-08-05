@@ -50,7 +50,7 @@
             callBack(NO,[responseObject objectForKey:@"rtmsg"],nil);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"线索详情错误error==%@",error);
+//        NSLog(@"线索详情错误error==%@",error);
         callBack(NO,@"请检查您的网络",nil);
     }];
 }
@@ -71,7 +71,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"线索详情错误error==%@",error);
+//        NSLog(@"线索详情错误error==%@",error);
         callBack(NO,@"请检查您的网络",nil);
     }];
 
@@ -93,7 +93,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"线索详情错误error==%@",error);
+//        NSLog(@"线索详情错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 
@@ -114,7 +114,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"线索详情错误error==%@",error);
+//        NSLog(@"线索详情错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
     
@@ -136,7 +136,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"取消领取错误error==%@",error);
+//        NSLog(@"取消领取错误error==%@",error);
         callBack(NO,@"请检查您的网络",nil);
     }];
 
@@ -157,7 +157,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"选他合作错误error==%@",error);
+//        NSLog(@"选他合作错误error==%@",error);
         callBack(NO,@"请检查您的网络",nil);
     }];
 
@@ -185,7 +185,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"评价错误error==%@",error);
+//        NSLog(@"评价错误error==%@",error);
         callBack(NO,@"请检查您的网络",nil);
     }];
 
@@ -207,7 +207,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"申诉错误error==%@",error);
+//        NSLog(@"申诉错误error==%@",error);
         callBak(NO,@"请检查您的网络",nil);
     }];
 
@@ -228,7 +228,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"不申诉错误error==%@",error);
+//        NSLog(@"不申诉错误error==%@",error);
         callBak(NO,@"请检查您的网络",nil);
     }];
 
@@ -250,7 +250,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"领取人列表错误error==%@",error);
+//        NSLog(@"领取人列表错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 
@@ -270,7 +270,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"关注列表错误error==%@",error);
+//        NSLog(@"关注列表错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 
@@ -291,7 +291,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"关注列表错误error==%@",error);
+//        NSLog(@"关注列表错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
     

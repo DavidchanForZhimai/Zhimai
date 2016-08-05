@@ -19,6 +19,7 @@
         self.imageView.userInteractionEnabled =YES;
         [self.imageView.layer setCornerRadius:4];
         [self.imageView.layer setMasksToBounds:YES];
+               
         //删除按钮的实现
         self.delBtn =  [UIButton buttonWithType:UIButtonTypeCustom];
         self.delBtn.frame = CGRectMake(self.imageView.frame.size.width-21,1, 20, 20);
@@ -28,4 +29,6 @@
     }
     return self;
 }
+
+
 @end

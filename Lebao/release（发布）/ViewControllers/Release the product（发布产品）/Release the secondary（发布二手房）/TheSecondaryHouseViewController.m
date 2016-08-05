@@ -245,7 +245,7 @@
             [ _comboBox.valueLabel setText:imageDic[ImageDiagramType]];
             _comboBox.changedBlock = ^(FSComboListView *comboListView,NSString * toValue)
             {
-                 NSLog(@"comboboxClosed2=%@ imageDic2=%@",toValue,imageDic);
+//                 NSLog(@"comboboxClosed2=%@ imageDic2=%@",toValue,imageDic);
 
                 [imageDic setValue:toValue forKey:ImageDiagramType];
                 if (!imageDic[ImageDefault]||[imageDic[ImageDefault] isEqualToString:@""]) {
@@ -254,7 +254,7 @@
                     return ;
                 }
                 [weakSelf.images addObject:imageDic];
-                NSLog(@"comboboxClosed=%@",toValue);
+//                NSLog(@"comboboxClosed=%@",toValue);
             };
 
             

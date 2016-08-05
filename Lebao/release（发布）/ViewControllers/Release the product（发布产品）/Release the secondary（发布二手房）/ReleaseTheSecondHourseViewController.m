@@ -605,9 +605,9 @@ typedef NS_ENUM(int,SwitchActionTag) {
             [parameter setObject:weakSelf.redTextField.text forKey:@"reward"];
         }
         [[ToolManager shareInstance] showWithStatus:@"保存中..."];
-                 NSLog(@"parameter = %@",parameter);
+//                 NSLog(@"parameter = %@",parameter);
         [XLDataService postWithUrl:Saveproduct param:parameter modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-                        NSLog(@"dataObj = %@",dataObj);
+//                        NSLog(@"dataObj = %@",dataObj);
             if (dataObj) {
                 if ([dataObj[@"rtcode"] intValue]==1) {
                     [[ToolManager shareInstance] dismiss];

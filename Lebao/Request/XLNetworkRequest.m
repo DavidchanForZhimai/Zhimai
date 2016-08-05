@@ -117,7 +117,7 @@
         
         NSURL *documentUrl = [[NSFileManager defaultManager] URLForDirectory :NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:nil];
       
-        NSLog(@"[documentUrl URLByAppendingPathComponent:[response suggestedFilename]] =%@",[documentUrl URLByAppendingPathComponent:[response suggestedFilename]]);
+//        NSLog(@"[documentUrl URLByAppendingPathComponent:[response suggestedFilename]] =%@",[documentUrl URLByAppendingPathComponent:[response suggestedFilename]]);
         
         return [documentUrl URLByAppendingPathComponent:[response suggestedFilename]];
         

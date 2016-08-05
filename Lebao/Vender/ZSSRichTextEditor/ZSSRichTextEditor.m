@@ -828,7 +828,7 @@ static Class hackishFixClass = Nil;
             UITextField *title = [alertController.textFields objectAtIndex:1];
             if (!self.selectedLinkURL) {
                 [self insertLink:linkURL.text title:title.text];
-                NSLog(@"insert link");
+//                NSLog(@"insert link");
             } else {
                 [self updateLink:linkURL.text title:title.text];
             }

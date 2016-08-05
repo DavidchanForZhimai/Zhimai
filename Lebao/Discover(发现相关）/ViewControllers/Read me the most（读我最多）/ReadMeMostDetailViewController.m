@@ -227,7 +227,7 @@
     NSString *text = [NSString stringWithFormat:@"%@ 阅读的内容",modal.userinfo.nickname];
     UILabel *lookLb = [UILabel createLabelWithFrame:frame(10, 150*ScreenMultiple, frameWidth(headView)/2.0, 45) text:text fontSize:28*SpacedFonts textColor:BlackTitleColor textAlignment:NSTextAlignmentCenter inView:headView];
     if (![modal.userinfo.nickname isEqualToString:@""]&&modal.userinfo.nickname) {
-        NSLog(@"modal.userinfo.nickname %@",modal.userinfo.nickname);
+//        NSLog(@"modal.userinfo.nickname %@",modal.userinfo.nickname);
         NSMutableAttributedString *str = [[NSMutableAttributedString alloc] initWithString:text];
         [str addAttribute:NSForegroundColorAttributeName value:AppMainColor range:[text rangeOfString:modal.userinfo.nickname]];
         lookLb.attributedText = str;

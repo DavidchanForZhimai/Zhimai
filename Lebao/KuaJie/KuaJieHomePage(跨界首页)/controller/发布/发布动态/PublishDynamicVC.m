@@ -15,6 +15,7 @@
 #import "MJExtension.h"
 #import "XLDataService.h"
 #import "Parameter.h"
+#import "LWImageBrowser.h"
 #define PADDING 10
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width
@@ -65,66 +66,52 @@
 
 -(void)postDataSouce
 {
-    
-    
     NSMutableDictionary *param = [Parameter parameterWithSessicon];
     [param setValue:@(1) forKey:@"page"];
     [[ToolManager shareInstance] showWithStatus];
     [XLDataService postWithUrl:[NSString stringWithFormat:@"%@dynamic/topic",HttpURL] param:param modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-        
+        actionSheetTopic=[[UIActionSheet alloc]initWithTitle:@"请选择您想要发送的话题" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:nil];
+        actionSheetTopic.delegate=self;
+        actionSheetTopic.tag=1002;
         objTopic=[[NSMutableArray alloc]init];
         if (dataObj) {
             if ([dataObj[@"rtcode"] intValue]==1) {
                 [[ToolManager shareInstance]dismiss];
-    
+                
                 for (id obj in dataObj[@"datas"]) {
                     [objTopic addObject:obj[@"tipic"]];
                 }
 //                NSLog(@"dataObj =%@",objTopic);
-                actionSheetTopic=[[UIActionSheet alloc]initWithTitle:@"请选择您想要发送的话题" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:nil];
                 
                 if (objTopic.count!=0) {
                     for (id obj in objTopic) {
-                        
                         [actionSheetTopic addButtonWithTitle:obj];
                     }
                 }else{
-                    [actionSheetTopic addButtonWithTitle:@"#知脉有我更精彩#"];
+                    [objTopic addObject:@"#知脉有我更精彩#"];
+                    
                 }
                 
-                
-              
-                
-                
-                actionSheetTopic.delegate=self;
-                actionSheetTopic.tag=1002;
                 [actionSheetTopic showInView:self.view];
-                
             }
             else
             {
                 [[ToolManager shareInstance]dismiss];
-//                [[ToolManager shareInstance] showInfoWithStatus:dataObj[@"rtmsg"]];
-                 actionSheetTopic=[[UIActionSheet alloc]initWithTitle:@"请选择您想要发送的话题" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"#知脉有我更精彩#",nil];
-                actionSheetTopic.delegate=self;
-                actionSheetTopic.tag=1002;
+                [objTopic addObject:@"#知脉有我更精彩#"];
+                //                [[ToolManager shareInstance] showInfoWithStatus:dataObj[@"rtmsg"]];
                 [actionSheetTopic showInView:self.view];
             }
         }
         else
         {
-           [[ToolManager shareInstance]dismiss];
-//            [[ToolManager shareInstance] showInfoWithStatus];
-             actionSheetTopic=[[UIActionSheet alloc]initWithTitle:@"请选择您想要发送的话题" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"#知脉有我更精彩#",nil];
-            actionSheetTopic.delegate=self;
-            actionSheetTopic.tag=1002;
+            [[ToolManager shareInstance]dismiss];
+            //            [[ToolManager shareInstance] showInfoWithStatus];
+            [objTopic addObject:@"#知脉有我更精彩#"];
+            [actionSheetTopic addButtonWithTitle:@"#知脉有我更精彩#"];
             [actionSheetTopic showInView:self.view];
         }
     }];
 }
-
-
-
 
 -(void)createUI{
     UIView * navView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 64)];
@@ -155,9 +142,6 @@
     [rightBtn setImage:[UIImage imageNamed:@"wancheng"] forState:UIControlStateNormal];
     [rightBtn addTarget:self action:@selector(rightAction) forControlEvents:UIControlEventTouchUpInside];
     [navView addSubview:rightBtn];
-    
-    
-    
     
 }
 
@@ -231,11 +215,6 @@
     self.svMain.contentSize = CGSizeMake(APPWIDTH,MaxY(_collectionView));
     
 }
-
-
-
-
-
 -(void)backAction
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -293,15 +272,9 @@
                             }
                         }];
                     }
-                    
-                    
-                    
                 }];
             }
         }
-        
-        
-        
     }
 }
 
@@ -363,12 +336,41 @@
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     QTRejectViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"rejectViewMeCell" forIndexPath:indexPath];
+    
     cell.imageView.image = [self.phonelist objectAtIndex:indexPath.row];
+    UITapGestureRecognizer *oneGR=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(onetap:)];
+    [cell.imageView addGestureRecognizer:oneGR];
+    
     cell.delBtn.tag = 100+indexPath.row;
     [cell.delBtn addTarget:self action:@selector(BtnDelPhone:) forControlEvents:UIControlEventTouchUpInside];
     return cell;
 }
 
+-(void)onetap:(UITapGestureRecognizer *)sender{
+
+    int tag =0;
+    for (int i=0;i<self.phonelist.count;i++) {
+        
+        if ([((UIImageView *)sender.view).image isEqual:(UIImage *)self.phonelist[i]]) {
+            tag = i;
+        }
+    }
+    NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:1];
+    for (int i=0;i<self.phonelist.count;i++) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        QTRejectViewCell *cell = (QTRejectViewCell *)[_collectionView cellForItemAtIndexPath:indexPath];
+
+        LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithLocalImage:cell.imageView.image imageViewSuperView:cell positionAtSuperView:cell.imageView.frame index:i];
+         [tmp addObject:imageModel];
+    }
+   
+    LWImageBrowser* imageBrowser = [[LWImageBrowser alloc] initWithParentViewController:self
+                                                                            imageModels:tmp
+                                                                           currentIndex:tag];
+    imageBrowser.view.backgroundColor = [UIColor blackColor];
+    [imageBrowser show];
+
+}
 #pragma mark --UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -389,7 +391,7 @@
 #pragma mark --UICollectionViewDelegate
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    DDLog(@"indexPath==%@被点击了",indexPath);
 }
 //删除照片的事件
 - (void)BtnDelPhone:(UIButton *)sender{
@@ -447,10 +449,7 @@
 -(void)BtnhotTopicBtnClick
 {
     [self postDataSouce];
-      [self.view endEditing:YES];
-   
-    
-    
+    [self.view endEditing:YES];
 }
 #pragma mark - UIActionSheetDelegate
 
@@ -490,7 +489,7 @@
         
     }
     else if (actionSheet.tag==1002) {
-        NSLog(@"-----------%ld",buttonIndex);
+//        NSLog(@"-----------%ld",buttonIndex);
         if (buttonIndex!=0) {
             if (objTopic.count!=0) {
                 if ([_tfView.text isEqualToString: @"请输入您想要分享的新鲜事(最多255个字)"]) {
@@ -500,18 +499,10 @@
                     _tfView.text =[NSString stringWithFormat:@"%@%@",_tfView.text,objTopic[buttonIndex-1]];
                     _tfView.textColor=[UIColor blackColor];
                 }
-            }else {
-                if ([_tfView.text isEqualToString: @"请输入您想要分享的新鲜事(最多255个字)"]) {
-                    _tfView.text =@"#知脉有我更精彩#";
-                    _tfView.textColor=[UIColor blackColor];
-                }else {
-                    _tfView.text =[NSString stringWithFormat:@"%@%@",_tfView.text,@"#知脉有我更精彩#"];
-                    _tfView.textColor=[UIColor blackColor];
-                }
             }
-           
+            
         }else if(buttonIndex==0){}
-      
+        
     }
     
 }
@@ -555,6 +546,13 @@
         [self resetLayout];
         
     }];
+}
+#pragma UICollectionViewCellDelegate
+
+//collectionView可以被选择
+-(BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView

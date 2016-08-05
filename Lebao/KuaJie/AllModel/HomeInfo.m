@@ -72,7 +72,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"首页线索列表错误error==%@",error);
+//        NSLog(@"首页线索列表错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 }
@@ -104,7 +104,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"首页经纪人列表错误error==%@",error);
+//        NSLog(@"首页经纪人列表错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 
@@ -168,7 +168,7 @@
          [parameters setValue:imgs forKey:@"img"];
     }
    
-    NSLog(@"parameters =%@ url =%@",parameters,url);
+//    NSLog(@"parameters =%@ url =%@",parameters,url);
     [[ToolManager shareInstance]showWithStatus];
     [self.manager POST:url parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([[responseObject objectForKey:@"rtcode"] intValue]==1) {
@@ -296,7 +296,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"首页线索列表错误error==%@",error);
+//        NSLog(@"首页线索列表错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 

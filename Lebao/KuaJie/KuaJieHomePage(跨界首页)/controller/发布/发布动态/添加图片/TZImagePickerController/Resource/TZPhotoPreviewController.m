@@ -232,7 +232,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGPoint offSet = scrollView.contentOffset;
     _currentIndex = offSet.x / self.view.tz_width;
-    _titleLab.text = [NSString stringWithFormat:@"%d/%ld",self.currentIndex +1,self.photoArr.count];
+    _titleLab.text = [NSString stringWithFormat:@"%ld/%ld",self.currentIndex +1,self.photoArr.count];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {

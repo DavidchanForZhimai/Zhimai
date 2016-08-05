@@ -211,7 +211,7 @@
 {
     UIImageView * headImg = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 41, 41)];
     NSString * imgUrl =[_jjrJsonDic objectForKey:@"imgurl"];
-    NSLog(@"_jjrJsonDic =%@",_jjrJsonDic);
+//    NSLog(@"_jjrJsonDic =%@",_jjrJsonDic);
     
     [[ToolManager shareInstance]imageView:headImg setImageWithURL:imgUrl placeholderType:PlaceholderTypeUserHead];
     UIGestureRecognizer *TapOneGr=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(TapOne:)];

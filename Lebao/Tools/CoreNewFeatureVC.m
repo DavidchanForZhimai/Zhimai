@@ -186,7 +186,7 @@ NSString *const NewFeatureVersionKey = @"NewFeatureVersionKey";
     NSString *versionValueStringForSystemNow=[[NSBundle mainBundle].infoDictionary valueForKey:(NSString *)kCFBundleVersionKey];
     
     //保存版本号
-    NSLog(@"versionValueStringForSystemNow =%@",versionValueStringForSystemNow);
+//    NSLog(@"versionValueStringForSystemNow =%@",versionValueStringForSystemNow);
     [CoreArchive setStr:versionValueStringForSystemNow key:NewFeatureVersionKey];
     
 }

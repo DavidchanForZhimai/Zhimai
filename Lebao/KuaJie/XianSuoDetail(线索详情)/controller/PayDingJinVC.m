@@ -129,8 +129,8 @@ typedef enum {
         if (_isAudio) {
             
             [[MP3PlayerManager shareInstance] uploadAudioWithType:@"mp3" finishuploadBlock:^(BOOL succeed,id  audioDic) {
-                NSLog(@"audioDic =%@",audioDic);
-                NSLog(@"%@%@",ImageURLS,audioDic[@"audiourl"]);
+//                NSLog(@"audioDic =%@",audioDic);
+//                NSLog(@"%@%@",ImageURLS,audioDic[@"audiourl"]);
                 
                 NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://pic.lmlm.cn/record/201607/21/146908531456209.mp3"]];
 

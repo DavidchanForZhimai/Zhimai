@@ -282,7 +282,7 @@ typedef enum{
 //                         NSLog(@"parameter =%@",parameter);
                         [[ToolManager shareInstance] showWithStatus:@"报名中..."];
                         [XLDataService postWithUrl:SubcollectUrl param:parameter modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-                            NSLog(@"dataObj =%@",dataObj);
+//                            NSLog(@"dataObj =%@",dataObj);
                             if (dataObj) {
                                 if ([dataObj[@"rtcode"] integerValue] ==1) {
                                     strong.joinBg.hidden = YES;

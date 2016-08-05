@@ -295,7 +295,7 @@ static dispatch_once_t once;
         [param setValue:_withdrawMoney forKey:@"amount"];
         [[ToolManager shareInstance] showWithStatus:@"提现..."];
         [XLDataService postWithUrl:WXWithdrawURL param:param modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-            NSLog(@"dataObj =%@",dataObj);
+//            NSLog(@"dataObj =%@",dataObj);
             if (dataObj) {
                 
                 if ([dataObj[@"rtcode"] integerValue] ==1) {

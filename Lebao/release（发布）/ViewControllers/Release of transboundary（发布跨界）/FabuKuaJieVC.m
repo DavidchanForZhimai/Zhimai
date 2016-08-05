@@ -445,7 +445,7 @@
         HUDText(@"请输入标题");
         return;
     }
-    NSLog(@"_contTex.text=%@",_contTex.text);
+//    NSLog(@"_contTex.text=%@",_contTex.text);
     if ([_contTex.text isEqualToString:@"请输入线索内容"]) {
         HUDText(@"请输入线索内容");
         return;

@@ -551,7 +551,7 @@ static dispatch_once_t once;
 //    NSLog(@"urlStr =%@",urlStr);
     urlStr = [urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     DWWebViewController *webContro =allocAndInit(DWWebViewController);
-     NSLog(@"urlStr =%@",urlStr);
+//     NSLog(@"urlStr =%@",urlStr);
     webContro.homeUrl = [NSURL URLWithString:urlStr];
     webContro.title = title;
     

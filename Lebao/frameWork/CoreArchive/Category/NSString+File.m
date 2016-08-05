@@ -77,7 +77,7 @@
         return NO;
     } else {
         
-        NSLog(@"FileDir is exists.");
+//        NSLog(@"FileDir is exists.");
         return YES;
         
     }

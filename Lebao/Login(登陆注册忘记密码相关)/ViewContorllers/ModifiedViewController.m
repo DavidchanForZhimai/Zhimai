@@ -185,9 +185,9 @@ typedef enum {
         [sendcaptchaParam setObject:[_oldPassWord.text md5]   forKey:oldpassword];
         [sendcaptchaParam setObject:[_passWord.text md5]   forKey:newpassword];
         
-        NSLog(@"sendcaptchaParam =%@ sendcaptchaParam=%@",sendcaptchaParam,ChangepwdURL);
+//        NSLog(@"sendcaptchaParam =%@ sendcaptchaParam=%@",sendcaptchaParam,ChangepwdURL);
         [XLDataService postWithUrl:ChangepwdURL param:sendcaptchaParam modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-            DDLog(@"dataObj =%@",dataObj);
+//            DDLog(@"dataObj =%@",dataObj);
         
             if (error) {
                 

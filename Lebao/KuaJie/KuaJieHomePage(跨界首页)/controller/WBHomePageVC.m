@@ -973,7 +973,7 @@
         self.view.userInteractionEnabled = YES;
         if (issucced == YES) {
             if (jsonDic[@"datas"]) {
-                NSLog(@"jsonDic =%@",jsonDic);
+//                NSLog(@"jsonDic =%@",jsonDic);
                 StatusLike *like = [StatusLike mj_objectWithKeyValues:jsonDic[@"datas"]];
             
                 like.imgurl =[[ToolManager shareInstance] urlAppend:like.imgurl];

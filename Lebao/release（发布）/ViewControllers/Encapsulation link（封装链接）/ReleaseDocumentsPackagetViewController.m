@@ -152,7 +152,7 @@ typedef NS_ENUM(int,ButtonActionTag) {
 //        NSLog(@"parame =%@",parame);
         __weak ReleaseDocumentsPackagetViewController *weakSelf =self;
         [XLDataService postWithUrl:LinkEncapsulation param:parame modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-            NSLog(@"dataObj =%@",dataObj);
+//            NSLog(@"dataObj =%@",dataObj);
             if (dataObj) {
                 
                 ReleaseDocumentsModal *modal = [ReleaseDocumentsModal mj_objectWithKeyValues:dataObj];

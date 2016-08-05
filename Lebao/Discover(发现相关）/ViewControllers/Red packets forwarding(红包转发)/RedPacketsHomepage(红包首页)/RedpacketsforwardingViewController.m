@@ -99,7 +99,7 @@
         if (dataObj) {
             
             if ([dataObj[@"rtcode"] integerValue]==1) {
-                NSLog(@"dataObj =%@",dataObj);
+//                NSLog(@"dataObj =%@",dataObj);
                 [CoreArchive setStr:dataObj[@"rid"] key:RID];
                 [[ToolManager shareInstance] dismiss];
                 if (shouldClearData) {

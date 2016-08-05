@@ -134,7 +134,7 @@
     //    NSMutableArray *instanceArray =
     location = @"0";
     if (_modal.datas.floorgrade) {
-        NSLog(@"_modal.datas.floorgrade =%i",(int)_modal.datas.floorgrade);
+//        NSLog(@"_modal.datas.floorgrade =%i",(int)_modal.datas.floorgrade);
         location =[NSString stringWithFormat:@"%i",(int)_modal.datas.floorgrade];
     }
     float cellW = (APPWIDTH/2.0)/3.0;

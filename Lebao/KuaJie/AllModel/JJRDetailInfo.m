@@ -63,7 +63,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"查找更多经纪人列表错误error==%@",error);
+//        NSLog(@"查找更多经纪人列表错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 }
@@ -83,7 +83,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"经纪人详情错误error==%@",error);
+//        NSLog(@"经纪人详情错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 
@@ -106,7 +106,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"经纪人详情错误error==%@",error);
+//        NSLog(@"经纪人详情错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 
@@ -129,7 +129,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"经纪人详情错误error==%@",error);
+//        NSLog(@"经纪人详情错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 

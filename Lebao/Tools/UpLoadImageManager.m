@@ -43,7 +43,7 @@ static dispatch_once_t once;
     [parameter setObject:@"imageFile" forKey:@"name"];
     
     [XLNetworkRequest updateRequest:UploadImagesURL params:parameter fileConfig:fileConfig success:^(id responseObj) {
-        NSLog(@"responseObj =%@ parameter= %@",responseObj,parameter);
+//        NSLog(@"responseObj =%@ parameter= %@",responseObj,parameter);
         if (responseObj) {
             UpLoadImageModal *upLoadImageModal = [UpLoadImageModal mj_objectWithKeyValues:responseObj];
             if (upLoadImageModal.rtcode ==1) {

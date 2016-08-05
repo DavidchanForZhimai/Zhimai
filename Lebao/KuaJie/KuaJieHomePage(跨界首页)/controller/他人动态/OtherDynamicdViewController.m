@@ -268,7 +268,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"didSelectRowAtIndexPath");
+//    NSLog(@"didSelectRowAtIndexPath");
     if (tableView ==_dtTab) {
         CellLayout* cellLayout = self.jjrJsonArr[indexPath.row];
         DynamicDetailsViewController*dynamicDetailsViewController = allocAndInit(DynamicDetailsViewController);

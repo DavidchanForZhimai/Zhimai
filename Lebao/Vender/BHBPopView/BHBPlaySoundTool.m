@@ -30,7 +30,7 @@
             if (error == kAudioServicesNoError) {
                 _soundID = theSoundID;
             }else {
-                NSLog(@"Failed to create sound ");
+//                NSLog(@"Failed to create sound ");
             }
         }
         
@@ -50,7 +50,7 @@
             if (error == kAudioServicesNoError){
                 _soundID = theSoundID;
             }else {
-                NSLog(@"Failed to create sound ");
+//                NSLog(@"Failed to create sound ");
             }
         }
     }

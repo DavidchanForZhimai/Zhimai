@@ -51,7 +51,7 @@ static LoCationManager *locationManager;
     
    
     if ([CLLocationManager locationServicesEnabled]&&[CLLocationManager authorizationStatus]!= kCLAuthorizationStatusDenied) {
-        NSLog(@"![CLLocationManager locationServicesEnabled]=%d",[CLLocationManager locationServicesEnabled]);
+//        NSLog(@"![CLLocationManager locationServicesEnabled]=%d",[CLLocationManager locationServicesEnabled]);
     }else{
         [[ToolManager shareInstance] showAlertViewTitle:@"温馨提示" contentText:@"请到设置-隐私-定位-开启知脉定位" showAlertViewBlcok:^{
             
@@ -85,7 +85,7 @@ static LoCationManager *locationManager;
     
     coordinate2D=cllocation.coordinate;
     
-    NSLog(@"纬度: %f, 经度: %lf", coordinate2D.latitude, coordinate2D.longitude);
+//    NSLog(@"纬度: %f, 经度: %lf", coordinate2D.latitude, coordinate2D.longitude);
     
     
     NSMutableDictionary *param = [Parameter parameterWithSessicon];
@@ -96,8 +96,8 @@ static LoCationManager *locationManager;
 
     
     [XLDataService postWithUrl:[NSString stringWithFormat:@"%@user/locationlog",HttpURL] param:param modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-        NSLog(@"dataObj=%@",dataObj);
-        NSLog(@"定位上传error=%@",error);
+//        NSLog(@"dataObj=%@",dataObj);
+//        NSLog(@"定位上传error=%@",error);
         
     }];
 

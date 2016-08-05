@@ -54,7 +54,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"线索详情错误error==%@",error);
+//        NSLog(@"线索详情错误error==%@",error);
         callBack(NO,@"请检查您的网络",nil);
     }];
     
@@ -78,7 +78,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"获取个人余额错误error==%@",error);
+//        NSLog(@"获取个人余额错误error==%@",error);
         callBack(NO,@"请检查您的网络",nil);
     }];
 
@@ -107,7 +107,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"发布跨界错误error==%@",error);
+//        NSLog(@"发布跨界错误error==%@",error);
         callBack(NO,@"请检查您的网络",nil);
     }];
 
@@ -131,7 +131,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"领取错误错误error==%@",error);
+//        NSLog(@"领取错误错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 
@@ -154,7 +154,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"领取错误错误error==%@",error);
+//        NSLog(@"领取错误错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
     
@@ -179,7 +179,7 @@
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"领取错误错误error==%@",error);
+//        NSLog(@"领取错误错误error==%@",error);
         callback(NO,@"请检查您的网络",nil);
     }];
 

@@ -194,7 +194,7 @@ typedef enum {
 #pragma mark
 #pragma mark - 私有方法（四舍五入问题）
 -(NSString *)notRounding:(float)price afterPoint:(int)position{
-    NSLog(@"price =%f",price);
+//    NSLog(@"price =%f",price);
     NSString *priceStr = [NSString stringWithFormat:@"%f",price];
     NSArray *comp = [priceStr componentsSeparatedByString:@"."];
     NSString *afterPoint;

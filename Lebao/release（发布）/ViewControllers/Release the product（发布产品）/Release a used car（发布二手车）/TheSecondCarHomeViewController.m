@@ -251,7 +251,7 @@
                     return ;
                 }
                 [weakSelf.images addObject:imageDic];
-                NSLog(@"comboboxClosed=%@",toValue);
+//                NSLog(@"comboboxClosed=%@",toValue);
             };
             
             

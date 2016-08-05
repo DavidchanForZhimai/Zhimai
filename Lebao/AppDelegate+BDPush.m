@@ -114,7 +114,7 @@ static BOOL isBackGroundActivateApplication;
             
             [BPush setTag:@"Mytag" withCompleteHandler:^(id result, NSError *error) {
                 if (result) {
-                    NSLog(@"设置tag成功");
+//                    NSLog(@"设置tag成功");
                 }
             }];
         }
@@ -129,7 +129,7 @@ static BOOL isBackGroundActivateApplication;
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
-    NSLog(@"接收本地通知啦！！！");
+//    NSLog(@"接收本地通知啦！！！");
     [BPush showLocalNotificationAtFront:notification identifierKey:nil];
 }
 

@@ -44,7 +44,7 @@ static MP3PlayerManager* mP3PlayerManager;
 //删除录音
 - (void)removeAudioRecorder
 {
-    NSLog(@"removeAudioRecorder");
+//    NSLog(@"removeAudioRecorder");
     [self.audioPlayer stop];
     [self.audioRecorder stop];
     [self.audioRecorder deleteRecording];
@@ -58,7 +58,7 @@ static MP3PlayerManager* mP3PlayerManager;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     NSError *error;
     [session setCategory:AVAudioSessionCategoryPlayback error:&error];
-    NSLog(@"errrrr%@",error);
+//    NSLog(@"errrrr%@",error);
     _url = url;
     [self setPlayer];
     [self.audioPlayer play];
@@ -190,7 +190,7 @@ static MP3PlayerManager* mP3PlayerManager;
  */
 -(void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag{
     
-    NSLog(@"录音完成!");
+//    NSLog(@"录音完成!");
 }
 #pragma mark - 播放器代理方法
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
@@ -302,7 +302,7 @@ static MP3PlayerManager* mP3PlayerManager;
             //            [[ToolManager shareInstance] showWithStatus:@"上传音频中..."];
             [XLNetworkRequest updateRequest:UploadAudioURL params:parameter fileConfig:fileConfig success:^(id responseObj) {
                 
-                NSLog(@"responseObj =%@ parameter= %@",responseObj,parameter);
+//                NSLog(@"responseObj =%@ parameter= %@",responseObj,parameter);
                 
                 if (responseObj) {
                     
