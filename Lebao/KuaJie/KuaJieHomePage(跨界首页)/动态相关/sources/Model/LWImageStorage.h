@@ -33,6 +33,8 @@
  */
 @interface LWImageStorage : LWStorage <NSCopying,NSCoding>
 
+@property (nonatomic,strong) UIImage* imageStorage;//占位图
+
 @property (nonatomic,strong) id contents;//内容（UIImage or NSURL）
 @property (nonatomic,strong) UIImage* placeholder;//占位图
 @property (nonatomic,assign,getter=isFadeShow) BOOL fadeShow;//加载完成是否渐隐出现

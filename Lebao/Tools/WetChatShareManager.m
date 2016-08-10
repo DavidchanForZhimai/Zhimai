@@ -37,22 +37,97 @@ static dispatch_once_t once;
     return wetChatShareManager;
     
 }
-
-//本地分享
+#pragma mark
+#pragma mark 动态分享
+- (void)dynamicShareTo:(NSString *)title desc:(NSString *)desc image:(UIImage *)image shareurl:(NSString *)url
+{
+    if (![url hasPrefix:@"http://"]) {
+        url = [NSString stringWithFormat:@"%@%@",HttpURL,url];
+    }
+    DWActionSheetView *_actionSheetView =[DWActionSheetView showShareViewWithTitle:@"分享" otherButtonTitles:@[@"weixing",@"weixingpenyouquan"] handler:^(DWActionSheetView *actionSheetView, NSInteger buttonIndex, NSString *shareText) {
+        
+        if (![WXApi isWXAppInstalled]) {
+            
+            [[ToolManager shareInstance] showInfoWithStatus:@"未安装微信"];
+            return;
+        }
+        if (![WXApi isWXAppSupportApi]) {
+            
+            [[ToolManager shareInstance] showInfoWithStatus:@"此版本不支持微信分享"];
+            return;
+        }
+        if (buttonIndex>=0) {
+            
+            
+            WXMediaMessage *message = [WXMediaMessage message];
+            message.description = desc;
+            //因为分享的图片有限制
+            if (image) {
+                
+                float w = image.size.width;
+                float h = image.size.height;
+                if (w>120) {
+                    w = 120;
+                    h = 120.0/image.size.width*image.size.height;
+                }
+                UIImage *newImage = [image imageByScalingAndCroppingForSize:CGSizeMake(w, h)];
+                [message setThumbImage:newImage];
+            }
+            else
+            {
+                [message setThumbImage:[UIImage imageNamed:@"wx-logo.jpg"]];
+            }
+            
+            WXWebpageObject *webpageObject=  [WXWebpageObject object];
+            webpageObject.webpageUrl =url;
+            message.mediaObject = webpageObject;
+            
+            SendMessageToWXReq *rep = [[SendMessageToWXReq alloc]init];
+            rep.bText = NO;
+            rep.message = message;
+            switch (buttonIndex) {
+                case 0:
+                    message.title = title;
+                    rep.scene = WXSceneSession;
+                    break;
+                case 1:
+                    message.title = desc ;
+                    rep.scene = WXSceneTimeline;
+                    break;
+                    
+                default:
+                    break;
+            }
+            [WXApi sendReq:rep];
+            //回调
+            [WXApiManager sharedManager].delegate =self;
+        }
+        else
+        {
+            return;
+        }
+    }];
+    
+    
+    [_actionSheetView show];
+    
+}
+#pragma mark
+#pragma mark 本地分享
 - (void)showLocalShareView:(NSArray *)arrays otherParamer:(NSArray *)Paramer title:(NSString *)title desc:(NSString *)desc  image:(UIImage *)image shareID:(NSString *)str isWxShareSucceedShouldNotice:(BOOL)isWxShareSucceedShouldNotice isAuthen:(BOOL)isAuthen
 {
     __weak WetChatShareManager *weakSelf =self;
-   DWOptionView *_actionSheetView =  [[DWOptionView alloc]initWithFrame:frame(0, 0, APPWIDTH, APPHEIGHT) options:arrays sureSeletedItemsBlock:^(NSArray *items) {
-              NSMutableDictionary * parameter =[Parameter parameterWithSessicon];
-              [parameter setObject:[NSString stringWithFormat:@"%@",items[0]] forKey:@"isaddress"];
-              [parameter setObject:[NSString stringWithFormat:@"%@",items[1]] forKey:@"isranking"];
-              [parameter setObject:[NSString stringWithFormat:@"%@",items[2]] forKey:@"isauthor"];
-              for (NSDictionary *dic in Paramer) {
-                  [parameter setObject:dic[@"value"] forKey:dic[@"key"]];
-                  
-              }
-       [weakSelf shareToWeixinApp:title desc:desc image:image shareID:str isWxShareSucceedShouldNotice:isWxShareSucceedShouldNotice isLocalShare:YES localshareParme:parameter isAuthen:isAuthen];
-       
+    DWOptionView *_actionSheetView =  [[DWOptionView alloc]initWithFrame:frame(0, 0, APPWIDTH, APPHEIGHT) options:arrays sureSeletedItemsBlock:^(NSArray *items) {
+        NSMutableDictionary * parameter =[Parameter parameterWithSessicon];
+        [parameter setObject:[NSString stringWithFormat:@"%@",items[0]] forKey:@"isaddress"];
+        [parameter setObject:[NSString stringWithFormat:@"%@",items[1]] forKey:@"isranking"];
+        [parameter setObject:[NSString stringWithFormat:@"%@",items[2]] forKey:@"isauthor"];
+        for (NSDictionary *dic in Paramer) {
+            [parameter setObject:dic[@"value"] forKey:dic[@"key"]];
+            
+        }
+        [weakSelf shareToWeixinApp:title desc:desc image:image shareID:str isWxShareSucceedShouldNotice:isWxShareSucceedShouldNotice isLocalShare:YES localshareParme:parameter isAuthen:isAuthen];
+        
     }];
     _actionSheetView.tag =0;
 }
@@ -107,13 +182,13 @@ static dispatch_once_t once;
                     }
                     else
                     {
-                        [message setThumbImage:[UIImage imageNamed:@"AppIconLogo"]];
+                        [message setThumbImage:[UIImage imageNamed:@"wx-logo.jpg"]];
                     }
                     
                     WXWebpageObject *webpageObject=  [WXWebpageObject object];
                     webpageObject.webpageUrl =url;
                     message.mediaObject = webpageObject;
-                 
+                    
                     SendMessageToWXReq *rep = [[SendMessageToWXReq alloc]init];
                     rep.bText = NO;
                     rep.message = message;
@@ -163,10 +238,10 @@ static dispatch_once_t once;
             [param setObject:_Id forKey:@"acid"];
             [param setObject:_uid forKey:@"uid"];
             [param setObject:_unionid forKey:@"unionid"];
-//            NSLog(@"param =%@",param);
+            //            NSLog(@"param =%@",param);
             [XLDataService postWithUrl:Wxsuccess param:param modelClass:nil responseBlock:^(id dataObj, NSError *error) {
                 
-//           
+                //
             }];
         }
         

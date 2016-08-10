@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, SDImageCacheType) {
     SDImageCacheTypeMemory
 };
 
-typedef void(^SDWebImageQueryCompletedBlock)(UIImage *image, SDImageCacheType cacheType);
+typedef void(^SDWebImageQueryCompletedBlock)(UIImage *image,SDImageCacheType cacheType);
 
 typedef void(^SDWebImageCheckCacheCompletionBlock)(BOOL isInCache);
 

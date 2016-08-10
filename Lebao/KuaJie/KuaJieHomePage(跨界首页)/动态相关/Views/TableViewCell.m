@@ -16,11 +16,12 @@
 #import "BaseButton.h"
 #import "UILabel+Extend.h"
 #import "NSString+Extend.h"
-
+#import "WetChatShareManager.h"
 @interface TableViewCell ()<LWAsyncDisplayViewDelegate,UIActionSheetDelegate>
 
 @property (nonatomic,strong) LWAsyncDisplayView* asyncDisplayView;
 @property (nonatomic,strong) BaseButton* comentButton;
+@property (nonatomic,strong) BaseButton* avatarImage;
 @property (nonatomic,strong) BaseButton* likeButton;
 @property (nonatomic,strong) UIImageView* moreImage;
 @property (nonatomic,strong) UILabel* likeLb;
@@ -37,7 +38,8 @@
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         [self.contentView addSubview:self.asyncDisplayView];
-         [self.contentView addSubview:self.likeLb];
+        [self.contentView addSubview:self.avatarImage];
+        [self.contentView addSubview:self.likeLb];
         [self.contentView addSubview:self.comentButton];
         [self.contentView addSubview:self.likeButton];
         
@@ -55,15 +57,14 @@
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView
    didCilickedImageStorage:(LWImageStorage *)imageStorage
                      touch:(UITouch *)touch{
-//    NSLog(@"tag:%ld",imageStorage.tag);//这里可以通过判断Tag来执行相应的回调。
-  
+    //    NSLog(@"tag:%ld",imageStorage.tag);//这里可以通过判断Tag来执行相应的回调。
     //查看动态详情
     if (imageStorage.tag ==20) {
         if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithDTID:atIndexPath:)] &&
             [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-        [self.delegate tableViewCell:self didClickedLikeButtonWithDTID:[NSString stringWithFormat:@"%ld",_cellLayout.statusModel.ID] atIndexPath:_indexPath];
+            [self.delegate tableViewCell:self didClickedLikeButtonWithDTID:[NSString stringWithFormat:@"%ld",_cellLayout.statusModel.ID] atIndexPath:_indexPath];
         }
-            return;
+        return;
     }
     
     //点击更多
@@ -71,17 +72,9 @@
         [self didClickedMenuButton:imageStorage];
         return;
     }
-  // 作者头像
-    else if(imageStorage.tag ==9){
-        if ([self.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithJJRId:)] &&
-            [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
-            StatusDatas *like = self.cellLayout .statusModel;
-            [self.delegate tableViewCell:self didClickedLikeButtonWithJJRId:[NSString stringWithFormat:@"%ld",like.brokerid]];
-        }
-
-    }
+    
     CGPoint point = [touch locationInView:self];
-
+    
     for (NSInteger i = 0; i < self.cellLayout.imagePostionArray.count; i ++) {
         CGRect imagePosition = CGRectFromString(self.cellLayout.imagePostionArray[i]);
         if (CGRectContainsPoint(imagePosition, point)) {
@@ -104,13 +97,13 @@
                 }
             }
         }
-
+        
     }
-    }
+}
 
 /***  点击文本链接 ***/
 - (void)lwAsyncDisplayView:(LWAsyncDisplayView *)asyncDisplayView didCilickedTextStorage:(LWTextStorage *)textStorage linkdata:(id)data {
-//    NSLog(@"tag:%ld",textStorage.tag);//这里可以通过判断Tag来执行相应的回调。
+    //    NSLog(@"tag:%ld",textStorage.tag);//这里可以通过判断Tag来执行相应的回调。
     if ([self.delegate respondsToSelector:@selector(tableViewCell:cellLayout: atIndexPath: didClickedLinkWithData:)] &&
         [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
         [self.delegate tableViewCell:self cellLayout:self.cellLayout  atIndexPath:_indexPath didClickedLinkWithData:data];
@@ -121,8 +114,8 @@
 - (void)didClickedMenuButton:(LWImageStorage *)imageStorage {
     UIActionSheet *sheet;
     if (self.cellLayout.statusModel.me) {
-     
-        sheet = [[UIActionSheet alloc]initWithTitle:@"操作" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"删除", nil];
+        
+        sheet = [[UIActionSheet alloc]initWithTitle:@"操作" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"删除",@"分享", nil];
         sheet.tag =88;
         [sheet showInView:self];
         
@@ -130,13 +123,13 @@
     else
     {
         if (self.cellLayout.statusModel.isfollow) {
-            sheet = [[UIActionSheet alloc]initWithTitle:@"操作" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"取消关注",@"举报", nil];
+            sheet = [[UIActionSheet alloc]initWithTitle:@"操作" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"取消关注",@"举报",@"分享", nil];
             sheet.tag =888;
             [sheet showInView:self];
         }
         else
         {
-            UIActionSheet *sheet = [[UIActionSheet alloc]initWithTitle:@"操作" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"关注",@"举报", nil];
+            UIActionSheet *sheet = [[UIActionSheet alloc]initWithTitle:@"操作" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"关注",@"举报",@"分享", nil];
             sheet.tag =8888;
             [sheet showInView:self];
         }
@@ -145,7 +138,7 @@
     
     sheet.actionSheetStyle= UIActionSheetStyleBlackOpaque;
     
-   
+    
 }
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -155,19 +148,64 @@
                 [self.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
                 [self.delegate tableViewCell:self didClickedLikeButtonWithIsSelf:self.cellLayout.statusModel.me andDynamicID:[NSString stringWithFormat:@"%ld",self.cellLayout.statusModel.ID] atIndexPath:_indexPath andIndex:buttonIndex];
             }
-
+            
         }
-       
+        else if (buttonIndex==1)
+        {
+            //分享
+            //获取最后一张图片的模型
+            UIImage *image = [UIImage imageNamed:@"wx-logo.jpg"];
+            if (_cellLayout.imageStorageArray.count>0) {
+                LWImageStorage* lastImageStorage = (LWImageStorage *)[_cellLayout.imageStorageArray firstObject];
+                image= lastImageStorage.imageStorage;
+            }
+            else
+            {
+                if (![_cellLayout.statusModel.imgurl isEqualToString:ImageURLS]) {
+                    image = _avatarImage.imageView.image;
+                }
+                
+            }
+            
+            [[WetChatShareManager shareInstance] dynamicShareTo:_cellLayout.statusModel.sharetitle desc:_cellLayout.statusModel.content image:image shareurl:_cellLayout.statusModel.shareurl ];
+        
+        }
+        
     }
     else
     {
-        if (buttonIndex<2) {
-             [self.delegate tableViewCell:self didClickedLikeButtonWithIsSelf:self.cellLayout.statusModel.me andDynamicID:[NSString stringWithFormat:@"%ld",self.cellLayout.statusModel.ID] atIndexPath:_indexPath andIndex:buttonIndex];
+        if (buttonIndex<3) {
+            
+            if (buttonIndex==2)
+            {
+                //分享
+                //获取最后一张图片的模型
+                UIImage *image = [UIImage imageNamed:@"wx-logo.jpg"];
+                if (_cellLayout.imageStorageArray.count>0) {
+                    LWImageStorage* lastImageStorage = (LWImageStorage *)[_cellLayout.imageStorageArray firstObject];
+                    image= lastImageStorage.imageStorage;
+                }
+                else
+                {
+                    if (![_cellLayout.statusModel.imgurl isEqualToString:ImageURLS]) {
+                          image = _avatarImage.imageView.image;
+                    }
+                    
+                }
+                
+                [[WetChatShareManager shareInstance] dynamicShareTo:_cellLayout.statusModel.sharetitle desc:_cellLayout.statusModel.content image:image shareurl:_cellLayout.statusModel.shareurl ];
+                
+                return;
+            }
+            
+            [self.delegate tableViewCell:self didClickedLikeButtonWithIsSelf:self.cellLayout.statusModel.me andDynamicID:[NSString stringWithFormat:@"%ld",self.cellLayout.statusModel.ID] atIndexPath:_indexPath andIndex:buttonIndex];
         }
+        
     }
     
     
 }
+
 - (BOOL)canBecomeFirstResponder{
     
     return YES;
@@ -182,7 +220,7 @@
     }
     _cellLayout = cellLayout;
     self.asyncDisplayView.layout = self.cellLayout;
-
+    
 }
 
 - (void)layoutSubviews {
@@ -226,6 +264,9 @@
     self.cellline.frame = self.cellLayout.cellMarginsRect;
     self.moreImage.frame = frame(APPWIDTH -30, 10, 16, 16);
     self.moreImage.hidden = !_cellLayout.isShowMore;
+    _avatarImage.frame = _cellLayout.avatarPosition;
+    [_avatarImage setRound];
+    [[ToolManager shareInstance] imageView:_avatarImage setImageWithURL:_cellLayout.statusModel.imgurl placeholderType:PlaceholderTypeUserHead];
 }
 
 - (void)extraAsyncDisplayIncontext:(CGContextRef)context size:(CGSize)size isCancelled:(LWAsyncDisplayIsCanclledBlock)isCancelled {
@@ -236,12 +277,12 @@
         CGContextSetLineWidth(context, 0.2f);
         CGContextSetStrokeColorWithColor(context,RGB(220.0f, 220.0f, 220.0f, 1).CGColor);
         CGContextStrokePath(context);
-
-//        if ([self.cellLayout.statusModel.type isEqualToString:@"website"]) {
-//            CGContextAddRect(context, self.cellLayout.websiteRect);
-//            CGContextSetFillColorWithColor(context, RGB(240, 240, 240, 1).CGColor);
-//            CGContextFillPath(context);
-//        }
+        
+        //        if ([self.cellLayout.statusModel.type isEqualToString:@"website"]) {
+        //            CGContextAddRect(context, self.cellLayout.websiteRect);
+        //            CGContextSetFillColorWithColor(context, RGB(240, 240, 240, 1).CGColor);
+        //            CGContextFillPath(context);
+        //        }
     }
 }
 
@@ -284,13 +325,13 @@
     
     _likeButton.didClickBtnBlock = ^
     {
-       
+        
         if ([weakSelf.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeWithCellLayout:atIndexPath:)]) {
             [weakSelf.delegate tableViewCell:weakSelf didClickedLikeWithCellLayout:weakSelf.cellLayout atIndexPath:weakSelf.indexPath];
         }
-       
+        
     };
-        return _likeButton;
+    return _likeButton;
 }
 - (BaseButton *)comentButton
 {
@@ -299,16 +340,16 @@
     }
     
     UIImage *commentImage = [UIImage imageNamed:@"dongtai_pinglun"];
-   
+    
     _comentButton = [[BaseButton alloc]initWithFrame:self.cellLayout.commentPosition setTitle:[NSString stringWithFormat:@"%ld评论",self.cellLayout.statusModel.comment.count] titleSize:22*SpacedFonts titleColor:[UIColor colorWithRed:0.8157 green:0.8157 blue:0.8275 alpha:1.0]backgroundImage:nil iconImage:commentImage highlightImage:commentImage setTitleOrgin:CGPointMake(0 , 3) setImageOrgin:CGPointMake(0, 0) inView:self];
     __weak typeof(self) weakSelf =self;
     _comentButton.didClickBtnBlock = ^{
-  
+        
         if ([weakSelf.delegate respondsToSelector:@selector(tableViewCell:didClickedCommentWithCellLayout:atIndexPath:)]) {
             [weakSelf.delegate tableViewCell:weakSelf didClickedCommentWithCellLayout:weakSelf.cellLayout atIndexPath:weakSelf.indexPath];
-          
+            
         }
-
+        
     };
     return _comentButton;
 }
@@ -319,8 +360,8 @@
         
         return _likeLb;
     }
-   
-
+    
+    
     _likeLb = [UILabel createLabelWithFrame:CGRectZero text:@"" fontSize:22*SpacedFonts textColor:[UIColor colorWithRed:0.8157 green:0.8157 blue:0.8275 alpha:1.0] textAlignment:0 inView:self];
     
     return _likeLb;
@@ -330,6 +371,25 @@
     if (_moreImage) {
         return _moreImage;
     }
-   return  _moreImage =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"dongtai_gengduo"]];
+    _moreImage =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"dongtai_gengduo"]];
+    return _moreImage;
+}
+- (BaseButton *)avatarImage
+{
+    if (_avatarImage) {
+        return _avatarImage;
+    }
+   _avatarImage = [[BaseButton alloc]initWithFrame:CGRectZero];
+    __weak typeof(self) weakSelf =self;
+    _avatarImage.didClickBtnBlock = ^{
+        if ([weakSelf.delegate respondsToSelector:@selector(tableViewCell:didClickedLikeButtonWithJJRId:)] &&
+            [weakSelf.delegate conformsToProtocol:@protocol(TableViewCellDelegate)]) {
+            StatusDatas *like = weakSelf.cellLayout .statusModel;
+            [weakSelf.delegate tableViewCell:weakSelf didClickedLikeButtonWithJJRId:[NSString stringWithFormat:@"%ld",like.brokerid]];
+        }
+ 
+    };
+    return _avatarImage;
+    
 }
 @end

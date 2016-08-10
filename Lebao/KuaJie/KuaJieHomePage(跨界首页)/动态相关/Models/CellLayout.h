@@ -22,7 +22,7 @@
  */
 
 @interface CellLayout : LWLayout
-
+@property (nonatomic,copy) NSArray* imageStorageArray;
 @property (nonatomic,assign) CGFloat cellHeight;
 @property (nonatomic,assign) CGRect lineRect;
 @property (nonatomic,assign) CGRect cellMarginsRect;
@@ -31,6 +31,7 @@
 @property (nonatomic,assign) CGRect prisePosition;
 @property (nonatomic,copy) NSArray* imagePostionArray;
 @property (nonatomic,copy) NSArray* prisePostionArray;
+@property (nonatomic,assign) CGRect avatarPosition;
 @property (nonatomic,strong) StatusDatas* statusModel;
 @property (nonatomic,assign) BOOL isShowMore;
 @property (nonatomic,assign) CGRect websiteRect;

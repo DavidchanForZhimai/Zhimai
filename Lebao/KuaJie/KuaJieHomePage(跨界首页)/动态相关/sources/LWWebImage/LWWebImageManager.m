@@ -133,6 +133,7 @@
     operation.cacheOperation = [self.imageCache
                                 queryDiskCacheForKey:key
                                 done:^(UIImage *image, SDImageCacheType cacheType) {
+                                   
                                     if (operation.isCancelled) {
                                         @synchronized (self.runningOperations) {
                                             [self.runningOperations removeObject:operation];
@@ -145,6 +146,7 @@
                                             dispatch_main_sync_safe(^{
                                                 // If image was found in the cache but SDWebImageRefreshCached is provided, notify about the cached image
                                                 // AND try to re-download it in order to let a chance to NSURLCache to refresh it from server.
+                                               
                                                 completedBlock(image, nil, cacheType, YES, url);
                                             });
                                         }
@@ -165,6 +167,8 @@
                                             downloaderOptions |= SDWebImageDownloaderIgnoreCachedResponse;
                                         }
                                         id <SDWebImageOperation> subOperation = [self.imageDownloader downloadImageWithURL:url options:downloaderOptions progress:progressBlock completed:^(UIImage *downloadedImage, NSData *data, NSError *error, BOOL finished) {
+                                            
+            
                                             __strong __typeof(weakOperation) strongOperation = weakOperation;
                                             if (!strongOperation || strongOperation.isCancelled) {
                                                 // Do nothing if the operation was cancelled
@@ -256,7 +260,7 @@
                                     }
                                     
                                     else if (image) {
-                                        
+                                       
                                         dispatch_main_sync_safe(^{
                                             
                                             __strong __typeof(weakOperation) strongOperation = weakOperation;

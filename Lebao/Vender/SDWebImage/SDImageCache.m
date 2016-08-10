@@ -397,11 +397,12 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     }
     
     // First check the in-memory cache...
-    UIImage *image = [self imageFromMemoryCacheForKey:key];
-    if (image) {
-        doneBlock(image, SDImageCacheTypeMemory);
-        return nil;
-    }
+        UIImage *image = [self imageFromMemoryCacheForKey:key];
+    
+        if (image) {
+            doneBlock(image, SDImageCacheTypeMemory);
+            return nil;
+        }
     
     NSOperation *operation = [NSOperation new];
     dispatch_async(self.ioQueue, ^{
@@ -410,6 +411,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         }
         
         @autoreleasepool {
+           
             UIImage *diskImage = [self diskImageForKey:key];
             if (diskImage && self.shouldCacheImagesInMemory) {
                 NSUInteger cost = SDCacheCostForImage(diskImage);

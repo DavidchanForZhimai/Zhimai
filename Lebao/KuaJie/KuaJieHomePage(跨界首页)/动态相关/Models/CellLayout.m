@@ -23,27 +23,10 @@
     if (self) {
         self.statusModel = statusModel;
         //头像模型 avatarImageStorage
-        LWImageStorage* avatarStorage = [[LWImageStorage alloc] initWithIdentifier:@"avatar"];
-        avatarStorage.contents = statusModel.imgurl;
-        avatarStorage.placeholder = [UIImage imageNamed:@"defaulthead"];
-            if ([statusModel.imgurl isEqualToString:ImageURLS]) {
-          
-            if (statusModel.sex==1) {
-               avatarStorage.contents = [UIImage imageNamed:@"defaulthead"];
-            }
-            else
-            {
-                avatarStorage.contents = [UIImage imageNamed:@"defaulthead_nv"];
-                
-            }
-        }
-       
-        avatarStorage.cornerRadius = 20.0f;
-        avatarStorage.cornerBackgroundColor = [UIColor whiteColor];
-        avatarStorage.backgroundColor = [UIColor whiteColor];
-        avatarStorage.frame = CGRectMake(10, 10, 40, 40);
-        avatarStorage.tag = 9;
-       
+        LWImageStorage * _avatarStorage = [[LWImageStorage alloc] initWithIdentifier:@"avatar"];
+        _avatarStorage.frame =CGRectMake(10, 10, 40, 40);
+        _avatarPosition = CGRectMake(10, 10, 40, 40);
+
         NSString *renzen;
         if (statusModel.authen==3) {
            renzen = @"[renzhen]";
@@ -57,7 +40,7 @@
        
         nameTextStorage.text = [NSString stringWithFormat:@"%@ %@",statusModel.realname,renzen];
         nameTextStorage.font = Size(28.0);
-        nameTextStorage.frame = CGRectMake(avatarStorage.right + 6, 15.0f, SCREEN_WIDTH - (avatarStorage.right + 6 + 30), CGFLOAT_MAX);
+        nameTextStorage.frame = CGRectMake(_avatarStorage.right + 6, 15.0f, SCREEN_WIDTH - (_avatarStorage.right + 6 + 30), CGFLOAT_MAX);
         [nameTextStorage lw_addLinkWithData:[NSString stringWithFormat:@"%ld",statusModel.brokerid]
                                       range:NSMakeRange(0,statusModel.realname.length)
                                   linkColor:BlackTitleColor
@@ -391,7 +374,6 @@
         [self addStorage:contentTextStorage];
         [self addStorage:dateTextStorage];
         [self addStorages:commentTextStorages];
-        [self addStorage:avatarStorage];
         [self addStorage:commentBgStorage];
         
         [self addStorages:imageStorageArray];
@@ -405,6 +387,7 @@
         self.commentBgPosition = commentBgPosition;
         self.imagePostionArray = imagePositionArray;
         self.prisePostionArray = prisePositionArray;
+        self.imageStorageArray = imageStorageArray;
         self.statusModel = statusModel;
         //如果是使用在UITableViewCell上面，可以通过以下方法快速的得到Cell的高度
         

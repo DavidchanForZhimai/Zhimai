@@ -9,7 +9,22 @@
 #import "BaseButton.h"
 #import "UILabel+Extend.h"
 @implementation BaseButton
-
+- (UIButton *)initWithFrame:(CGRect)frame
+{
+    _anmialTime = .15;
+    _anmialScal =1.2;
+    _shouldAnmial = YES;
+    
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        [self addTarget:self action:@selector(didClickBtn:) forControlEvents:UIControlEventTouchUpInside];
+        [self addTarget:self action:@selector(didClickOutBtn:) forControlEvents:UIControlEventTouchUpOutside];
+        [self addTarget:self action:@selector(didTouchBtn:) forControlEvents:UIControlEventTouchDown];
+        [self addTarget:self action:@selector(didCancelBtn:) forControlEvents:UIControlEventTouchDragInside];
+    }
+    return self;
+}
 - (UIButton *)initWithFrame:(CGRect)frame setTitle:(NSString *)titleT titleSize:(float)size titleColor:(UIColor*)color backgroundImage:(UIImage *)backgroundImage iconImage:(UIImage *)iconImage highlightImage:(UIImage *)highLightImage  setTitleOrgin:(CGPoint)titlePoint  setImageOrgin:(CGPoint)imagePoint  inView:(UIView *)view
 {
     _anmialTime = .15;

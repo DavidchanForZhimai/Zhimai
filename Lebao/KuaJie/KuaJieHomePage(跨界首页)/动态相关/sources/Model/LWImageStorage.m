@@ -179,6 +179,7 @@ LWSERIALIZE_COPY_WITH_ZONE()
         return;
     }
     if ([self.contents isKindOfClass:[UIImage class]]) {
+        
         UIImage* image = (UIImage *)self.contents;
         BOOL isOpaque = self.opaque;
         UIColor* backgroundColor = self.backgroundColor;
@@ -265,6 +266,9 @@ static const void* URLKey;
                              if (!image) {
                                  return ;
                              }
+                             
+                             //获取图片
+                             imageStorage.imageStorage = image;
                              if (imageStorage.needResize) {
                                  CGSize imageSize = image.size;
                                  CGFloat imageScale = imageSize.height/imageSize.width;

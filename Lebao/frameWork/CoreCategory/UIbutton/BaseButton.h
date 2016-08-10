@@ -18,7 +18,7 @@
 @property (nonatomic, copy) dispatch_block_t didClickOutBtnBlock;
 @property (nonatomic, copy) dispatch_block_t didTouchBtnBlock;
 @property (nonatomic, copy) dispatch_block_t didCancelBtnBlock;
-
+- (UIButton *)initWithFrame:(CGRect)frame;
 - (UIButton *)initWithFrame:(CGRect)frame setTitle:(NSString *)titleT titleSize:(float)size titleColor:(UIColor*)color backgroundImage:(UIImage *)backgroundImage iconImage:(UIImage *)iconImage highlightImage:(UIImage *)highLightImage  setTitleOrgin:(CGPoint)titlePoint  setImageOrgin:(CGPoint)imagePoint  inView:(UIView *)view;
 
 - (void)textAndImageCenter;

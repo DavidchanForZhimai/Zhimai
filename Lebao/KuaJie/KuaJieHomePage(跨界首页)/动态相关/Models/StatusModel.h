@@ -25,6 +25,8 @@
 @end
 @interface StatusDatas : NSObject
 
+@property (nonatomic, copy) NSString *shareurl;
+@property (nonatomic, copy) NSString *sharetitle;
 
 @property (nonatomic, copy) NSString *type;//自己添加
 
