@@ -492,9 +492,8 @@
             type =@"head";
             [[UpLoadImageManager shareInstance] upLoadImageType:type image:image imageBlock:^(UpLoadImageModal * upLoadImageModal) {
                 
-                weakSelf.saveBtn.hidden = NO;
-                
-                    _modal.imgurl = upLoadImageModal.imgurl;
+                     weakSelf.saveBtn.hidden = NO;
+                    _modal.imgurl = upLoadImageModal.abbr_imgurl;
                     [_basicInfoTableView reloadData];
               
             }];
