@@ -362,12 +362,21 @@
     biaoqianLab.font = [UIFont systemFontOfSize:14];
     [biaoQianV addSubview:biaoqianLab];
    NSString * biaoqStr =  [_jjrJsonDic objectForKey:@"labels"];
-    NSArray * biaoqArr = [biaoqStr componentsSeparatedByString:@","];
+    NSMutableArray *biaoqArr=[[NSMutableArray alloc]initWithArray: [biaoqStr componentsSeparatedByString:@","]];
+   
+    for (int i = 0; i<biaoqArr.count; i++) {
+        
+        if ([biaoqArr[i] length]==0) {
+            [biaoqArr removeObjectAtIndex:i];
+        }
+    }
+   
     if (![[_jjrJsonDic objectForKey:@"labels"] isEqualToString:@""]) {
-        CGFloat  wid = 85.f;
+               CGFloat  wid = 85.f;
         CGFloat height = 0.f;
         int j = 0;
         for (int i = 0; i<biaoqArr.count; i++) {
+    
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.titleLabel.font = [UIFont systemFontOfSize:13.0];
             btn.layer.masksToBounds = YES;
@@ -666,13 +675,35 @@
 #pragma mark -头像点击事件
 -(void)TapOne:(UITapGestureRecognizer *)tap
 {
+    
     NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:1];
    
     UIView *cellImageView = [tap view];
     NSString *url = [_jjrJsonDic objectForKey:@"imgurl"];
+    NSString *yuantu =url;
+    if (url.length==0){
+        [[ToolManager shareInstance]showAlertMessage:@"没有头像"];
+        return;
+        
+    }
+    if (url.length>0) {
+        NSArray *arr=[url componentsSeparatedByString:@"/"];
+        if ([arr[arr.count - 1] hasPrefix:@"s"]) {
+                       NSString *substring=[arr[arr.count - 1] substringFromIndex:1];
+            url=@"";
+            for (int i=0;i<(arr.count-1);i++) {
+                
+                url =[url stringByAppendingString:arr[i]];
+                url=[url stringByAppendingString:@"/"];
+            }
+            url =[url stringByAppendingString:substring];
+        
+        }
+  
+    }
     
     LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithplaceholder:nil
-                                                                              thumbnailURL:[NSURL URLWithString: [[ToolManager shareInstance] urlAppend:url] ]
+                                                                              thumbnailURL:[NSURL URLWithString: [[ToolManager shareInstance] urlAppend:yuantu] ]
                                                                                      HDURL:[NSURL URLWithString:[[ToolManager shareInstance] urlAppend:url]]
                                                                         imageViewSuperView:cellImageView.superview
                                                                        positionAtSuperView:cellImageView.frame
