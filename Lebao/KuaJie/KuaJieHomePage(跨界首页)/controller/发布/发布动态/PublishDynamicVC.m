@@ -81,7 +81,7 @@
                 for (id obj in dataObj[@"datas"]) {
                     [objTopic addObject:obj[@"tipic"]];
                 }
-//                NSLog(@"dataObj =%@",objTopic);
+                //                NSLog(@"dataObj =%@",objTopic);
                 
                 if (objTopic.count!=0) {
                     for (id obj in objTopic) {
@@ -159,11 +159,11 @@
     [self.svMain addGestureRecognizer:tap];
     [self.view addSubview:self.svMain];
     
-    self.viewBg = [[UIView alloc]initWithFrame:CGRectMake(0, 10, APPWIDTH, 90)];
+    self.viewBg = [[UIView alloc]initWithFrame:CGRectMake(0, 10, APPWIDTH, 130)];
     self.viewBg.backgroundColor = [UIColor whiteColor];
     [self.svMain addSubview:self.viewBg];
     
-    self.tfView = [[UITextView alloc]initWithFrame:CGRectMake(10, 10, SCREEN_WIDTH-20, 90)];
+    self.tfView = [[UITextView alloc]initWithFrame:CGRectMake(10, 10, SCREEN_WIDTH-20, 130)];
     self.tfView.font = [UIFont systemFontOfSize:13];
     self.tfView.text = @"请输入您想要分享的新鲜事(最多255个字)";
     self.tfView.textColor = [UIColor colorWithRed:0.741 green:0.741 blue:0.745 alpha:1.000];
@@ -291,6 +291,28 @@
         textView.text = @"";
         textView.textColor = [UIColor blackColor];
     }
+    
+}
+
+
+//限制字数
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    NSString *string = [textView.text stringByReplacingCharactersInRange:range withString:text];
+    if ([string length]==255)
+    {
+        return NO;
+    }
+    else if ([string length] >255)
+    {
+        NSLog(@"string length%ld",[string length]);
+        string = [string substringToIndex:255];
+        textView.text = string;
+        
+        return NO;
+    }
+    else
+        return YES;
 }
 -(void)huishouAction
 {
@@ -347,7 +369,7 @@
 }
 
 -(void)onetap:(UITapGestureRecognizer *)sender{
-
+    
     int tag =0;
     NSMutableArray* tmp = [[NSMutableArray alloc] initWithCapacity:1];
     for (int i=0;i<self.phonelist.count;i++) {
@@ -357,15 +379,15 @@
             tag =i;
         }
         LWImageBrowserModel* imageModel = [[LWImageBrowserModel alloc] initWithLocalImage:cell.imageView.image imageViewSuperView:cell positionAtSuperView:cell.imageView.frame index:i];
-         [tmp addObject:imageModel];
+        [tmp addObject:imageModel];
     }
-   
+    
     LWImageBrowser* imageBrowser = [[LWImageBrowser alloc] initWithParentViewController:self
                                                                             imageModels:tmp
                                                                            currentIndex:tag];
     imageBrowser.view.backgroundColor = [UIColor blackColor];
     [imageBrowser show];
-
+    
 }
 #pragma mark --UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -464,8 +486,7 @@
             // 你可以通过block或者代理，来得到用户选择的照片.
             [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets) {
                 [self.phonelist addObjectsFromArray:photos];
-                Pnumb-=photos.count;
-                
+                Pnumb-=photos.count;    
                 [self resetLayout];
             }];
             // 在这里设置imagePickerVc的外观
@@ -479,13 +500,10 @@
             [self presentViewController:imagePickerVc animated:YES completion:nil];
             
         }else if (buttonIndex==2) {
-            
-            
         }
         
     }
     else if (actionSheet.tag==1002) {
-//        NSLog(@"-----------%ld",buttonIndex);
         if (buttonIndex!=0) {
             if (objTopic.count!=0) {
                 if ([_tfView.text isEqualToString: @"请输入您想要分享的新鲜事(最多255个字)"]) {

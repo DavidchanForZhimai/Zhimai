@@ -104,19 +104,15 @@
                 if (modal.datas.isaddress) {
                     
                     
-                    UIView *bg = allocAndInitWithFrame(UIView, frame(0, height, APPWIDTH, 70));
+                    UIView *bg = allocAndInitWithFrame(UIView, frame(0, height, APPWIDTH, 110));
                     bg.backgroundColor = AppViewBGColor;
                     [self addSubview:bg];
                     
-                    UIView *bg1 = allocAndInitWithFrame(UIView, frame(10, 10, APPWIDTH - 20, 50));
-                    bg1.backgroundColor = WhiteColor;
+                    UIImageView *bg1 = allocAndInitWithFrame(UIImageView, frame(10, 10, APPWIDTH - 20, 90));
+                    bg1.image = [UIImage imageNamed:@"mingpian_back"];
                     [bg addSubview:bg1];
                     
-                    UILabel *line1 = allocAndInitWithFrame(UILabel, frame(0, 0, 2, frameHeight(bg1)));
-                    line1.backgroundColor = AppMainColor;
-                    [bg1 addSubview:line1];
-                    
-                    UIImageView *icon = allocAndInitWithFrame(UIImageView, frame(10, 5, 40, 40));
+                    UIImageView *icon = allocAndInitWithFrame(UIImageView, frame(10, 20, 50, 50));
                    
                     [[ToolManager shareInstance] imageView:icon setImageWithURL:modal.datas.isaddress_imgurl placeholderType:PlaceholderTypeUserHead];
                     
@@ -129,11 +125,20 @@
                     CGSize sizeName = [name sizeWithContent:name.text font:[UIFont systemFontOfSize:26*SpacedFonts]];
                     name.frame = frame(frameX(name), frameY(name), sizeName.width, frameHeight(name));
                     
-                    [UILabel createLabelWithFrame:frame(CGRectGetMaxX(name.frame) +5, frameY(name), 200, 26*SpacedFonts) text:modal.datas.isaddress_add fontSize:22*SpacedFonts textColor:lightGrayTitleColor textAlignment:NSTextAlignmentLeft inView:bg1];
+                    [UILabel createLabelWithFrame:frame(frameX(name), CGRectGetMaxY(name.frame)+10, 200, 26*SpacedFonts) text:modal.datas.isaddress_add fontSize:22*SpacedFonts textColor:BlackTitleColor textAlignment:NSTextAlignmentLeft inView:bg1];//公司
+                   
+                    NSString *industryStr=[Parameter industryForChinese:modal.datas.industry];
+                    [UILabel createLabelWithFrame:frame(CGRectGetMaxX(name.frame)+10, frameY(name), 200, 26*SpacedFonts) text:industryStr fontSize:22*SpacedFonts textColor:lightGrayTitleColor textAlignment:NSTextAlignmentLeft inView:bg1];//行业
                     
-                    [UILabel createLabelWithFrame:frame(frameX(name), CGRectGetMaxY(name.frame) + 5, 100, 26*SpacedFonts) text:modal.datas.isaddress_tel fontSize:24*SpacedFonts textColor:lightGrayTitleColor textAlignment:NSTextAlignmentLeft inView:bg1];
+                    [UILabel createLabelWithFrame:frame(bg1.size.width-110, 14, 100, 26*SpacedFonts) text:modal.datas.isaddress_area fontSize:22*SpacedFonts textColor:BlackTitleColor textAlignment:NSTextAlignmentRight inView:bg1];//地址
                     
-                    height += 70;
+                    UIImage *shouji=[UIImage imageNamed:@"shouji(1)"];
+                    
+                    BaseButton *shoujibtn= [[BaseButton alloc]initWithFrame:frame(frameX(name), CGRectGetMaxY(name.frame) +26*SpacedFonts+20, 100, shouji.size.height+6) setTitle:modal.datas.isaddress_tel titleSize:22*SpacedFonts  titleColor:WhiteColor backgroundImage:nil iconImage:shouji highlightImage:nil setTitleOrgin:CGPointMake(3, 3) setImageOrgin:CGPointMake(3, 3) inView:bg1];
+                    
+                    shoujibtn.backgroundColor=[UIColor orangeColor];
+                    shoujibtn.radius=(shouji.size.height+6)/2.0;
+                    height += 110;
                 }
                 else
                 {

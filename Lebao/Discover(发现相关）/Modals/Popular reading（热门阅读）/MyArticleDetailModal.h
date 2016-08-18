@@ -21,6 +21,7 @@
 @property(nonatomic,strong) NSString *isaddress_imgurl;
 @property(nonatomic,strong) NSString *isaddress_tel;
 @property(nonatomic,strong) NSString *isaddress_add;
+@property(nonatomic,strong) NSString *isaddress_area;
 @property(nonatomic,assign) BOOL islibrary;
 @property(nonatomic,assign) BOOL isranking;
 @property(nonatomic,assign) BOOL iscollect;
