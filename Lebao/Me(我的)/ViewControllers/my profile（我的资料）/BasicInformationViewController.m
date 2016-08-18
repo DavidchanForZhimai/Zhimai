@@ -64,8 +64,8 @@
     _saveBtn.didClickBtnBlock = ^
     {
         [weakSelf modity:weakSelf];
-       
-       
+        
+        
     };
 }
 #pragma mark
@@ -75,7 +75,7 @@
     if (sender.tag ==NavViewButtonActionNavLeftBtnTag ) {
         PopView(self);
     }
-
+    
 }
 
 #pragma mark
@@ -91,14 +91,14 @@
     _basicInfoTableView.delegate = self;
     _basicInfoTableView.dataSource = self;
     _basicInfoTableView.backgroundColor =[UIColor clearColor];
-
+    
     [self.view addSubview:_basicInfoTableView];
     
     [[ToolManager shareInstance] showWithStatus:@"获取信息..."];
     NSMutableDictionary *parame = [Parameter parameterWithSessicon];
     [parame setObject:@"info" forKey:Conduct];
     [XLDataService postWithUrl:MemberURL param:parame modelClass:nil responseBlock:^(id dataObj, NSError *error) {
-  
+        
         if (dataObj) {
             _modal = [BasicInfoModal mj_objectWithKeyValues:dataObj];
             if (![_modal.mylabels isEqualToString:@""]) {
@@ -113,7 +113,7 @@
                 [_recommendArray addObjectsFromArray:[_modal.relabls componentsSeparatedByString:@","]];
                 
             }
-           
+            
             [_personAndoptionalArray addObjectsFromArray:_personArray];
             [_personAndoptionalArray addObjectsFromArray:_optionalArray];
             if (![_personAndoptionalArray containsObject:@"+标签"]) {
@@ -126,13 +126,12 @@
                 NSString *createPath = [NSString stringWithFormat:@"%@/%@.plist",pathDocuments,[CoreArchive  strForKey:AddressNewVersion]];
                 NSString *createDir = [NSString stringWithFormat:@"%@/%@_code.plist",pathDocuments,[CoreArchive  strForKey:AddressNewVersion]];
                 // 判断文件夹是否存在，如果不存在，则创建
-             
+                
                 if (![[NSFileManager defaultManager] fileExistsAtPath:createPath]) {
-                   
+                    
                     NSDictionary *param = [Parameter parameterWithSessicon];
                     [XLDataService postWithUrl:AreainfoURL param:param modelClass:nil responseBlock:^(id dataObj, NSError *error) {
                         
-//                        NSLog(@"dataObj =%@ ",dataObj);
                         if (dataObj) {
                             [[ToolManager shareInstance] dismiss];
                             if ([dataObj[@"rtcode"] intValue] ==1) {
@@ -148,7 +147,7 @@
                                 }
                                 else
                                 {
-                                     [_basicInfoTableView reloadData];
+                                    [_basicInfoTableView reloadData];
                                 }
                                 
                             }
@@ -163,13 +162,13 @@
                         }
                         
                     }];
-                  
+                    
                     
                 } else {
                     [[ToolManager shareInstance] dismiss];
                     [_basicInfoTableView reloadData];
                 }
-               
+                
                 
             }
             else
@@ -177,18 +176,18 @@
                 
                 [[ToolManager shareInstance] showInfoWithStatus:_modal.rtmsg];;
             }
-           
+            
         }
         else{
             
             [[ToolManager shareInstance] showInfoWithStatus];
-          
+            
         }
         
         
         
     }];
-
+    
 }
 
 #pragma mark
@@ -203,7 +202,7 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-  
+    
     return 10.0f;
     
 }
@@ -215,12 +214,12 @@
 - (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     NSMutableDictionary  *height = [self footerView];
-   
+    
     return [height[@"height"] floatValue];
 }
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-     NSMutableDictionary  *view = [self footerView];
+    NSMutableDictionary  *view = [self footerView];
     
     return (UIView *)view[@"view"];
 }
@@ -334,7 +333,7 @@
         s_titleW = tille.length*28*SpacedFonts + 10;
         if (s_titleW>frameWidth(recommendView) - 20) {
             s_titleW = frameWidth(recommendView) - 20;
-           
+            
         }
         s_titleXW =s_titleW+s_titleX+10;
         
@@ -387,7 +386,7 @@
     {
         return 40.0f;
     }
-
+    
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -420,19 +419,19 @@
             break;
         case 2:
             if ([_modal.sex isEqualToString:@"1"]) {
-                 [cell  showTitle:@"性别" icon:nil bg:nil detail:@"男" canEdit:YES];
+                [cell  showTitle:@"性别" icon:nil bg:nil detail:@"男" canEdit:YES];
             }
             else
             {
                 [cell  showTitle:@"性别" icon:nil bg:nil detail:@"女" canEdit:YES];
             }
-           
+            
             break;
         case 3:
             [cell  showTitle:@"手机" icon:nil bg:nil detail:_modal.tel  canEdit:NO];
             break;
         case 4:
-           
+            
         {
             NSString *address = _modal.area;
             if (!address||[address isEqualToString:@""]) {
@@ -447,7 +446,7 @@
                     
                     NSString *pathDocuments = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
                     NSString *createPath = [NSString stringWithFormat:@"%@/%@_code.plist",pathDocuments,[CoreArchive  strForKey:AddressNewVersion]];
-                        
+                    
                     NSDictionary *citiesArray                 = [NSDictionary dictionaryWithContentsOfFile:createPath];
                     city = citiesArray[@"city"][[NSString stringWithFormat:@"%@",addressArray[1]]];
                     pro = citiesArray[@"province"][[NSString stringWithFormat:@"%@",addressArray[0]]];
@@ -476,7 +475,7 @@
     }
     
     return cell;
-        
+    
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -484,21 +483,16 @@
     [parame setObject:@"edit" forKey:Conduct];
     __weak BasicInformationViewController *weakSelf= self;
     if (indexPath.row ==0) {
-      
-        
         [[ToolManager shareInstance] seleteImageFormSystem:self seleteImageFormSystemBlcok:^(UIImage *image) {
             NSString *type;
-     
             type =@"head";
             [[UpLoadImageManager shareInstance] upLoadImageType:type image:image imageBlock:^(UpLoadImageModal * upLoadImageModal) {
+                weakSelf.saveBtn.hidden = NO;
+                _modal.imgurl = upLoadImageModal.abbr_imgurl;
+                [_basicInfoTableView reloadData];
                 
-                     weakSelf.saveBtn.hidden = NO;
-                    _modal.imgurl = upLoadImageModal.abbr_imgurl;
-                    [_basicInfoTableView reloadData];
-              
             }];
-            }];
-        
+        }];
         
         
     }
@@ -537,7 +531,7 @@
                     }
                     
                     _modal.sex = [NSString stringWithFormat:@"%i",tag];
-                     [_basicInfoTableView reloadData];
+                    [_basicInfoTableView reloadData];
                     view.tag = 88;
                 }];
                 
@@ -561,7 +555,7 @@
                     
                     _modal.synopsis = text;
                     [_basicInfoTableView reloadData];
-                   
+                    
                 };
                 PushView(self, edit);
             }
@@ -569,7 +563,7 @@
             case 6:
             {
                 weakSelf.saveBtn.hidden = NO;
-        
+                
                 edit.editPageTag =EditCompanyTag;
                 edit.textView =  _modal.address;
                 edit.editBlock = ^(NSString *text)
@@ -604,14 +598,14 @@
                 break;
         }
         
-       
+        
         
     }
-     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 - (void)modity:(BasicInformationViewController *)weakSelf;
 {
-
+    
     [[ToolManager shareInstance] showWithStatus:@"修改中.."];
     NSMutableDictionary *parame =[Parameter parameterWithSessicon];
     [parame setObject:_modal.imgurl forKey:@"imgurl"];
@@ -622,7 +616,7 @@
     [parame setObject:_modal.tel forKey:@"tel"];
     [parame setObject:_modal.address forKey:@"address"];
     [parame setObject:_modal.workyears forKey:@"workyears"];
-
+    
     if ([_personArray mj_JSONString]) {
         [parame setObject:[_personArray mj_JSONString] forKey:@"mylabels"];
     }
@@ -630,7 +624,7 @@
         [parame setObject:[_optionalArray mj_JSONString] forKey:@"filllabels"];
     }
     
-//    NSLog(@"parame =%@",parame);
+    //    NSLog(@"parame =%@",parame);
     [XLDataService postWithUrl:SaveMemberURL param:parame modelClass:nil responseBlock:^(id dataObj, NSError *error) {
         if (dataObj) {
             if ([dataObj[@"rtcode"] intValue] ==1) {
@@ -640,53 +634,53 @@
             }
             else
             {
-                 weakSelf.saveBtn.hidden = NO;
+                weakSelf.saveBtn.hidden = NO;
                 [[ToolManager shareInstance] showInfoWithStatus:dataObj[@"rtmsg"]];
             }
             
         }
         else
         {
-             weakSelf.saveBtn.hidden = NO;
+            weakSelf.saveBtn.hidden = NO;
             [[ToolManager shareInstance] showInfoWithStatus];
         }
         
-
+        
         
     }];
 }
 
 - (void)configureCustomPikerView {
-
+    
     NSString *pathDocuments = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *createPath = [NSString stringWithFormat:@"%@/%@.plist",pathDocuments, [CoreArchive  strForKey:AddressNewVersion]];
     
     if (!_citiesData) {
-      
+        
         NSArray *citiesArray                 = [NSArray arrayWithContentsOfFile:createPath];
-       
+        
         if (!citiesArray) {
             
             [[ToolManager shareInstance] showInfoWithStatus:@"获取不到数据，请稍等再试！！"];
             
             return;
         }
-    
+        
         NSMutableArray *provinceModelArrayM  = [NSMutableArray array];
         for (NSDictionary *dict in citiesArray) {
             ProvinceModel *provinceModel         = [ProvinceModel provinceModelWithDict:dict];
             [provinceModelArrayM addObject:provinceModel];
         }
         _citiesData                          = provinceModelArrayM;
-//        NSLog(@"_citiesData =%@",_citiesData);
+        //        NSLog(@"_citiesData =%@",_citiesData);
     }
-
+    
     
     if (!self.customPikerView) {
         self.customPikerView   = [[GWLCustomPikerView alloc]init];
         self.customPikerView.frame = CGRectMake(0, APPHEIGHT, self.view.bounds.size.width, 220);
         [UIView animateWithDuration:0.5 animations:^{
-        self.customPikerView.frame = CGRectMake(0, APPHEIGHT  -220, self.view.bounds.size.width, 220);
+            self.customPikerView.frame = CGRectMake(0, APPHEIGHT  -220, self.view.bounds.size.width, 220);
         }];
         
         self.customPikerView.dataSource           = self;
@@ -703,9 +697,9 @@
         [UIView animateWithDuration:0.5 animations:^{
             self.customPikerView.frame = CGRectMake(0, APPHEIGHT  -220, self.view.bounds.size.width, 220);
         }];
- 
+        
     }
-
+    
 }
 
 #pragma mark - GWLCustomPikerViewDataSource
@@ -743,8 +737,8 @@
         _selectedCity                        = row;
     }
     
-//    ProvinceModel *provinceModel         = self.citiesData[_selectedProvince];
-  
+    //    ProvinceModel *provinceModel         = self.citiesData[_selectedProvince];
+    
 }
 
 - (void)customPikerViewCompleteSelectedRows:(NSArray *)rows {
@@ -758,7 +752,7 @@
     _saveBtn.hidden = NO;
     [_basicInfoTableView reloadData];
     
-
+    
 }
 
 
@@ -768,21 +762,21 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end
 
 
 @implementation BasicInformationView
 {
-     UIImageView *assorry;
+    UIImageView *assorry;
 }
 
 
@@ -814,7 +808,7 @@
         assorry.hidden = YES;
         [self addSubview:assorry];
         
-//        [UILabel CreateLineFrame:frame(0, cellHeight , cellWidth, 0.5) inView:self];
+        //        [UILabel CreateLineFrame:frame(0, cellHeight , cellWidth, 0.5) inView:self];
         
         
     }
@@ -823,7 +817,7 @@
 }
 - (void)showTitle:(NSString *)title icon:(NSString *)icon bg:(NSString *)bg detail:(NSString *)detail canEdit:(BOOL)canEdit
 {
-     assorry.hidden = !canEdit;
+    assorry.hidden = !canEdit;
     
     if (title) {
         _title.text =title;
@@ -831,7 +825,7 @@
     }
     else
     {
-       _title.hidden = YES;
+        _title.hidden = YES;
     }
     if (icon) {
         
@@ -843,8 +837,8 @@
         _userIcon.hidden = YES;
     }
     if (bg) {
-    
-         [[ToolManager shareInstance] imageView:_userBg setImageWithURL:bg placeholderType:PlaceholderTypeUserBg];
+        
+        [[ToolManager shareInstance] imageView:_userBg setImageWithURL:bg placeholderType:PlaceholderTypeUserBg];
         _userBg.hidden = NO;
     }
     else

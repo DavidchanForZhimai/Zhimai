@@ -38,8 +38,8 @@ typedef NS_ENUM(NSUInteger,PlaceholderType) {
 
 typedef void (^RefreshComponentRefreshingBlock)();/** 进入刷新状态的回调 */
 typedef void (^LocationPositionBlock)(NSString *locate);//地址回调
-typedef void(^SeleteImageFormSystemBlcok) (UIImage *image);//选择系统相册
-typedef void(^ShowAlertViewBlcok) (void);//提示选择
+typedef void (^SeleteImageFormSystemBlcok) (UIImage *image);//选择系统相册
+typedef void (^ShowAlertViewBlcok) (void);//提示选择
 
 @interface ToolManager : NSObject
 
