@@ -510,6 +510,7 @@
 		638468BA1D08151000A80223 /* NotificationModal.m in Sources */ = {isa = PBXBuildFile; fileRef = 638468B81D08151000A80223 /* NotificationModal.m */; };
 		638468BD1D08154E00A80223 /* MeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 638468BB1D08154E00A80223 /* MeCell.m */; };
 		638468C01D0815C900A80223 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 638468BF1D0815C900A80223 /* MessageCell.m */; };
+		638686251D59DB1F00893B67 /* wx-logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 638686241D59DB1F00893B67 /* wx-logo.jpg */; };
 		638C2A071C9BD55A0067AE24 /* WetChatShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C2A061C9BD55A0067AE24 /* WetChatShareManager.m */; };
 		639B63FA1C72C3D500F4330F /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639B63F91C72C3D500F4330F /* WebKit.framework */; };
 		63A6B6981C0D89CE00C7EB09 /* IQNSArray+Sort.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A6B6761C0D89CE00C7EB09 /* IQNSArray+Sort.m */; };
@@ -1550,6 +1551,7 @@
 		638468BC1D08154E00A80223 /* MeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeCell.h; sourceTree = "<group>"; };
 		638468BE1D0815C900A80223 /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
 		638468BF1D0815C900A80223 /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
+		638686241D59DB1F00893B67 /* wx-logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "wx-logo.jpg"; sourceTree = "<group>"; };
 		638C2A051C9BD55A0067AE24 /* WetChatShareManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WetChatShareManager.h; sourceTree = "<group>"; };
 		638C2A061C9BD55A0067AE24 /* WetChatShareManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WetChatShareManager.m; sourceTree = "<group>"; };
 		639B63F91C72C3D500F4330F /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -1998,6 +2000,7 @@
 		6302E7F11C2D20ED00ED8669 /* launch */ = {
 			isa = PBXGroup;
 			children = (
+				638686241D59DB1F00893B67 /* wx-logo.jpg */,
 				63E9A5661D4EEAAD008704CB /* new_feature_1_736h.png */,
 				63E9A5671D4EEAAD008704CB /* new_feature_2_736h.png */,
 				63E9A5681D4EEAAD008704CB /* new_feature_3_736h.png */,
@@ -5175,6 +5178,7 @@
 				63ED82721D251CCC00DE3183 /* test.caf in Resources */,
 				63F8C57E1CFE8D7B00E35E94 /* icon_exhibition_mycontent_clue@2x.png in Resources */,
 				630E787D1CC60683000E96A9 /* iconfont-yaoqinghaoyou@3x.png in Resources */,
+				638686251D59DB1F00893B67 /* wx-logo.jpg in Resources */,
 				632210321CF3049B001327E6 /* meessage_custom@3x.png in Resources */,
 				706211511D4850B1003769DF /* bofangyuyuying1@2x.png in Resources */,
 				63346E741CE432A2007BC875 /* iconfont-jxwenzhang@2x.png in Resources */,
@@ -5811,7 +5815,7 @@
 				ENABLE_BITCODE = NO;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "/Users/yanwenbin/Desktop/知脉/Lebao/PrefixHeader.pch";
+				GCC_PREFIX_HEADER = "/Users/david/Desktop/知脉/Lebao/PrefixHeader.pch";
 				INFOPLIST_FILE = Lebao/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -5840,7 +5844,7 @@
 				ENABLE_BITCODE = NO;
 				GCC_INPUT_FILETYPE = automatic;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "/Users/yanwenbin/Desktop/知脉/Lebao/PrefixHeader.pch";
+				GCC_PREFIX_HEADER = "/Users/david/Desktop/知脉/Lebao/PrefixHeader.pch";
 				INFOPLIST_FILE = Lebao/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

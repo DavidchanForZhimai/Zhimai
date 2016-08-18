@@ -27,6 +27,7 @@
 @property(nonatomic,strong)BaseButton *dicoverBtn;
 @property(nonatomic,strong)UIImageView *headImageView;
 @property(nonatomic,strong)WHC_Banner *banner;
+@property(nonatomic,strong)UILabel *redLabel;
 @end
 
 @implementation DiscoverHomePageModal
@@ -47,9 +48,7 @@
 
 @end
 @implementation DiscoverHomePageViewController
-{
-    UILabel *redLabel;
-}
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -94,13 +93,13 @@
         UIImage *image = [UIImage imageNamed:imageName[i]];
         
         _dicoverBtn = [[BaseButton alloc]initWithFrame:frame(APPWIDTH/3.0*(i%3),0.4*frameWidth(self.view)+10 + (85*ScreenMultiple + 10)*(i/3), APPWIDTH/3.0-0.5, 85*ScreenMultiple) setTitle:title[i] titleSize:24*SpacedFonts titleColor:LightBlackTitleColor backgroundImage:nil iconImage:image highlightImage:nil setTitleOrgin:CGPointMake(28*ScreenMultiple + image.size.height, (APPWIDTH/3.0 - 4*24*SpacedFonts)/2.0 - image.size.width) setImageOrgin:CGPointMake(17*ScreenMultiple, (APPWIDTH/3.0 - image.size.width)/2.0) inView:_mainScrollView];
-        if (i==0) {
+        if (i==1) {
             
-            redLabel = allocAndInitWithFrame(UILabel, frame(frameWidth(_dicoverBtn)/2.0 + 10*ScreenMultiple, 15*ScreenMultiple, 8, 8));
-            [redLabel setRound];
-            redLabel.backgroundColor = [UIColor redColor];
-            redLabel.hidden = YES;
-            [_dicoverBtn addSubview:redLabel];
+            _redLabel = allocAndInitWithFrame(UILabel, frame(frameWidth(_dicoverBtn)/2.0 + 10*ScreenMultiple, 15*ScreenMultiple, 8, 8));
+            [_redLabel setRound];
+            _redLabel.backgroundColor = [UIColor redColor];
+            _redLabel.hidden = YES;
+            [_dicoverBtn addSubview:_redLabel];
         }
 
         _dicoverBtn.shouldAnmial = NO;
@@ -127,7 +126,7 @@
 
                     case 1:
                         PushView(weakSelf, allocAndInit(RedpacketsforwardingViewController));
-                        redLabel.hidden = YES;
+                        weakSelf.redLabel.hidden = YES;
                         break;
                     case 2:
                         PushView(weakSelf, allocAndInit(DiscoverViewController));
@@ -178,11 +177,11 @@
             if (modal.rtcode) {
                 [[ToolManager shareInstance]dismiss];
                 if ([[CoreArchive strForKey:RID] intValue]== modal.rid) {
-                    redLabel.hidden = YES;
+                    _redLabel.hidden = YES;
                 }
                 else
                 {
-                    redLabel.hidden = NO;
+                    _redLabel.hidden = NO;
                 }
              
                 if (modal.isdefault) {
