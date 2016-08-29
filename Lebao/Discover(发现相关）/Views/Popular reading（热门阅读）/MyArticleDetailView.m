@@ -103,7 +103,6 @@
                 float height =CGRectGetMaxY(_browse.frame)  +10 ;
                 if (modal.datas.isaddress) {
                     
-                    
                     UIView *bg = allocAndInitWithFrame(UIView, frame(0, height, APPWIDTH, 110));
                     bg.backgroundColor = AppViewBGColor;
                     [self addSubview:bg];
